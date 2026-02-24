@@ -2,7 +2,30 @@
 
 ## Overview
 
-The `integrate.sh` script links a target project repository to this central Speckit repository using relative symlinks. All projects share a single source of truth — no files are copied, no duplication, and central updates are visible instantly.
+The `integrate.sh` script links a target project repository to this central Speckit repository.
+It creates **two sets of symlinks**:
+
+1. **`.speckit/`** — Directory symlinks for full framework access (templates, scripts, instructions)
+2. **`.github/`** — Flat file symlinks so IntelliJ IDEA and VS Code Copilot can discover agents and prompts
+
+No files are copied. All projects share a single source of truth.
+
+---
+
+## Why Two Locations?
+
+| Location | Purpose | Who reads it |
+|----------|---------|-------------|
+| `.speckit/templates/` | Spec, plan, task, SDD, story templates | Agents during generation |
+| `.speckit/scripts/` | Bash utilities (check-prerequisites, setup-plan, etc.) | Agents that run shell commands |
+| `.speckit/instructions/` | Architecture, engineering, testing guidelines | Agents for context |
+| `.github/agents/*.agent.md` | **Flat** file symlinks — IntelliJ/VS Code Copilot agent discovery | **IDE Copilot plugin** |
+| `.github/prompts/*.prompt.md` | **Flat** file symlinks — IntelliJ/VS Code Copilot prompt discovery | **IDE Copilot plugin** |
+| `.github/copilot-instructions.md` | Global Copilot context (linked to constitution agent) | **IDE Copilot plugin** |
+
+**No duplication:** Agents and prompts live only in `.github/`. Templates, scripts, and instructions live only in `.speckit/`.
+
+IntelliJ and VS Code scan `.github/agents/` and `.github/prompts/` for `*.agent.md` and `*.prompt.md` files. They do **not** recurse into subdirectories like `core/` or `extensions/`. That's why the script creates flat individual file symlinks under `.github/`.
 
 ---
 
@@ -10,6 +33,7 @@ The `integrate.sh` script links a target project repository to this central Spec
 
 ```
 otto_speckit-central/
+├── integrate.sh                                   ← Integration script (run this)
 ├── agents/
 │   ├── core/
 │   │   ├── speckit.analyze.agent.md
@@ -44,69 +68,82 @@ otto_speckit-central/
 │   └── user-story.template.md
 ├── scripts/
 │   └── bash/
-│       ├── integrate.sh              ← Integration script
 │       ├── check-prerequisites.sh
 │       ├── common.sh
 │       ├── create-new-feature.sh
 │       ├── setup-plan.sh
 │       └── update-agent-context.sh
 ├── instructions/
-│   ├── architecture/
-│   │   └── architecture-guidelines.md
-│   ├── engineering/
-│   │   └── engineering-guidelines.md
-│   ├── infra/
-│   │   └── infrastructure-guidelines.md
-│   ├── languages/
-│   │   └── language-guidelines.md
-│   └── testing/
-│       └── testing-guidelines.md
+│   ├── architecture/architecture-guidelines.md
+│   ├── engineering/engineering-guidelines.md
+│   ├── infra/infrastructure-guidelines.md
+│   ├── languages/language-guidelines.md
+│   └── testing/testing-guidelines.md
 ├── registry/
 │   └── AGENT_REGISTRY.md
 ├── docs/
 │   └── INDEX.md
 ├── examples/
-│   ├── outputs/
-│   │   └── README.md
+│   ├── outputs/README.md
 │   └── sandbox/
-│       ├── notifications-service/
-│       │   └── SPECIFICATION.md
-│       └── orders-service/
-│           └── SPECIFICATION.md
+│       ├── notifications-service/SPECIFICATION.md
+│       └── orders-service/SPECIFICATION.md
 ├── README.md
 ├── STRUCTURE.md
 ├── VERSION
-└── SPECKIT_INTEGRATION_GUIDE.md      ← This file
+└── SPECKIT_INTEGRATION_GUIDE.md                   ← This file
 ```
 
 ---
 
-## What Gets Integrated
+## What Gets Created in the Target Repo
 
-The script creates a `.speckit/` directory in the target repo with 5 relative symlinks:
-
-| Symlink | Points To | Contents |
-|---------|-----------|----------|
-| `.speckit/agents` | `../../otto_speckit-central/agents` | 9 agent definitions (7 core + 2 extensions) |
-| `.speckit/prompts` | `../../otto_speckit-central/prompts` | 9 prompt files (7 core + 2 extensions) |
-| `.speckit/templates` | `../../otto_speckit-central/templates` | 7 output templates |
-| `.speckit/scripts` | `../../otto_speckit-central/scripts` | 6 bash utility scripts |
-| `.speckit/instructions` | `../../otto_speckit-central/instructions` | 5 guideline documents |
-
-After integration, the target repo looks like:
+After running `integrate.sh`, the target repo gets:
 
 ```
-developer-joyofenergy-java/
-├── .speckit/
-│   ├── agents       → ../../otto_speckit-central/agents
-│   ├── prompts      → ../../otto_speckit-central/prompts
+<target-repo>/
+│
+├── .speckit/                                       ← Directory symlinks (no agents/prompts)
 │   ├── templates    → ../../otto_speckit-central/templates
 │   ├── scripts      → ../../otto_speckit-central/scripts
 │   └── instructions → ../../otto_speckit-central/instructions
-├── .speckit-metadata.json   ← Integration metadata
-├── speckit-integration.log  ← Execution log
-└── (existing project files)
+│
+├── .github/
+│   ├── copilot-instructions.md → ../../otto_speckit-central/agents/core/speckit.constitution.agent.md
+│   │
+│   ├── agents/                                    ← Flat file symlinks (IDE discovery)
+│   │   ├── speckit.analyze.agent.md     → ../../../otto_speckit-central/agents/core/...
+│   │   ├── speckit.clarify.agent.md     → ...
+│   │   ├── speckit.constitution.agent.md → ...
+│   │   ├── speckit.groom-story.agent.md → .../extensions/...
+│   │   ├── speckit.implement.agent.md   → ...
+│   │   ├── speckit.plan.agent.md        → ...
+│   │   ├── speckit.review.agent.md      → .../extensions/...
+│   │   ├── speckit.specify.agent.md     → ...
+│   │   └── speckit.tasks.agent.md       → ...
+│   │
+│   ├── prompts/                                   ← Flat file symlinks (IDE discovery)
+│   │   ├── speckit.analyze.prompt.md    → ...
+│   │   ├── speckit.clarify.prompt.md    → ...
+│   │   ├── speckit.constitution.prompt.md → ...
+│   │   ├── speckit.groom-story.prompt.md → ...
+│   │   ├── speckit.implement.prompt.md  → ...
+│   │   ├── speckit.plan.prompt.md       → ...
+│   │   ├── speckit.review.prompt.md     → ...
+│   │   ├── speckit.specify.prompt.md    → ...
+│   │   └── speckit.tasks.prompt.md      → ...
+│   │
+│   ├── pull_request_template.md                   ← Existing file (untouched)
+│   └── workflows/                                 ← Existing dir (untouched)
+│
+├── .speckit-metadata.json                         ← Integration metadata
+├── speckit-integration.log                        ← Execution log
+└── (existing project files...)
 ```
+
+**Total: 3 directory symlinks + 9 agent file symlinks + 9 prompt file symlinks + 1 copilot-instructions symlink = 22 symlinks**
+
+**Zero duplication: each item is linked in exactly one location.**
 
 ---
 
@@ -117,9 +154,9 @@ developer-joyofenergy-java/
 - Both repositories cloned under the same parent directory
 
 ```
-~/Desktop/
+<workspace>/
 ├── otto_speckit-central/          ← Central repo
-└── developer-joyofenergy-java/    ← Target repo
+└── <target-repo>/                 ← Target repo
 ```
 
 ---
@@ -129,126 +166,119 @@ developer-joyofenergy-java/
 ### 1. Make the script executable (first time only)
 
 ```bash
-chmod +x /path/to/otto_speckit-central/scripts/bash/integrate.sh
+chmod +x <path-to>/otto_speckit-central/integrate.sh
 ```
 
 ### 2. Run integration
 
 ```bash
-/path/to/otto_speckit-central/scripts/bash/integrate.sh <target-repo> <central-repo>
+# Auto-detect central repo from script location
+<path-to>/otto_speckit-central/integrate.sh <path-to>/<target-repo>
+
+# Or specify both explicitly
+<path-to>/otto_speckit-central/integrate.sh <path-to>/<target-repo> <path-to>/otto_speckit-central
+
+# Non-interactive mode (for CI/CD — skips confirmation prompts)
+<path-to>/otto_speckit-central/integrate.sh <path-to>/<target-repo> --yes
 ```
 
 **Example:**
 
 ```bash
-/Users/swetha/Desktop/otto_speckit-central/scripts/bash/integrate.sh \
-  /Users/swetha/Desktop/developer-joyofenergy-java \
-  /Users/swetha/Desktop/otto_speckit-central
+../otto_speckit-central/integrate.sh ../developer-joyofenergy-java
 ```
 
 ### 3. Verify
 
 ```bash
-# Check symlinks
-ls -la /Users/swetha/Desktop/developer-joyofenergy-java/.speckit/
+# Check .speckit/ directory symlinks
+ls -la <target-repo>/.speckit/
 
-# Read a file through the symlink
-cat /Users/swetha/Desktop/developer-joyofenergy-java/.speckit/agents/core/speckit.analyze.agent.md
+# Check .github/agents/ flat file symlinks (what Copilot sees)
+ls -la <target-repo>/.github/agents/
+
+# Check .github/prompts/ flat file symlinks (what Copilot sees)
+ls -la <target-repo>/.github/prompts/
+
+# Read an agent through the symlink
+cat <target-repo>/.github/agents/speckit.specify.agent.md
 
 # Check metadata
-cat /Users/swetha/Desktop/developer-joyofenergy-java/.speckit-metadata.json
+cat <target-repo>/.speckit-metadata.json
+```
+
+### 4. Show help
+
+```bash
+./integrate.sh --help
 ```
 
 ---
 
-## What the Script Does
+## How Copilot Discovers Speckit
 
-1. **Validates** both repositories exist
-2. **Validates** the central repo contains all required directories (`agents`, `prompts`, `templates`, `scripts`, `instructions`)
-3. **Creates** `.speckit/` directory in the target repo
-4. **Creates** 5 relative symlinks pointing back to the central repo
-5. **Validates** every symlink resolves correctly and is not broken
-6. **Tests** file access through the symlinks (e.g. `agents/core/`, `prompts/core/`)
-7. **Generates** `.speckit-metadata.json` with integration details
-8. **Generates** `speckit-integration.log` with execution trace
+After integration, when you open the target project in IntelliJ IDEA or VS Code:
+
+1. **Copilot reads `.github/copilot-instructions.md`** as global context for every interaction. This is the constitution agent — it sets the baseline rules and standards.
+
+2. **Copilot scans `.github/agents/*.agent.md`** and lists them in the agent picker. You can invoke any speckit agent (e.g., `@speckit.specify`, `@speckit.plan`).
+
+3. **Copilot scans `.github/prompts/*.prompt.md`** and lists them as reusable prompts. You can run any speckit prompt from the prompt picker.
+
+All files are symlinks pointing to the central repo. Updating an agent in `otto_speckit-central` makes it immediately visible in every integrated project.
 
 ---
 
-## Why Relative Symlinks
+## What the Script Does (Step by Step)
 
-All symlinks use **relative paths**, not absolute:
+| Phase | Action |
+|-------|--------|
+| **Validation** | Checks both repos exist and central has required directories |
+| **Phase 1** | Creates `.speckit/` with 3 directory symlinks (templates, scripts, instructions) |
+| **Phase 2a** | Finds all `*.agent.md` files in central `agents/core/` and `agents/extensions/`, creates flat symlinks in `.github/agents/` |
+| **Phase 2b** | Finds all `*.prompt.md` files in central `prompts/core/` and `prompts/extensions/`, creates flat symlinks in `.github/prompts/` |
+| **Phase 2c** | Links `speckit.constitution.agent.md` as `.github/copilot-instructions.md` |
+| **Phase 3** | Validates every symlink resolves correctly |
+| **Phase 4** | Writes `.speckit-metadata.json` with integration details |
+
+---
+
+## Symlink Type: Relative
+
+All symlinks use relative paths:
 
 ```
-agents → ../../otto_speckit-central/agents     ← Relative (used)
-agents → /Users/swetha/Desktop/otto_speckit-central/agents  ← Absolute (not used)
+.speckit/templates    → ../../otto_speckit-central/templates
+.github/agents/speckit.specify.agent.md → ../../../otto_speckit-central/agents/core/speckit.specify.agent.md
 ```
 
-| | Relative | Absolute |
-|---|---|---|
-| Portable across machines | ✅ | ❌ |
-| Works in Docker / CI | ✅ | ❌ |
-| Survives folder moves | ✅ | ❌ |
-| Team collaboration | ✅ | ❌ |
-
-The relative path `../../otto_speckit-central/agents` navigates:
-- `..` → up from `.speckit/` to the target repo root
-- `..` → up from the target repo to the shared parent directory
-- `otto_speckit-central/agents` → down into the central repo
+Relative paths ensure the integration works on any machine as long as both repos share the same parent directory.
 
 ---
 
 ## Re-running / Repairing
 
-The script is safe to re-run. It will detect existing symlinks and ask before replacing them:
+The script is safe to re-run. It detects existing symlinks and prompts before replacing. Use `--yes` to auto-replace without prompts:
 
 ```bash
-/Users/swetha/Desktop/otto_speckit-central/scripts/bash/integrate.sh \
-  /Users/swetha/Desktop/developer-joyofenergy-java \
-  /Users/swetha/Desktop/otto_speckit-central
-```
-
----
-
-## Metadata File
-
-After integration, `.speckit-metadata.json` is created in the target repo:
-
-```json
-{
-  "integrated_at": "2026-02-24T06:04:00Z",
-  "central_repo_name": "otto_speckit-central",
-  "target_repo_name": "developer-joyofenergy-java",
-  "symlink_type": "relative",
-  "speckit_dir": ".speckit",
-  "symlinks": {
-    "agents": ".speckit/agents",
-    "prompts": ".speckit/prompts",
-    "templates": ".speckit/templates",
-    "scripts": ".speckit/scripts",
-    "instructions": ".speckit/instructions"
-  },
-  "version": "1.0",
-  "integration_status": "success"
-}
+<path-to>/otto_speckit-central/integrate.sh <path-to>/<target-repo> --yes
 ```
 
 ---
 
 ## Integrating Additional Repositories
 
-Repeat the same command for any project:
+Run the same command for any project:
 
 ```bash
+# Java project
+./integrate.sh ../<java-project>
+
 # Python project
-/Users/swetha/Desktop/otto_speckit-central/scripts/bash/integrate.sh \
-  /Users/swetha/Desktop/my-python-service \
-  /Users/swetha/Desktop/otto_speckit-central
+./integrate.sh ../<python-service>
 
 # Node.js project
-/Users/swetha/Desktop/otto_speckit-central/scripts/bash/integrate.sh \
-  /Users/swetha/Desktop/my-node-app \
-  /Users/swetha/Desktop/otto_speckit-central
+./integrate.sh ../<node-app>
 ```
 
 All integrated repos share the same central artifacts. Update once in `otto_speckit-central`, and every linked project sees the change immediately.
-
