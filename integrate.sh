@@ -1,78 +1,94 @@
 #!/bin/bash
 
-# integrate.sh — Speckit Central Integration Script v2.1
+# integrate.sh — Speckit Central Integration Script v4.0
 #
-# Integrates the central Speckit framework into a target repository by creating:
+# Centralized pull-model integration. Target repos run THIS script
+# to obtain Speckit framework files as read-only symlinks.
 #
-#   .speckit/              — Templates, scripts, instructions (not discovered by IDE)
-#   .github/agents/        — Flat file symlinks for IntelliJ/VS Code Copilot agent discovery
-#   .github/prompts/       — Flat file symlinks for IntelliJ/VS Code Copilot prompt discovery
-#   .github/copilot-instructions.md — Constitution linked as global Copilot instructions
+# How target repos use it (no local scripts needed):
 #
-# No duplication: agents & prompts live ONLY in .github/ (IDE discovery).
-# Templates, scripts, instructions live ONLY in .speckit/ (framework access).
+#   cd my-project
+#   ../otto_speckit-central/integrate.sh              # current dir = target
+#   ../otto_speckit-central/integrate.sh --sync       # re-link latest
+#   ../otto_speckit-central/integrate.sh --yes        # non-interactive
 #
-# Usage:
-#   ./integrate.sh <target-repo-path> [central-repo-path]
-#   ./integrate.sh <target-repo-path>                       (auto-detects central from script location)
-#   ./integrate.sh --help
+# Or via Makefile in target repo:
+#   speckit:
+#       ../otto_speckit-central/integrate.sh --yes
 #
-# Examples:
-#   ./integrate.sh /Users/swetha/Desktop/developer-joyofenergy-java
-#   ./integrate.sh /Users/swetha/Desktop/developer-joyofenergy-java /Users/swetha/Desktop/otto_speckit-central
-#   ./integrate.sh /Users/swetha/Desktop/developer-joyofenergy-java --yes
+# Creates (all read-only symlinks):
+#   .speckit/templates      → central/templates
+#   .speckit/scripts        → central/scripts
+#   .speckit/instructions   → central/instructions
+#   .github/agents/*.md     → central agent files (flat)
+#   .github/prompts/*.md    → central prompt files (flat)
+#   .github/copilot-instructions.md → constitution agent
+#
+# One-way: Central → Target. Writes through symlinks are denied.
 
 set -e
 
 # ─── Help ─────────────────────────────────────────────────────────
 show_help() {
     cat <<'HELP'
-Usage: ./integrate.sh <target-repo-path> [central-repo-path] [options]
+Usage: integrate.sh [target-repo-path] [options]
 
-Integrates the central Speckit framework into a target repository so that
-IntelliJ IDEA and VS Code with GitHub Copilot can discover all agents and prompts.
+Pulls the Speckit framework into a target repository as read-only symlinks.
+Central repo is always auto-detected from the script's own location.
 
 Arguments:
-  target-repo-path    Path to the project repository to integrate
-  central-repo-path   Path to otto_speckit-central (default: auto-detected from script location)
+  target-repo-path    Path to integrate (default: current directory)
 
 Options:
   -h, --help          Show this help message
   -y, --yes           Skip confirmation prompts (for CI/CD)
+  --sync              Re-create all symlinks (replaces existing)
 
-What gets created in the target repo:
+How target repos use it (run from inside your project):
 
-  .speckit/                              Directory symlinks (no agents/prompts here)
+  # One-liner from any target repo
+  ../otto_speckit-central/integrate.sh
+
+  # Non-interactive
+  ../otto_speckit-central/integrate.sh --yes
+
+  # Re-sync latest
+  ../otto_speckit-central/integrate.sh --sync
+
+  # In your Makefile
+  speckit:
+      ../otto_speckit-central/integrate.sh --yes
+
+  # Explicit target path (from anywhere)
+  /path/to/otto_speckit-central/integrate.sh /path/to/my-project
+
+What gets created (all read-only symlinks):
+
+  .speckit/
     ├── templates    → central/templates
     ├── scripts      → central/scripts
     └── instructions → central/instructions
 
-  .github/                               Flat file symlinks (IDE discovery)
-    ├── copilot-instructions.md          → constitution agent (global Copilot context)
-    ├── agents/
-    │   ├── speckit.analyze.agent.md     → central agent files (flat)
-    │   ├── speckit.clarify.agent.md
-    │   └── ...
-    └── prompts/
-        ├── speckit.analyze.prompt.md    → central prompt files (flat)
-        ├── speckit.clarify.prompt.md
-        └── ...
+  .github/
+    ├── copilot-instructions.md → constitution agent
+    ├── agents/*.agent.md       → central agent files (flat)
+    └── prompts/*.prompt.md     → central prompt files (flat)
 
-Why this split?
-  .speckit/  — Templates, scripts, instructions that the IDE does not need to discover
-  .github/   — Agents and prompts that IntelliJ/VS Code Copilot scans for discovery
-               (requires FLAT structure — no core/extensions/ subdirectories)
+Protection: Source files in central are set read-only (chmod a-w).
+Writing through symlinks → "permission denied".
 HELP
     exit 0
 }
 
 # ─── Parse arguments ──────────────────────────────────────────────
 AUTO_YES=false
+SYNC_MODE=false
 POSITIONAL_ARGS=()
 for arg in "$@"; do
     case "$arg" in
         -h|--help) show_help ;;
         -y|--yes)  AUTO_YES=true ;;
+        --sync)    SYNC_MODE=true; AUTO_YES=true ;;
         *)         POSITIONAL_ARGS+=("$arg") ;;
     esac
 done
@@ -84,35 +100,35 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
-# ─── Resolve central repo from script location ───────────────────
+# ─── Central repo = always derived from this script's location ────
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
-# If script is in scripts/bash/, central is two levels up
-# If script is at repo root, central is the script dir itself
 if [[ "$(basename "$SCRIPT_DIR")" == "bash" && "$(basename "$(dirname "$SCRIPT_DIR")")" == "scripts" ]]; then
-    SCRIPT_CENTRAL="$(cd "$SCRIPT_DIR/../.." && pwd)"
+    CENTRAL_REPO="$(cd "$SCRIPT_DIR/../.." && pwd)"
 else
-    SCRIPT_CENTRAL="$SCRIPT_DIR"
+    CENTRAL_REPO="$SCRIPT_DIR"
 fi
 
-# ─── Configuration ────────────────────────────────────────────────
+# ─── Target repo = first arg, or current working directory ────────
 TARGET_REPO="${POSITIONAL_ARGS[0]:-.}"
-CENTRAL_REPO="${POSITIONAL_ARGS[1]:-$SCRIPT_CENTRAL}"
 SPECKIT_DIR=".speckit"
 
-# ─── Resolve absolute paths FIRST (before any file operations) ────
+# ─── Resolve absolute paths ──────────────────────────────────────
 if [[ ! -d "$TARGET_REPO" ]]; then
     echo -e "${RED}[ERROR]${NC} Target repository not found: $TARGET_REPO"
     exit 1
 fi
-if [[ ! -d "$CENTRAL_REPO" ]]; then
-    echo -e "${RED}[ERROR]${NC} Central repository not found: $CENTRAL_REPO"
-    exit 1
-fi
 
 TARGET_REPO=$(cd "$TARGET_REPO" && pwd)
-CENTRAL_REPO=$(cd "$CENTRAL_REPO" && pwd)
 LOG_FILE="${TARGET_REPO}/speckit-integration.log"
+
+# Guard: don't integrate central into itself
+if [[ "$TARGET_REPO" == "$CENTRAL_REPO" ]]; then
+    echo -e "${RED}[ERROR]${NC} Cannot integrate central repo into itself."
+    echo "Run this script from inside your target project, or pass the target path:"
+    echo "  cd <your-project> && $0"
+    echo "  $0 <path-to-your-project>"
+    exit 1
+fi
 
 # ─── Helper functions ─────────────────────────────────────────────
 log()     { echo -e "${GREEN}[INFO]${NC} $1"    | tee -a "$LOG_FILE"; }
@@ -186,17 +202,30 @@ validate_symlink() {
         return 1
     fi
     if [[ ! -e "$link_path" ]]; then
-        error "Broken symlink: $label -> $(readlink "$link_path")"
+        warning "Broken symlink: $label -> $(readlink "$link_path")"
         return 1
     fi
-    success "  ✓ $label -> $(readlink "$link_path")"
+    if [[ -d "$link_path" ]]; then
+        local writable
+        writable=$(find "$link_path" -type f -perm +0222 2>/dev/null | wc -l | tr -d ' ')
+        if [[ "$writable" -eq 0 ]]; then
+            success "  ✓ $label -> $(readlink "$link_path") (all files read-only)"
+        else
+            warning "  ⚠ $label -> $(readlink "$link_path") ($writable files still writable)"
+        fi
+        return 0
+    fi
+    if [[ -w "$link_path" ]]; then
+        warning "  ⚠ $label (writable through symlink!)"
+        return 1
+    fi
+    success "  ✓ $label -> $(readlink "$link_path") (read-only)"
 }
 
 # ─── Validation ───────────────────────────────────────────────────
 validate_central_structure() {
     local central_path="$1"
     local required_dirs=("agents" "prompts" "templates" "scripts" "instructions")
-
     for dir in "${required_dirs[@]}"; do
         if [[ ! -d "$central_path/$dir" ]]; then
             error "Missing required directory in central repo: $dir"
@@ -211,24 +240,42 @@ validate_central_structure() {
 main() {
     echo ""
     echo "╔══════════════════════════════════════════════════════════╗"
-    echo "║        Speckit Central Integration Script v2.1          ║"
+    if [[ "$SYNC_MODE" == true ]]; then
+        echo "║   Speckit Central Integration v4.0 (SYNC)               ║"
+    else
+        echo "║        Speckit Central Integration v4.0                 ║"
+    fi
     echo "╚══════════════════════════════════════════════════════════╝"
     echo ""
 
-    > "$LOG_FILE"
+    true > "$LOG_FILE"
 
-    log "Target:  $TARGET_REPO"
-    log "Central: $CENTRAL_REPO"
+    log "Target:  $(basename "$TARGET_REPO") ($TARGET_REPO)"
+    log "Central: $(basename "$CENTRAL_REPO") ($CENTRAL_REPO)"
+    log "Mode:    $(if [[ "$SYNC_MODE" == true ]]; then echo "SYNC (re-link)"; else echo "INTEGRATE (fresh)"; fi)"
     echo ""
 
     validate_central_structure "$CENTRAL_REPO"
     echo ""
 
     # ══════════════════════════════════════════════════════════════
-    # PHASE 1: .speckit/ — Templates, scripts, instructions ONLY
-    #          (agents & prompts go to .github/ in Phase 2)
+    # PHASE 0: Make central source files read-only
     # ══════════════════════════════════════════════════════════════
-    log "Phase 1: .speckit/ directory symlinks (templates, scripts, instructions)..."
+    log "Phase 0: Setting central source files read-only..."
+    local readonly_count=0
+    for dir in agents prompts templates scripts instructions; do
+        find "$CENTRAL_REPO/$dir" -type f -exec chmod a-w {} \;
+        local cnt
+        cnt=$(find "$CENTRAL_REPO/$dir" -type f | wc -l | tr -d ' ')
+        readonly_count=$((readonly_count + cnt))
+    done
+    success "Phase 0 done: $readonly_count files set read-only in central"
+    echo ""
+
+    # ══════════════════════════════════════════════════════════════
+    # PHASE 1: .speckit/ — Symlink templates, scripts, instructions
+    # ══════════════════════════════════════════════════════════════
+    log "Phase 1: .speckit/ directory symlinks..."
     mkdir -p "$TARGET_REPO/$SPECKIT_DIR"
 
     local SPECKIT_DIRS=("templates" "scripts" "instructions")
@@ -238,25 +285,16 @@ main() {
             ((speckit_count++))
         fi
     done
-    success "Phase 1 done: $speckit_count directory symlinks in .speckit/"
+    success "Phase 1 done: $speckit_count directory symlinks"
     echo ""
 
     # ══════════════════════════════════════════════════════════════
-    # PHASE 2: .github/ — IDE Copilot discovery (flat file symlinks)
-    #
-    # IntelliJ and VS Code GitHub Copilot scan:
-    #   .github/agents/*.agent.md       — agent definitions
-    #   .github/prompts/*.prompt.md     — reusable prompts
-    #   .github/copilot-instructions.md — global instructions
-    #
-    # They do NOT recurse into subdirectories (core/, extensions/).
-    # So we create flat individual file symlinks.
+    # PHASE 2: .github/ — Flat file symlinks for IDE discovery
     # ══════════════════════════════════════════════════════════════
     log "Phase 2: .github/ flat file symlinks (IDE Copilot discovery)..."
     mkdir -p "$TARGET_REPO/.github/agents"
     mkdir -p "$TARGET_REPO/.github/prompts"
 
-    # 2a. Agent files — flatten core/ and extensions/ into .github/agents/
     local agent_count=0
     while IFS= read -r -d '' agent_file; do
         local filename
@@ -265,9 +303,8 @@ main() {
             ((agent_count++))
         fi
     done < <(find "$CENTRAL_REPO/agents" -name "*.agent.md" -print0 2>/dev/null)
-    info "$agent_count agent files linked in .github/agents/"
+    info "$agent_count agent symlinks in .github/agents/"
 
-    # 2b. Prompt files — flatten core/ and extensions/ into .github/prompts/
     local prompt_count=0
     while IFS= read -r -d '' prompt_file; do
         local filename
@@ -276,43 +313,42 @@ main() {
             ((prompt_count++))
         fi
     done < <(find "$CENTRAL_REPO/prompts" -name "*.prompt.md" -print0 2>/dev/null)
-    info "$prompt_count prompt files linked in .github/prompts/"
+    info "$prompt_count prompt symlinks in .github/prompts/"
 
-    # 2c. copilot-instructions.md — link constitution agent as global Copilot context
-    local constitution="$CENTRAL_REPO/agents/core/speckit.constitution.agent.md"
     local copilot_instructions="$TARGET_REPO/.github/copilot-instructions.md"
+    local constitution="$CENTRAL_REPO/agents/core/speckit.constitution.agent.md"
     if [[ -f "$constitution" ]]; then
         create_file_symlink "$constitution" "$copilot_instructions"
         info "copilot-instructions.md -> constitution agent"
     else
-        warning "Constitution agent not found at: $constitution"
+        warning "Constitution agent not found: $constitution"
     fi
 
-    success "Phase 2 done: $agent_count agents, $prompt_count prompts, copilot-instructions.md"
+    success "Phase 2 done: $agent_count agents, $prompt_count prompts, copilot-instructions"
     echo ""
 
     # ══════════════════════════════════════════════════════════════
-    # PHASE 3: Validate all symlinks
+    # PHASE 3: Validate
     # ══════════════════════════════════════════════════════════════
-    log "Phase 3: Validating symlinks..."
+    log "Phase 3: Validating symlinks and read-only protection..."
     echo ""
 
-    log ".speckit/ directory symlinks:"
+    log ".speckit/:"
     for name in "${SPECKIT_DIRS[@]}"; do
         [[ -L "$TARGET_REPO/$SPECKIT_DIR/$name" ]] && \
             validate_symlink "$TARGET_REPO/$SPECKIT_DIR/$name" ".speckit/$name"
     done
     echo ""
 
-    log ".github/agents/ file symlinks:"
-    for symlink in "$TARGET_REPO/.github/agents"/*.agent.md; do
-        [[ -L "$symlink" ]] && validate_symlink "$symlink" ".github/agents/$(basename "$symlink")"
+    log ".github/agents/:"
+    for f in "$TARGET_REPO/.github/agents"/*.agent.md; do
+        [[ -L "$f" ]] && validate_symlink "$f" ".github/agents/$(basename "$f")"
     done
     echo ""
 
-    log ".github/prompts/ file symlinks:"
-    for symlink in "$TARGET_REPO/.github/prompts"/*.prompt.md; do
-        [[ -L "$symlink" ]] && validate_symlink "$symlink" ".github/prompts/$(basename "$symlink")"
+    log ".github/prompts/:"
+    for f in "$TARGET_REPO/.github/prompts"/*.prompt.md; do
+        [[ -L "$f" ]] && validate_symlink "$f" ".github/prompts/$(basename "$f")"
     done
     echo ""
 
@@ -327,11 +363,10 @@ main() {
     cat > "$metadata_file" << EOF
 {
   "integrated_at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
-  "central_repo": "$CENTRAL_REPO",
-  "central_repo_name": "$(basename "$CENTRAL_REPO")",
-  "target_repo": "$TARGET_REPO",
-  "target_repo_name": "$(basename "$TARGET_REPO")",
-  "symlink_type": "relative",
+  "central_repo": "$(basename "$CENTRAL_REPO")",
+  "target_repo": "$(basename "$TARGET_REPO")",
+  "integration_type": "symlink (read-only source)",
+  "flow": "pull (target runs central script)",
   "framework": {
     "speckit_dir": "$SPECKIT_DIR",
     "templates": "$SPECKIT_DIR/templates",
@@ -345,11 +380,10 @@ main() {
     "agent_count": $agent_count,
     "prompt_count": $prompt_count
   },
-  "version": "2.1",
-  "integration_status": "success"
+  "version": "4.0"
 }
 EOF
-    log "Metadata written: $metadata_file"
+    log "Metadata: .speckit-metadata.json"
     echo ""
 
     # ══════════════════════════════════════════════════════════════
@@ -362,31 +396,27 @@ EOF
     printf "  Status:  ${GREEN}SUCCESS${NC}\n"
     printf "  Target:  %s\n" "$(basename "$TARGET_REPO")"
     printf "  Central: %s\n" "$(basename "$CENTRAL_REPO")"
+    printf "  Type:    READ-ONLY SYMLINKS (pull model)\n"
     echo ""
-    echo "  ── .speckit/ (full framework) ──"
+    echo "  ── .speckit/ ──"
     for name in "${SPECKIT_DIRS[@]}"; do
         [[ -L "$TARGET_REPO/$SPECKIT_DIR/$name" ]] && \
             printf "    ${GREEN}✓${NC} .speckit/%-15s -> %s\n" "$name" "$(readlink "$TARGET_REPO/$SPECKIT_DIR/$name")"
     done
     echo ""
-    echo "  ── .github/ (IDE Copilot discovery) ──"
+    echo "  ── .github/ (IDE discovery) ──"
     [[ -L "$copilot_instructions" ]] && \
         printf "    ${GREEN}✓${NC} copilot-instructions.md\n"
-    printf "    ${GREEN}✓${NC} agents/   (%d .agent.md files, flat)\n" "$agent_count"
-    printf "    ${GREEN}✓${NC} prompts/  (%d .prompt.md files, flat)\n" "$prompt_count"
+    printf "    ${GREEN}✓${NC} agents/   (%d symlinks)\n" "$agent_count"
+    printf "    ${GREEN}✓${NC} prompts/  (%d symlinks)\n" "$prompt_count"
     echo ""
-    echo "  ── Files ──"
-    echo "    Metadata: $metadata_file"
-    echo "    Log:      $LOG_FILE"
-    echo ""
-    echo "  ── How Copilot finds speckit ──"
-    echo "    IntelliJ/VS Code scans .github/agents/ and .github/prompts/"
-    echo "    Each speckit agent appears in the Copilot agent picker"
-    echo "    copilot-instructions.md provides global context for all interactions"
+    echo "  ── How to use ──"
+    echo "    Sync:  ../$(basename "$CENTRAL_REPO")/integrate.sh --sync"
+    echo "    Write protection: all source files are read-only"
+    echo "    Zero duplication: symlinks point to central"
     echo ""
 
     success "Integration complete."
 }
 
 main "$@"
-
