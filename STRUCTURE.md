@@ -125,7 +125,7 @@ otto_speckit-central/
 
 1. Read [README.md](README.md) for project overview and quick start
 2. Run `./install-cli.sh` to install the `speckit-integrate` CLI command
-3. Check [SPECKIT_INTEGRATION_GUIDE.md](SPECKIT_INTEGRATION_GUIDE.md) for full integration details
+3. Check [SPECKIT_INTEGRATION_GUIDE.md](APEX_INTEGRATION_GUIDE.md) for full integration details
 4. Review [registry/AGENT_REGISTRY.md](registry/AGENT_REGISTRY.md) for available agents
 5. Explore [examples/](examples/) for reference implementations
 

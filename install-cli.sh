@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# install-cli.sh — Install the `speckit-integrate` command globally
+# install-cli.sh — Install the `apex-integrate` command globally
 #
 # Run this ONCE from the central repo. After that, any target repo
-# can simply run: speckit-integrate
+# can simply run: apex-integrate
 #
 # Usage:
-#   cd otto_speckit-central
+#   cd otto_apex-central
 #   ./install-cli.sh                  # Install
 #   ./install-cli.sh --uninstall      # Remove
 
@@ -43,8 +43,8 @@ fi
 TEMP_FILE=$(mktemp)
 
 echo '#!/bin/bash' > "$TEMP_FILE"
-echo "SPECKIT_CENTRAL=\"$CENTRAL_REPO\"" >> "$TEMP_FILE"
-echo 'exec bash "$SPECKIT_CENTRAL/integrate.sh" "$(pwd)" "$@"' >> "$TEMP_FILE"
+echo "APEX_CENTRAL=\"$CENTRAL_REPO\"" >> "$TEMP_FILE"
+echo 'exec bash "$APEX_CENTRAL/integrate.sh" "$(pwd)" "$@"' >> "$TEMP_FILE"
 
 chmod +x "$TEMP_FILE"
 

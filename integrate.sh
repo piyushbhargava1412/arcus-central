@@ -1,23 +1,23 @@
 #!/bin/bash
 
-# integrate.sh — Speckit Central Integration Script v4.0
+# integrate.sh — Apex Central Integration Script v4.0
 #
 # Centralized pull-model integration. Target repos run THIS script
-# to obtain Speckit framework files as read-only symlinks.
+# to obtain SDD framework files as read-only symlinks.
 #
 # Recommended: Install the CLI command once, then use it everywhere:
 #
-#   cd otto_speckit-central && ./install-cli.sh    # one-time install
-#   cd my-project && speckit-integrate             # use from any repo
-#   speckit-integrate --sync                       # re-link latest
-#   speckit-integrate --yes                        # non-interactive
+#   cd otto_apex-central && ./install-cli.sh    # one-time install
+#   cd my-project && apex-integrate             # use from any repo
+#   apex-integrate --sync                       # re-link latest
+#   apex-integrate --yes                        # non-interactive
 #
 # Direct usage (without CLI install):
 #
 #   cd my-project
-#   ../otto_speckit-central/integrate.sh              # current dir = target
-#   ../otto_speckit-central/integrate.sh --sync       # re-link latest
-#   ../otto_speckit-central/integrate.sh --yes        # non-interactive
+#   ../otto_apex-central/integrate.sh              # current dir = target
+#   ../otto_apex-central/integrate.sh --sync       # re-link latest
+#   ../otto_apex-central/integrate.sh --yes        # non-interactive
 #
 # Creates (all read-only symlinks):
 #   .specify/templates      → central/templates
@@ -36,7 +36,7 @@ show_help() {
     cat <<'HELP'
 Usage: integrate.sh [target-repo-path] [options]
 
-Pulls the Speckit framework into a target repository as read-only symlinks.
+Pulls the SDD framework into a target repository as read-only symlinks.
 Central repo is always auto-detected from the script's own location.
 
 Arguments:
@@ -50,17 +50,17 @@ Options:
 How target repos use it:
 
   # Recommended: Install CLI once, use everywhere
-  cd otto_speckit-central && ./install-cli.sh     # one-time
-  cd <your-project> && speckit-integrate          # integrate
-  speckit-integrate --sync                        # re-sync
-  speckit-integrate --yes                         # non-interactive (CI/CD)
+  cd otto_apex-central && ./install-cli.sh     # one-time
+  cd <your-project> && apex-integrate          # integrate
+  apex-integrate --sync                        # re-sync
+  apex-integrate --yes                         # non-interactive (CI/CD)
 
   # Direct usage (without CLI install)
-  ../otto_speckit-central/integrate.sh
+  ../otto_apex-central/integrate.sh
 
   # In your Makefile
-  speckit:
-      speckit-integrate --yes
+  apex:
+      apex-integrate --yes
 
 What gets created (all read-only symlinks):
 
@@ -411,7 +411,7 @@ EOF
     printf "    ${GREEN}✓${NC} prompts/  (%d symlinks)\n" "$prompt_count"
     echo ""
     echo "  ── How to use ──"
-    echo "    Sync:  speckit-integrate --sync"
+    echo "    Sync:  apex-integrate --sync"
     echo "    Write protection: all source files are read-only"
     echo "    Zero duplication: symlinks point to central"
     echo ""

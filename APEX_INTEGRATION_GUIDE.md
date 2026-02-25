@@ -1,11 +1,11 @@
-# Speckit Integration Guide
+# Apex Integration Guide
 
 ## Overview
 
-The `speckit-integrate` CLI command creates **read-only symlinks** from any target repository into the central Speckit repository. Source files in central are set read-only (`chmod a-w`) so that writing through symlinks is denied.
+The `apex-integrate` CLI command creates **read-only symlinks** from any target repository into the central Speckit repository. Source files in central are set read-only (`chmod a-w`) so that writing through symlinks is denied.
 
 **One-way flow:** Central → Target. Zero file duplication. Instant updates.  
-**Pull model:** Target repos pull Speckit — no bootstrap scripts needed in each repo.
+**Pull model:** Target repos pull apex — no bootstrap scripts needed in each repo.
 
 ---
 
@@ -14,23 +14,23 @@ The `speckit-integrate` CLI command creates **read-only symlinks** from any targ
 ### Step 1: Clone the central repo (once per machine)
 
 ```bash
-git clone <central-repo-url> ~/speckit-central
+git clone <central-repo-url> ~/apex-central
 ```
 
 ### Step 2: Install the CLI command (once per machine)
 
 ```bash
-cd ~/speckit-central
+cd ~/apex-central
 ./install-cli.sh
 ```
 
-This installs `speckit-integrate` to `/usr/local/bin/`.
+This installs `apex-integrate` to `/usr/local/bin/`.
 
 ### Step 3: Integrate any target repo (from inside the repo)
 
 ```bash
 cd ~/projects/my-java-service
-speckit-integrate
+apex-integrate
 ```
 
 That's it. Works for 1 repo or 100 repos — same single command.
@@ -41,24 +41,24 @@ That's it. Works for 1 repo or 100 repos — same single command.
 
 | Command | Description |
 |---------|-------------|
-| `speckit-integrate` | Integrate current directory |
-| `speckit-integrate --sync` | Re-create all symlinks (re-pull latest) |
-| `speckit-integrate --yes` | Skip confirmation prompts (CI/CD mode) |
+| `apex-integrate` | Integrate current directory |
+| `apex-integrate --sync` | Re-create all symlinks (re-pull latest) |
+| `apex-integrate --yes` | Skip confirmation prompts (CI/CD mode) |
 
 ### CI/CD Usage
 
 Add to your project's `Makefile`:
 
 ```makefile
-speckit:
-	speckit-integrate --yes
+apex:
+	apex-integrate --yes
 ```
 
 Or in a CI pipeline step:
 
 ```yaml
-- name: Integrate Speckit
-  run: speckit-integrate --yes
+- name: Integrate apex
+  run: apex-integrate --yes
 ```
 
 ---
@@ -68,10 +68,10 @@ Or in a CI pipeline step:
 No per-repo setup needed. The same command works everywhere:
 
 ```bash
-cd ~/projects/orders-service     && speckit-integrate
-cd ~/projects/payments-service   && speckit-integrate
-cd ~/projects/notifications-api  && speckit-integrate
-cd ~/projects/frontend-app       && speckit-integrate
+cd ~/projects/orders-service     && apex-integrate
+cd ~/projects/payments-service   && apex-integrate
+cd ~/projects/notifications-api  && apex-integrate
+cd ~/projects/frontend-app       && apex-integrate
 ```
 
 All repos share the same central source files. Update once in central, every linked repo sees it instantly.
@@ -157,7 +157,7 @@ All source files are read-only. All symlinks use relative paths.
 
 ---
 
-## How Copilot / IntelliJ Discovers Speckit
+## How Copilot / IntelliJ Discovers apex
 
 1. **`.github/copilot-instructions.md`** — read automatically as global context
 2. **`.github/agents/*.agent.md`** — appear in the Copilot agent picker (`@speckit.specify`, etc.)
@@ -182,7 +182,7 @@ All source files are read-only. All symlinks use relative paths.
 ### Install
 
 ```bash
-cd <speckit-central-repo>
+cd <apex-central-repo>
 ./install-cli.sh
 ```
 
@@ -198,6 +198,6 @@ cd <speckit-central-repo>
 Re-run the installer from the new location:
 
 ```bash
-cd <new-location>/speckit-central
+cd <new-location>/apex-central
 ./install-cli.sh
 ```

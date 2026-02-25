@@ -1,6 +1,6 @@
-# otto_speckit-central
+# otto_apex-central
 
-Central Speckit repository providing refined and hardened agents, prompts, templates, scripts, and constitution layers that can be integrated with any repository for spec-driven development.
+Central SDD repository providing refined and hardened agents, prompts, templates, scripts, and constitution layers that can be integrated with any repository for spec-driven development.
 
 ## Quick Start
 
@@ -19,14 +19,14 @@ speckit-integrate
 
 ## CLI Commands
 
-| Command | Description |
-|---------|-------------|
-| `speckit-integrate` | Integrate current directory |
-| `speckit-integrate --sync` | Re-sync all symlinks |
-| `speckit-integrate --yes` | Non-interactive (CI/CD) |
+| Command                 | Description |
+|-------------------------|-------------|
+| `apex-integrate`        | Integrate current directory |
+| `apex-integrate --sync` | Re-sync all symlinks |
+| `apex-integrate --yes`  | Non-interactive (CI/CD) |
 
 ## Documentation
 
-- [Integration Guide](SPECKIT_INTEGRATION_GUIDE.md) — Full setup and usage details
+- [Integration Guide](APEX_INTEGRATION_GUIDE.md) — Full setup and usage details
 - [Repository Structure](STRUCTURE.md) — Central repo layout
 - [Docs Index](docs/INDEX.md) — All documentation
