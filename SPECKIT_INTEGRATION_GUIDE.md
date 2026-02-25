@@ -2,9 +2,79 @@
 
 ## Overview
 
-The `integrate.sh` script creates **read-only symlinks** from a target project repository into the central Speckit repository. Source files in central are set read-only (`chmod a-w`) so that writing through symlinks is denied.
+The `speckit-integrate` CLI command creates **read-only symlinks** from any target repository into the central Speckit repository. Source files in central are set read-only (`chmod a-w`) so that writing through symlinks is denied.
 
-**One-way flow:** Central → Target. Zero file duplication. Instant updates.
+**One-way flow:** Central → Target. Zero file duplication. Instant updates.  
+**Pull model:** Target repos pull Speckit — no bootstrap scripts needed in each repo.
+
+---
+
+## Quick Start (3 steps)
+
+### Step 1: Clone the central repo (once per machine)
+
+```bash
+git clone <central-repo-url> ~/speckit-central
+```
+
+### Step 2: Install the CLI command (once per machine)
+
+```bash
+cd ~/speckit-central
+./install-cli.sh
+```
+
+This installs `speckit-integrate` to `/usr/local/bin/`.
+
+### Step 3: Integrate any target repo (from inside the repo)
+
+```bash
+cd ~/projects/my-java-service
+speckit-integrate
+```
+
+That's it. Works for 1 repo or 100 repos — same single command.
+
+---
+
+## CLI Reference
+
+| Command | Description |
+|---------|-------------|
+| `speckit-integrate` | Integrate current directory |
+| `speckit-integrate --sync` | Re-create all symlinks (re-pull latest) |
+| `speckit-integrate --yes` | Skip confirmation prompts (CI/CD mode) |
+
+### CI/CD Usage
+
+Add to your project's `Makefile`:
+
+```makefile
+speckit:
+	speckit-integrate --yes
+```
+
+Or in a CI pipeline step:
+
+```yaml
+- name: Integrate Speckit
+  run: speckit-integrate --yes
+```
+
+---
+
+## Scaling to Multiple Repos
+
+No per-repo setup needed. The same command works everywhere:
+
+```bash
+cd ~/projects/orders-service     && speckit-integrate
+cd ~/projects/payments-service   && speckit-integrate
+cd ~/projects/notifications-api  && speckit-integrate
+cd ~/projects/frontend-app       && speckit-integrate
+```
+
+All repos share the same central source files. Update once in central, every linked repo sees it instantly.
 
 ---
 
@@ -27,9 +97,9 @@ zsh: permission denied                  ← symlink → read-only source file
 
 | Location | Type | Points To |
 |----------|------|-----------|
-| `.speckit/templates` | Dir symlink | `central/templates` |
-| `.speckit/scripts` | Dir symlink | `central/scripts` |
-| `.speckit/instructions` | Dir symlink | `central/instructions` |
+| `.specify/templates` | Dir symlink | `central/templates` |
+| `.specify/scripts` | Dir symlink | `central/scripts` |
+| `.specify/instructions` | Dir symlink | `central/instructions` |
 | `.github/agents/*.agent.md` | File symlinks (flat) | `central/agents/core/` + `extensions/` |
 | `.github/prompts/*.prompt.md` | File symlinks (flat) | `central/prompts/core/` + `extensions/` |
 | `.github/copilot-instructions.md` | File symlink | `central/agents/core/speckit.constitution.agent.md` |
@@ -43,10 +113,10 @@ All source files are read-only. All symlinks use relative paths.
 ```
 <target-repo>/
 │
-├── .speckit/                                       ← Directory symlinks
-│   ├── templates    → ../../otto_speckit-central/templates
-│   ├── scripts      → ../../otto_speckit-central/scripts
-│   └── instructions → ../../otto_speckit-central/instructions
+├── .specify/                                       ← Directory symlinks
+│   ├── templates    → ../../speckit-central/templates
+│   ├── scripts      → ../../speckit-central/scripts
+│   └── instructions → ../../speckit-central/instructions
 │
 ├── .github/
 │   ├── copilot-instructions.md                    → constitution agent
@@ -73,7 +143,7 @@ All source files are read-only. All symlinks use relative paths.
 │   ├── pull_request_template.md                   ← Existing (untouched)
 │   └── workflows/                                 ← Existing (untouched)
 │
-├── .speckit-metadata.json
+├── .specify-metadata.json
 └── speckit-integration.log
 ```
 
@@ -83,66 +153,11 @@ All source files are read-only. All symlinks use relative paths.
 
 - macOS or Linux
 - Python 3 (for relative path calculation)
-- Both repositories cloned under the same parent directory
+- Both repositories cloned on the local machine (any location)
 
 ---
 
-## How to Run
-
-There are two ways to integrate. **Scenario 2 (Pull) is recommended.**
-
-### Scenario 2: Pull Model (recommended)
-
-The target repo pulls speckit from central. Developer only needs **read access** to central.
-
-**1. Copy `speckit-setup.sh` into your project root:**
-
-```bash
-cp <path-to>/otto_speckit-central/scripts/speckit-setup.sh ./speckit-setup.sh
-chmod +x speckit-setup.sh
-```
-
-**2. Run it from your project:**
-
-```bash
-./speckit-setup.sh                              # Auto-detect central as sibling
-./speckit-setup.sh --central <path>             # Explicit path
-./speckit-setup.sh --sync                       # Re-pull latest
-./speckit-setup.sh --yes                        # Non-interactive (CI/CD)
-```
-
-**3. Add to your Makefile or setup script:**
-
-```makefile
-setup-speckit:
-	./speckit-setup.sh --yes
-```
-
-Auto-detection looks for `otto_speckit-central/` as a sibling directory. You can also set `SPECKIT_CENTRAL_REPO` env var.
-
-### Scenario 1: Push Model (alternative)
-
-Central pushes into the target. Requires write access to the target repo.
-
-```bash
-<path-to>/otto_speckit-central/integrate.sh <path-to>/<target-repo>
-<path-to>/otto_speckit-central/integrate.sh <path-to>/<target-repo> --yes
-<path-to>/otto_speckit-central/integrate.sh <path-to>/<target-repo> --sync
-```
-
-### Comparison
-
-| Feature | Scenario 1 (Push) | Scenario 2 (Pull) |
-|---------|-------------------|-------------------|
-| Who runs it | Central repo owner | Target repo developer |
-| Access needed | Write to target | Read to central |
-| Developer feel | "Pushed" update | "Pulled" dependency |
-| CI/CD | Harder to automate | One line in Makefile |
-| Recommended | For initial onboarding | For daily use |
-
----
-
-## How Copilot Discovers Speckit
+## How Copilot / IntelliJ Discovers Speckit
 
 1. **`.github/copilot-instructions.md`** — read automatically as global context
 2. **`.github/agents/*.agent.md`** — appear in the Copilot agent picker (`@speckit.specify`, etc.)
@@ -155,19 +170,34 @@ Central pushes into the target. Requires write access to the target repo.
 | Phase | Action |
 |-------|--------|
 | **Phase 0** | Sets all central source files read-only (`chmod a-w`) |
-| **Phase 1** | Creates `.speckit/` with 3 directory symlinks |
+| **Phase 1** | Creates `.specify/` with 3 directory symlinks |
 | **Phase 2** | Creates flat file symlinks in `.github/agents/` and `.github/prompts/` + `copilot-instructions.md` |
 | **Phase 3** | Validates every symlink resolves and is read-only |
-| **Phase 4** | Writes `.speckit-metadata.json` |
+| **Phase 4** | Writes `.specify-metadata.json` |
 
 ---
 
-## Integrating Additional Repositories
+## Installer Management
+
+### Install
 
 ```bash
-./integrate.sh ../<java-project>
-./integrate.sh ../<python-service>
-./integrate.sh ../<node-app>
+cd <speckit-central-repo>
+./install-cli.sh
 ```
 
-All repos share the same central source files. Update once in central, every linked repo sees it instantly.
+
+### Uninstall
+
+```bash
+./install-cli.sh --uninstall
+```
+
+### If central repo moves
+
+Re-run the installer from the new location:
+
+```bash
+cd <new-location>/speckit-central
+./install-cli.sh
+```

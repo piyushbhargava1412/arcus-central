@@ -10,6 +10,8 @@ otto_speckit-central/
 ├── FINAL_VERIFICATION.md                          # Setup verification document
 ├── STRUCTURE.md                                   # This file - repository structure
 ├── VERSION                                        # Version file (1.0.0)
+├── integrate.sh                                   # Core integration script
+├── install-cli.sh                                 # CLI installer (installs speckit-integrate command)
 ├── .editorconfig                                  # Editor configuration
 ├── .gitignore                                     # Git ignore rules
 │
@@ -111,20 +113,20 @@ otto_speckit-central/
 | File | Purpose |
 |------|---------|
 | `README.md` | Main project documentation |
-| `CHANGELOG.md` | Version history and changes |
-| `CONTRIBUTING.md` | Contribution guidelines |
-| `FINAL_VERIFICATION.md` | Setup verification and summary |
+| `integrate.sh` | Core integration script (creates symlinks in target repos) |
+| `install-cli.sh` | CLI installer (installs `speckit-integrate` command globally) |
+| `SPECKIT_INTEGRATION_GUIDE.md` | Full integration guide and CLI reference |
 | `STRUCTURE.md` | This file - complete repository structure |
-| `VERSION` | Current version (1.0.0) |
+| `VERSION` | Current version |
 | `.editorconfig` | Editor configuration for consistent formatting |
 | `.gitignore` | Git ignore patterns |
 
 ## Getting Started
 
-1. Read [README.md](README.md) for project overview
-2. Check [docs/INDEX.md](docs/INDEX.md) for documentation index
-3. Review [registry/AGENT_REGISTRY.md](registry/AGENT_REGISTRY.md) for available agents
-4. Follow [CONTRIBUTING.md](CONTRIBUTING.md) to set up development environment
+1. Read [README.md](README.md) for project overview and quick start
+2. Run `./install-cli.sh` to install the `speckit-integrate` CLI command
+3. Check [SPECKIT_INTEGRATION_GUIDE.md](SPECKIT_INTEGRATION_GUIDE.md) for full integration details
+4. Review [registry/AGENT_REGISTRY.md](registry/AGENT_REGISTRY.md) for available agents
 5. Explore [examples/](examples/) for reference implementations
 
 ## Architecture

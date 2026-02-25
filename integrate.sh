@@ -5,21 +5,24 @@
 # Centralized pull-model integration. Target repos run THIS script
 # to obtain Speckit framework files as read-only symlinks.
 #
-# How target repos use it (no local scripts needed):
+# Recommended: Install the CLI command once, then use it everywhere:
+#
+#   cd otto_speckit-central && ./install-cli.sh    # one-time install
+#   cd my-project && speckit-integrate             # use from any repo
+#   speckit-integrate --sync                       # re-link latest
+#   speckit-integrate --yes                        # non-interactive
+#
+# Direct usage (without CLI install):
 #
 #   cd my-project
 #   ../otto_speckit-central/integrate.sh              # current dir = target
 #   ../otto_speckit-central/integrate.sh --sync       # re-link latest
 #   ../otto_speckit-central/integrate.sh --yes        # non-interactive
 #
-# Or via Makefile in target repo:
-#   speckit:
-#       ../otto_speckit-central/integrate.sh --yes
-#
 # Creates (all read-only symlinks):
-#   .speckit/templates      → central/templates
-#   .speckit/scripts        → central/scripts
-#   .speckit/instructions   → central/instructions
+#   .specify/templates      → central/templates
+#   .specify/scripts        → central/scripts
+#   .specify/instructions   → central/instructions
 #   .github/agents/*.md     → central agent files (flat)
 #   .github/prompts/*.md    → central prompt files (flat)
 #   .github/copilot-instructions.md → constitution agent
@@ -44,27 +47,24 @@ Options:
   -y, --yes           Skip confirmation prompts (for CI/CD)
   --sync              Re-create all symlinks (replaces existing)
 
-How target repos use it (run from inside your project):
+How target repos use it:
 
-  # One-liner from any target repo
+  # Recommended: Install CLI once, use everywhere
+  cd otto_speckit-central && ./install-cli.sh     # one-time
+  cd <your-project> && speckit-integrate          # integrate
+  speckit-integrate --sync                        # re-sync
+  speckit-integrate --yes                         # non-interactive (CI/CD)
+
+  # Direct usage (without CLI install)
   ../otto_speckit-central/integrate.sh
-
-  # Non-interactive
-  ../otto_speckit-central/integrate.sh --yes
-
-  # Re-sync latest
-  ../otto_speckit-central/integrate.sh --sync
 
   # In your Makefile
   speckit:
-      ../otto_speckit-central/integrate.sh --yes
-
-  # Explicit target path (from anywhere)
-  /path/to/otto_speckit-central/integrate.sh /path/to/my-project
+      speckit-integrate --yes
 
 What gets created (all read-only symlinks):
 
-  .speckit/
+  .specify/
     ├── templates    → central/templates
     ├── scripts      → central/scripts
     └── instructions → central/instructions
@@ -110,7 +110,7 @@ fi
 
 # ─── Target repo = first arg, or current working directory ────────
 TARGET_REPO="${POSITIONAL_ARGS[0]:-.}"
-SPECKIT_DIR=".speckit"
+SPECKIT_DIR=".specify"
 
 # ─── Resolve absolute paths ──────────────────────────────────────
 if [[ ! -d "$TARGET_REPO" ]]; then
@@ -273,9 +273,9 @@ main() {
     echo ""
 
     # ══════════════════════════════════════════════════════════════
-    # PHASE 1: .speckit/ — Symlink templates, scripts, instructions
+    # PHASE 1: .specify/ — Symlink templates, scripts, instructions
     # ══════════════════════════════════════════════════════════════
-    log "Phase 1: .speckit/ directory symlinks..."
+    log "Phase 1: .specify/ directory symlinks..."
     mkdir -p "$TARGET_REPO/$SPECKIT_DIR"
 
     local SPECKIT_DIRS=("templates" "scripts" "instructions")
@@ -333,10 +333,10 @@ main() {
     log "Phase 3: Validating symlinks and read-only protection..."
     echo ""
 
-    log ".speckit/:"
+    log ".specify/:"
     for name in "${SPECKIT_DIRS[@]}"; do
         [[ -L "$TARGET_REPO/$SPECKIT_DIR/$name" ]] && \
-            validate_symlink "$TARGET_REPO/$SPECKIT_DIR/$name" ".speckit/$name"
+            validate_symlink "$TARGET_REPO/$SPECKIT_DIR/$name" ".specify/$name"
     done
     echo ""
 
@@ -359,7 +359,7 @@ main() {
     # ══════════════════════════════════════════════════════════════
     # PHASE 4: Metadata
     # ══════════════════════════════════════════════════════════════
-    local metadata_file="$TARGET_REPO/.speckit-metadata.json"
+    local metadata_file="$TARGET_REPO/.specify-metadata.json"
     cat > "$metadata_file" << EOF
 {
   "integrated_at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
@@ -383,7 +383,7 @@ main() {
   "version": "4.0"
 }
 EOF
-    log "Metadata: .speckit-metadata.json"
+    log "Metadata: .specify-metadata.json"
     echo ""
 
     # ══════════════════════════════════════════════════════════════
@@ -398,10 +398,10 @@ EOF
     printf "  Central: %s\n" "$(basename "$CENTRAL_REPO")"
     printf "  Type:    READ-ONLY SYMLINKS (pull model)\n"
     echo ""
-    echo "  ── .speckit/ ──"
+    echo "  ── .specify/ ──"
     for name in "${SPECKIT_DIRS[@]}"; do
         [[ -L "$TARGET_REPO/$SPECKIT_DIR/$name" ]] && \
-            printf "    ${GREEN}✓${NC} .speckit/%-15s -> %s\n" "$name" "$(readlink "$TARGET_REPO/$SPECKIT_DIR/$name")"
+            printf "    ${GREEN}✓${NC} .specify/%-15s -> %s\n" "$name" "$(readlink "$TARGET_REPO/$SPECKIT_DIR/$name")"
     done
     echo ""
     echo "  ── .github/ (IDE discovery) ──"
@@ -411,7 +411,7 @@ EOF
     printf "    ${GREEN}✓${NC} prompts/  (%d symlinks)\n" "$prompt_count"
     echo ""
     echo "  ── How to use ──"
-    echo "    Sync:  ../$(basename "$CENTRAL_REPO")/integrate.sh --sync"
+    echo "    Sync:  speckit-integrate --sync"
     echo "    Write protection: all source files are read-only"
     echo "    Zero duplication: symlinks point to central"
     echo ""
