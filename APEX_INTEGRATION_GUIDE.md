@@ -99,9 +99,9 @@ zsh: permission denied                  ← symlink → read-only source file
 
 | Location | Type | Points To |
 |----------|------|-----------|
-| `.specify/templates` | Dir symlink | `central/templates` |
-| `.specify/scripts` | Dir symlink | `central/scripts` |
-| `.specify/instructions` | Dir symlink | `central/instructions` |
+| `.apex/templates` | Dir symlink | `central/templates` |
+| `.apex/scripts` | Dir symlink | `central/scripts` |
+| `.apex/instructions` | Dir symlink | `central/instructions` |
 | `.github/agents/*.agent.md` | File symlinks (flat) | `central/agents/core/` + `extensions/` |
 | `.github/prompts/*.prompt.md` | File symlinks (flat) | `central/prompts/core/` + `extensions/` |
 
@@ -114,7 +114,7 @@ All source files are read-only. All symlinks use relative paths.
 ```
 <target-repo>/
 │
-├── .specify/                                       ← Directory symlinks
+├── .apex/                                       ← Directory symlinks
 │   ├── templates    → ../../apex-central/templates
 │   ├── scripts      → ../../apex-central/scripts
 │   └── instructions → ../../apex-central/instructions
@@ -143,7 +143,7 @@ All source files are read-only. All symlinks use relative paths.
 │   ├── pull_request_template.md                   ← Existing (untouched)
 │   └── workflows/                                 ← Existing (untouched)
 │
-├── .specify-metadata.json
+├── .apex-metadata.json
 └── sdd-integration.log
 ```
 
@@ -171,10 +171,10 @@ The "sdd.*" agent names are the command interface for the SDD methodology.
 | Phase | Action |
 |-------|--------|
 | **Phase 0** | Sets all central source files read-only (`chmod a-w`) |
-| **Phase 1** | Creates `.specify/` with 3 directory symlinks |
+| **Phase 1** | Creates `.apex/` with 3 directory symlinks |
 | **Phase 2** | Creates flat file symlinks in `.github/agents/` and `.github/prompts/` |
 | **Phase 3** | Validates every symlink resolves and is read-only |
-| **Phase 4** | Writes `.specify-metadata.json` |
+| **Phase 4** | Writes `.apex-metadata.json` |
 
 ---
 

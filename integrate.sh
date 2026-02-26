@@ -21,9 +21,9 @@
 #   ../otto_apex-central/integrate.sh --yes        # non-interactive
 #
 # Creates (all read-only symlinks):
-#   .specify/templates      → central/templates
-#   .specify/scripts        → central/scripts
-#   .specify/instructions   → central/instructions
+#   .apex/templates      → central/templates
+#   .apex/scripts        → central/scripts
+#   .apex/instructions   → central/instructions
 #   .github/agents/*.md     → central agent files (flat)
 #   .github/prompts/*.md    → central prompt files (flat)
 #
@@ -69,7 +69,7 @@ How target repos use it:
 
 What gets created (all read-only symlinks):
 
-  .specify/
+  .apex/
     ├── templates    → central/templates
     ├── scripts      → central/scripts
     └── instructions → central/instructions
@@ -114,7 +114,7 @@ fi
 
 # ─── Target repo = first arg, or current working directory ────────
 TARGET_REPO="${POSITIONAL_ARGS[0]:-.}"
-SDD_DIR=".specify"
+SDD_DIR=".apex"
 
 # ─── Resolve absolute paths ──────────────────────────────────────
 if [[ ! -d "$TARGET_REPO" ]]; then
@@ -283,12 +283,12 @@ main() {
         log "Phase 0.5: Cleaning up existing integration artifacts..."
         local cleanup_count=0
 
-        # Remove .specify/ symlinks
+        # Remove .apex/ symlinks
         for name in templates scripts instructions; do
             if [[ -L "$TARGET_REPO/$SDD_DIR/$name" ]] || [[ -e "$TARGET_REPO/$SDD_DIR/$name" ]]; then
                 rm -rf "${TARGET_REPO:?}/${SDD_DIR:?}/$name"
                 ((cleanup_count++))
-                info "Removed: .specify/$name"
+                info "Removed: .apex/$name"
             fi
         done
 
@@ -323,10 +323,10 @@ main() {
         fi
 
         # Remove metadata file
-        if [[ -f "$TARGET_REPO/.specify-metadata.json" ]]; then
-            rm -f "$TARGET_REPO/.specify-metadata.json"
+        if [[ -f "$TARGET_REPO/.apex-metadata.json" ]]; then
+            rm -f "$TARGET_REPO/.apex-metadata.json"
             ((cleanup_count++))
-            info "Removed: .specify-metadata.json"
+            info "Removed: .apex-metadata.json"
         fi
 
         success "Phase 0.5 done: $cleanup_count items cleaned up"
@@ -334,9 +334,9 @@ main() {
     fi
 
     # ══════════════════════════════════════════════════════════════
-    # PHASE 1: .specify/ — Symlink templates, scripts, instructions
+    # PHASE 1: .apex/ — Symlink templates, scripts, instructions
     # ══════════════════════════════════════════════════════════════
-    log "Phase 1: .specify/ directory symlinks..."
+    log "Phase 1: .apex/ directory symlinks..."
     mkdir -p "$TARGET_REPO/$SDD_DIR"
 
     local SDD_DIRS=("templates" "scripts" "instructions")
@@ -385,10 +385,10 @@ main() {
     log "Phase 3: Validating symlinks and read-only protection..."
     echo ""
 
-    log ".specify/:"
+    log ".apex/:"
     for name in "${SDD_DIRS[@]}"; do
         [[ -L "$TARGET_REPO/$SDD_DIR/$name" ]] && \
-            validate_symlink "$TARGET_REPO/$SDD_DIR/$name" ".specify/$name"
+            validate_symlink "$TARGET_REPO/$SDD_DIR/$name" ".apex/$name"
     done
     echo ""
 
@@ -408,7 +408,7 @@ main() {
     # ══════════════════════════════════════════════════════════════
     # PHASE 4: Metadata
     # ══════════════════════════════════════════════════════════════
-    local metadata_file="$TARGET_REPO/.specify-metadata.json"
+    local metadata_file="$TARGET_REPO/.apex-metadata.json"
     cat > "$metadata_file" << EOF
 {
   "integrated_at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
@@ -433,7 +433,7 @@ main() {
   "version": "4.0"
 }
 EOF
-    log "Metadata: .specify-metadata.json"
+    log "Metadata: .apex-metadata.json"
     echo ""
 
     # ══════════════════════════════════════════════════════════════
@@ -448,10 +448,10 @@ EOF
     printf "  Central: %s\n" "$(basename "$CENTRAL_REPO")"
     printf "  Type:    READ-ONLY SYMLINKS (pull model)\n"
     echo ""
-    echo "  ── .specify/ ──"
+    echo "  ── .apex/ ──"
     for name in "${SDD_DIRS[@]}"; do
         [[ -L "$TARGET_REPO/$SDD_DIR/$name" ]] && \
-            printf "    ${GREEN}✓${NC} .specify/%-15s -> %s\n" "$name" "$(readlink "$TARGET_REPO/$SDD_DIR/$name")"
+            printf "    ${GREEN}✓${NC} .apex/%-15s -> %s\n" "$name" "$(readlink "$TARGET_REPO/$SDD_DIR/$name")"
     done
     echo ""
     echo "  ── .github/ (IDE discovery) ──"

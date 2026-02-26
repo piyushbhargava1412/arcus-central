@@ -22,13 +22,13 @@ Given that feature description, do this:
 
     - Extract the JIRA Story ID from the user input (e.g., `BFCO-2156`)
     - Set paths directly without running any commands:
-        - `FEATURE_DIR = .specify/specs/<STORY-ID>/`
+        - `FEATURE_DIR = .apex/specs/<STORY-ID>/`
         - `SPEC_FILE = FEATURE_DIR/spec.md`
     - If the directory does not exist, create it
     - **DO NOT** create, switch, inspect, or infer Git branches
     - **DO NOT** run shell commands or scripts
 
-2. Load `.specify/templates/spec-template.md` to understand required sections.
+2. Load `.apex/templates/spec-template.md` to understand required sections.
 
 3. Follow this execution flow:
 
@@ -164,7 +164,7 @@ Given that feature description, do this:
 - Avoid **HOW** to implement (no tech stack, APIs, or code)
 - Written for business and domain stakeholders
 - Treat other repositories as external systems
-- All content MUST align with: `.specify/memory/constitution.md`
+- All content MUST align with: `.apex/memory/constitution.md`
 
 ### Section Requirements
 
