@@ -1,45 +1,48 @@
 # Documentation Index
 
-Welcome to speckit-central documentation!
+Welcome to the APEX SDD (Spec Driven Development) Framework documentation!
 
 ## Getting Started
 
-- [README.md](../README.md) - Project overview
+- [README.md](../README.md) - Project overview and SDD framework introduction
 - [STRUCTURE.md](../STRUCTURE.md) - Complete repository structure and layout
+- [APEX_INTEGRATION_GUIDE.md](../APEX_INTEGRATION_GUIDE.md) - How to integrate SDD framework into your repos
 
-## Agents
+## SDD Framework Components
 
-Complete documentation for all speckit-central agents:
+### Agents
+
+Complete documentation for all SDD agents:
 
 ### Core Agents
-- [Specify Agent](../agents/core/speckit.specify.agent.md) - Create specifications
-- [Clarify Agent](../agents/core/speckit.clarify.agent.md) - Clarify requirements
-- [Plan Agent](../agents/core/speckit.plan.agent.md) - Create project plans
-- [Tasks Agent](../agents/core/speckit.tasks.agent.md) - Break down into tasks
-- [Analyze Agent](../agents/core/speckit.analyze.agent.md) - Technical analysis
-- [Implement Agent](../agents/core/speckit.implement.agent.md) - Implementation guidance
-- [Constitution Agent](../agents/core/speckit.constitution.agent.md) - Standards & guidelines
+- [Specify Agent](../agents/core/sdd.specify.agent.md) - Create specifications
+- [Clarify Agent](../agents/core/sdd.clarify.agent.md) - Clarify requirements
+- [Plan Agent](../agents/core/sdd.plan.agent.md) - Create project plans
+- [Tasks Agent](../agents/core/sdd.tasks.agent.md) - Break down into tasks
+- [Analyze Agent](../agents/core/sdd.analyze.agent.md) - Technical analysis
+- [Implement Agent](../agents/core/sdd.implement.agent.md) - Implementation guidance
+- [Constitution Agent](../agents/core/sdd.constitution.agent.md) - Standards & guidelines
 
 ### Extension Agents
-- [Groom Story Agent](../agents/extensions/speckit.groom-story.agent.md) - Story refinement
-- [Review Agent](../agents/extensions/speckit.review.agent.md) - Code & spec review
+- [Groom Story Agent](../agents/extensions/sdd.groom-story.agent.md) - Story refinement
+- [Review Agent](../agents/extensions/sdd.review.agent.md) - Code & spec review
 
 ## Prompts
 
 Prompts used to guide agent behavior:
 
 ### Core Prompts
-- [Specify Prompt](../prompts/core/speckit.specify.prompt.md)
-- [Clarify Prompt](../prompts/core/speckit.clarify.prompt.md)
-- [Plan Prompt](../prompts/core/speckit.plan.prompt.md)
-- [Tasks Prompt](../prompts/core/speckit.tasks.prompt.md)
-- [Analyze Prompt](../prompts/core/speckit.analyze.prompt.md)
-- [Implement Prompt](../prompts/core/speckit.implement.prompt.md)
-- [Constitution Prompt](../prompts/core/speckit.constitution.prompt.md)
+- [Specify Prompt](../prompts/core/sdd.specify.prompt.md)
+- [Clarify Prompt](../prompts/core/sdd.clarify.prompt.md)
+- [Plan Prompt](../prompts/core/sdd.plan.prompt.md)
+- [Tasks Prompt](../prompts/core/sdd.tasks.prompt.md)
+- [Analyze Prompt](../prompts/core/sdd.analyze.prompt.md)
+- [Implement Prompt](../prompts/core/sdd.implement.prompt.md)
+- [Constitution Prompt](../prompts/core/sdd.constitution.prompt.md)
 
 ### Extension Prompts
-- [Groom Story Prompt](../prompts/extensions/speckit.groom-story.prompt.md)
-- [Review Prompt](../prompts/extensions/speckit.review.prompt.md)
+- [Groom Story Prompt](../prompts/extensions/sdd.groom-story.prompt.md)
+- [Review Prompt](../prompts/extensions/sdd.review.prompt.md)
 
 ## Templates
 

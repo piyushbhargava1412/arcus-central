@@ -1,47 +1,51 @@
-# Speckit-Central Repository Structure
+# APEX SDD Framework - Repository Structure
+
+**APEX** = Team name  
+**SDD** = Spec Driven Development methodology  
+**This repo** = Central distribution point for SDD framework components
 
 ## Complete Folder & File Layout
 
 ```
-otto_speckit-central/
+otto_apex-central/
 ├── README.md                                      # Main project documentation
 ├── CHANGELOG.md                                   # Version history and changes
 ├── CONTRIBUTING.md                                # Contribution guidelines
 ├── FINAL_VERIFICATION.md                          # Setup verification document
 ├── STRUCTURE.md                                   # This file - repository structure
-├── VERSION                                        # Version file (1.0.0)
+├── VERSION                                        # Version file (1.1.0)
 ├── integrate.sh                                   # Core integration script
-├── install-cli.sh                                 # CLI installer (installs speckit-integrate command)
+├── install-cli.sh                                 # CLI installer (installs apex-integrate command)
 ├── .editorconfig                                  # Editor configuration
 ├── .gitignore                                     # Git ignore rules
 │
 ├── agents/                                        # Agent specifications
 │   ├── core/                                      # Core agents (7 files)
-│   │   ├── speckit.specify.agent.md              # Specification creation agent
-│   │   ├── speckit.clarify.agent.md              # Requirement clarification agent
-│   │   ├── speckit.plan.agent.md                 # Project planning agent
-│   │   ├── speckit.tasks.agent.md                # Task decomposition agent
-│   │   ├── speckit.analyze.agent.md              # Technical analysis agent
-│   │   ├── speckit.implement.agent.md            # Implementation guidance agent
-│   │   └── speckit.constitution.agent.md         # Standards & guidelines agent
+│   │   ├── sdd.specify.agent.md              # Specification creation agent
+│   │   ├── sdd.clarify.agent.md              # Requirement clarification agent
+│   │   ├── sdd.plan.agent.md                 # Project planning agent
+│   │   ├── sdd.tasks.agent.md                # Task decomposition agent
+│   │   ├── sdd.analyze.agent.md              # Technical analysis agent
+│   │   ├── sdd.implement.agent.md            # Implementation guidance agent
+│   │   └── sdd.constitution.agent.md         # Standards & guidelines agent
 │   │
 │   └── extensions/                                # Extension agents (2 files)
-│       ├── speckit.groom-story.agent.md          # Story grooming agent
-│       └── speckit.review.agent.md               # Review agent
+│       ├── sdd.groom-story.agent.md          # Story grooming agent
+│       └── sdd.review.agent.md               # Review agent
 │
 ├── prompts/                                       # Agent prompts
 │   ├── core/                                      # Core prompts (7 files)
-│   │   ├── speckit.specify.prompt.md             # Prompt for specify agent
-│   │   ├── speckit.clarify.prompt.md             # Prompt for clarify agent
-│   │   ├── speckit.plan.prompt.md                # Prompt for plan agent
-│   │   ├── speckit.tasks.prompt.md               # Prompt for tasks agent
-│   │   ├── speckit.analyze.prompt.md             # Prompt for analyze agent
-│   │   ├── speckit.implement.prompt.md           # Prompt for implement agent
-│   │   └── speckit.constitution.prompt.md        # Prompt for constitution agent
+│   │   ├── sdd.specify.prompt.md             # Prompt for specify agent
+│   │   ├── sdd.clarify.prompt.md             # Prompt for clarify agent
+│   │   ├── sdd.plan.prompt.md                # Prompt for plan agent
+│   │   ├── sdd.tasks.prompt.md               # Prompt for tasks agent
+│   │   ├── sdd.analyze.prompt.md             # Prompt for analyze agent
+│   │   ├── sdd.implement.prompt.md           # Prompt for implement agent
+│   │   └── sdd.constitution.prompt.md        # Prompt for constitution agent
 │   │
 │   └── extensions/                                # Extension prompts (2 files)
-│       ├── speckit.groom-story.prompt.md         # Prompt for groom-story agent
-│       └── speckit.review.prompt.md              # Prompt for review agent
+│       ├── sdd.groom-story.prompt.md         # Prompt for groom-story agent
+│       └── sdd.review.prompt.md              # Prompt for review agent
 │
 ├── templates/                                     # Reusable templates (7 files)
 │   ├── software-design-document.template.md      # SDD template
@@ -114,8 +118,8 @@ otto_speckit-central/
 |------|---------|
 | `README.md` | Main project documentation |
 | `integrate.sh` | Core integration script (creates symlinks in target repos) |
-| `install-cli.sh` | CLI installer (installs `speckit-integrate` command globally) |
-| `SPECKIT_INTEGRATION_GUIDE.md` | Full integration guide and CLI reference |
+| `install-cli.sh` | CLI installer (installs `apex-integrate` command globally) |
+| `APEX_INTEGRATION_GUIDE.md` | Full integration guide and CLI reference |
 | `STRUCTURE.md` | This file - complete repository structure |
 | `VERSION` | Current version |
 | `.editorconfig` | Editor configuration for consistent formatting |
@@ -124,8 +128,8 @@ otto_speckit-central/
 ## Getting Started
 
 1. Read [README.md](README.md) for project overview and quick start
-2. Run `./install-cli.sh` to install the `speckit-integrate` CLI command
-3. Check [SPECKIT_INTEGRATION_GUIDE.md](APEX_INTEGRATION_GUIDE.md) for full integration details
+2. Run `./install-cli.sh` to install the `apex-integrate` CLI command
+3. Check [APEX_INTEGRATION_GUIDE.md](APEX_INTEGRATION_GUIDE.md) for full integration details
 4. Review [registry/AGENT_REGISTRY.md](registry/AGENT_REGISTRY.md) for available agents
 5. Explore [examples/](examples/) for reference implementations
 

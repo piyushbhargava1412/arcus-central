@@ -1,7 +1,8 @@
 #!/bin/bash
 
-# integrate.sh — Apex Central Integration Script v4.0
+# integrate.sh — APEX SDD Framework Integration Script v4.0
 #
+# Distributes the SDD (Spec Driven Development) framework to target repos.
 # Centralized pull-model integration. Target repos run THIS script
 # to obtain SDD framework files as read-only symlinks.
 #
@@ -36,8 +37,13 @@ show_help() {
     cat <<'HELP'
 Usage: integrate.sh [target-repo-path] [options]
 
-Pulls the SDD framework into a target repository as read-only symlinks.
-Central repo is always auto-detected from the script's own location.
+Distributes the SDD (Spec Driven Development) framework to a target repository
+as read-only symlinks. Central repo is always auto-detected from the script's
+own location.
+
+APEX = Team name
+SDD = Spec Driven Development methodology
+This script = Distribution mechanism
 
 Arguments:
   target-repo-path    Path to integrate (default: current directory)
@@ -110,7 +116,7 @@ fi
 
 # ─── Target repo = first arg, or current working directory ────────
 TARGET_REPO="${POSITIONAL_ARGS[0]:-.}"
-SPECKIT_DIR=".specify"
+SDD_DIR=".specify"
 
 # ─── Resolve absolute paths ──────────────────────────────────────
 if [[ ! -d "$TARGET_REPO" ]]; then
@@ -119,7 +125,7 @@ if [[ ! -d "$TARGET_REPO" ]]; then
 fi
 
 TARGET_REPO=$(cd "$TARGET_REPO" && pwd)
-LOG_FILE="${TARGET_REPO}/speckit-integration.log"
+LOG_FILE="${TARGET_REPO}/sdd-integration.log"
 
 # Guard: don't integrate central into itself
 if [[ "$TARGET_REPO" == "$CENTRAL_REPO" ]]; then
@@ -241,9 +247,9 @@ main() {
     echo ""
     echo "╔══════════════════════════════════════════════════════════╗"
     if [[ "$SYNC_MODE" == true ]]; then
-        echo "║   Speckit Central Integration v4.0 (SYNC)               ║"
+        echo "║   APEX SDD Framework Integration v4.0 (SYNC)            ║"
     else
-        echo "║        Speckit Central Integration v4.0                 ║"
+        echo "║   APEX SDD Framework Integration v4.0                   ║"
     fi
     echo "╚══════════════════════════════════════════════════════════╝"
     echo ""
@@ -276,16 +282,16 @@ main() {
     # PHASE 1: .specify/ — Symlink templates, scripts, instructions
     # ══════════════════════════════════════════════════════════════
     log "Phase 1: .specify/ directory symlinks..."
-    mkdir -p "$TARGET_REPO/$SPECKIT_DIR"
+    mkdir -p "$TARGET_REPO/$SDD_DIR"
 
-    local SPECKIT_DIRS=("templates" "scripts" "instructions")
-    local speckit_count=0
-    for name in "${SPECKIT_DIRS[@]}"; do
-        if create_dir_symlink "$CENTRAL_REPO/$name" "$TARGET_REPO/$SPECKIT_DIR/$name"; then
-            ((speckit_count++))
+    local SDD_DIRS=("templates" "scripts" "instructions")
+    local sdd_count=0
+    for name in "${SDD_DIRS[@]}"; do
+        if create_dir_symlink "$CENTRAL_REPO/$name" "$TARGET_REPO/$SDD_DIR/$name"; then
+            ((sdd_count++))
         fi
     done
-    success "Phase 1 done: $speckit_count directory symlinks"
+    success "Phase 1 done: $sdd_count directory symlinks"
     echo ""
 
     # ══════════════════════════════════════════════════════════════
@@ -316,7 +322,7 @@ main() {
     info "$prompt_count prompt symlinks in .github/prompts/"
 
     local copilot_instructions="$TARGET_REPO/.github/copilot-instructions.md"
-    local constitution="$CENTRAL_REPO/agents/core/speckit.constitution.agent.md"
+    local constitution="$CENTRAL_REPO/agents/core/sdd.constitution.agent.md"
     if [[ -f "$constitution" ]]; then
         create_file_symlink "$constitution" "$copilot_instructions"
         info "copilot-instructions.md -> constitution agent"
@@ -334,9 +340,9 @@ main() {
     echo ""
 
     log ".specify/:"
-    for name in "${SPECKIT_DIRS[@]}"; do
-        [[ -L "$TARGET_REPO/$SPECKIT_DIR/$name" ]] && \
-            validate_symlink "$TARGET_REPO/$SPECKIT_DIR/$name" ".specify/$name"
+    for name in "${SDD_DIRS[@]}"; do
+        [[ -L "$TARGET_REPO/$SDD_DIR/$name" ]] && \
+            validate_symlink "$TARGET_REPO/$SDD_DIR/$name" ".specify/$name"
     done
     echo ""
 
@@ -365,13 +371,15 @@ main() {
   "integrated_at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
   "central_repo": "$(basename "$CENTRAL_REPO")",
   "target_repo": "$(basename "$TARGET_REPO")",
+  "framework": "SDD (Spec Driven Development)",
+  "team": "APEX",
   "integration_type": "symlink (read-only source)",
   "flow": "pull (target runs central script)",
-  "framework": {
-    "speckit_dir": "$SPECKIT_DIR",
-    "templates": "$SPECKIT_DIR/templates",
-    "scripts": "$SPECKIT_DIR/scripts",
-    "instructions": "$SPECKIT_DIR/instructions"
+  "sdd_framework": {
+    "sdd_dir": "$SDD_DIR",
+    "templates": "$SDD_DIR/templates",
+    "scripts": "$SDD_DIR/scripts",
+    "instructions": "$SDD_DIR/instructions"
   },
   "ide_discovery": {
     "copilot_instructions": ".github/copilot-instructions.md",
@@ -399,9 +407,9 @@ EOF
     printf "  Type:    READ-ONLY SYMLINKS (pull model)\n"
     echo ""
     echo "  ── .specify/ ──"
-    for name in "${SPECKIT_DIRS[@]}"; do
-        [[ -L "$TARGET_REPO/$SPECKIT_DIR/$name" ]] && \
-            printf "    ${GREEN}✓${NC} .specify/%-15s -> %s\n" "$name" "$(readlink "$TARGET_REPO/$SPECKIT_DIR/$name")"
+    for name in "${SDD_DIRS[@]}"; do
+        [[ -L "$TARGET_REPO/$SDD_DIR/$name" ]] && \
+            printf "    ${GREEN}✓${NC} .specify/%-15s -> %s\n" "$name" "$(readlink "$TARGET_REPO/$SDD_DIR/$name")"
     done
     echo ""
     echo "  ── .github/ (IDE discovery) ──"

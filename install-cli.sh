@@ -1,7 +1,8 @@
 #!/bin/bash
 
-# install-cli.sh — Install the `apex-integrate` command globally
+# install-cli.sh — Install the `apex-integrate` CLI command globally
 #
+# Installs the SDD (Spec Driven Development) framework integration command.
 # Run this ONCE from the central repo. After that, any target repo
 # can simply run: apex-integrate
 #

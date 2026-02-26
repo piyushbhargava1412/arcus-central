@@ -12,7 +12,7 @@ You **MUST** consider the user input before proceeding (if not empty).
 
 ## Outline
 
-The text the user typed after `/speckit.specify` in the triggering message **is** the feature description.
+The text the user typed after `@sdd.specify` in the triggering message **is** the feature description.
 Assume you always have it available in this conversation even if `$ARGUMENTS` appears literally below.
 Do not ask the user to repeat it unless they provided an empty command.
 
@@ -96,7 +96,7 @@ Given that feature description, do this:
       
       ## Notes
       
-      - Items marked incomplete require spec updates before `/speckit.clarify` or `/speckit.plan`
+      - Items marked incomplete require spec updates before `@sdd.clarify` or `@sdd.plan`
       ```
 
    b. **Run Validation Check**: Review the spec against each checklist item:
@@ -154,7 +154,7 @@ Given that feature description, do this:
     - Path to `spec.md`
     - Path to `requirements.md` (if created)
     - Checklist status
-    - Readiness for `/speckit.clarify` or `/speckit.plan`
+    - Readiness for `@sdd.clarify` or `@sdd.plan`
 
 ## General Guidelines
 

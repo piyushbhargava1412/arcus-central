@@ -1,20 +1,22 @@
-# otto_apex-central
+# APEX Central - Spec Driven Development Framework
 
-Central SDD repository providing refined and hardened agents, prompts, templates, scripts, and constitution layers that can be integrated with any repository for spec-driven development.
+Central **SDD (Spec Driven Development)** repository providing refined and hardened agents, prompts, templates, scripts, and constitution layers that can be integrated with any repository for spec-driven development.
+
+**APEX** is the team. **SDD** is the methodology. This framework distributes the SDD methodology to any codebase.
 
 ## Quick Start
 
 ```bash
 # 1. Clone this repo (once per machine)
-git clone <central-repo-url> ~/speckit-central
+git clone <central-repo-url> ~/apex-central
 
 # 2. Install the CLI command (once per machine)
-cd ~/speckit-central
+cd ~/apex-central
 ./install-cli.sh
 
-# 3. Integrate any target repo
+# 3. Integrate any target repo with SDD framework
 cd ~/projects/my-service
-speckit-integrate
+apex-integrate
 ```
 
 ## CLI Commands

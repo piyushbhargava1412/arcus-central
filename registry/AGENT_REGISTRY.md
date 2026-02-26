@@ -4,8 +4,8 @@ This file maintains a registry of all available agents, their capabilities, and 
 
 ## Core Agents
 
-### speckit.specify
-- **File**: `agents/core/speckit.specify.agent.md`
+### sdd.specify
+- **File**: `agents/core/sdd.specify.agent.md`
 - **Purpose**: Create detailed specifications from requirements
 - **Key Capabilities**: 
   - Requirement analysis
@@ -13,8 +13,8 @@ This file maintains a registry of all available agents, their capabilities, and 
   - Documentation generation
   - Requirement clarification
 
-### speckit.clarify
-- **File**: `agents/core/speckit.clarify.agent.md`
+### sdd.clarify
+- **File**: `agents/core/sdd.clarify.agent.md`
 - **Purpose**: Clarify ambiguous requirements and specifications
 - **Key Capabilities**:
   - Requirement clarification
@@ -22,8 +22,8 @@ This file maintains a registry of all available agents, their capabilities, and 
   - Question generation
   - Scope definition
 
-### speckit.plan
-- **File**: `agents/core/speckit.plan.agent.md`
+### sdd.plan
+- **File**: `agents/core/sdd.plan.agent.md`
 - **Purpose**: Create project plans and roadmaps
 - **Key Capabilities**:
   - Project planning
@@ -32,8 +32,8 @@ This file maintains a registry of all available agents, their capabilities, and 
   - Risk planning
   - Milestone definition
 
-### speckit.tasks
-- **File**: `agents/core/speckit.tasks.agent.md`
+### sdd.tasks
+- **File**: `agents/core/sdd.tasks.agent.md`
 - **Purpose**: Break down specifications into actionable tasks
 - **Key Capabilities**:
   - Task decomposition
@@ -42,8 +42,8 @@ This file maintains a registry of all available agents, their capabilities, and 
   - Dependency analysis
   - Task assignment
 
-### speckit.analyze
-- **File**: `agents/core/speckit.analyze.agent.md`
+### sdd.analyze
+- **File**: `agents/core/sdd.analyze.agent.md`
 - **Purpose**: Analyze specifications and identify potential issues
 - **Key Capabilities**:
   - Technical analysis
@@ -52,8 +52,8 @@ This file maintains a registry of all available agents, their capabilities, and 
   - Quality analysis
   - Trade-off analysis
 
-### speckit.implement
-- **File**: `agents/core/speckit.implement.agent.md`
+### sdd.implement
+- **File**: `agents/core/sdd.implement.agent.md`
 - **Purpose**: Provide implementation guidance and recommendations
 - **Key Capabilities**:
   - Implementation planning
@@ -62,8 +62,8 @@ This file maintains a registry of all available agents, their capabilities, and 
   - Design pattern suggestions
   - Best practice enforcement
 
-### speckit.constitution
-- **File**: `agents/core/speckit.constitution.agent.md`
+### sdd.constitution
+- **File**: `agents/core/sdd.constitution.agent.md`
 - **Purpose**: Define and enforce standards and guidelines
 - **Key Capabilities**:
   - Standard definition
@@ -74,8 +74,8 @@ This file maintains a registry of all available agents, their capabilities, and 
 
 ## Extension Agents
 
-### speckit.groom-story
-- **File**: `agents/extensions/speckit.groom-story.agent.md`
+### sdd.groom-story
+- **File**: `agents/extensions/sdd.groom-story.agent.md`
 - **Purpose**: Refine and groom user stories for development
 - **Key Capabilities**:
   - Story refinement
@@ -84,8 +84,8 @@ This file maintains a registry of all available agents, their capabilities, and 
   - Story validation
   - Definition of done
 
-### speckit.review
-- **File**: `agents/extensions/speckit.review.agent.md`
+### sdd.review
+- **File**: `agents/extensions/sdd.review.agent.md`
 - **Purpose**: Review specifications, code, and deliverables
 - **Key Capabilities**:
   - Code review

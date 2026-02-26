@@ -1,11 +1,13 @@
-# Apex Integration Guide
+# APEX SDD Framework Integration Guide
 
 ## Overview
 
-The `apex-integrate` CLI command creates **read-only symlinks** from any target repository into the central Speckit repository. Source files in central are set read-only (`chmod a-w`) so that writing through symlinks is denied.
+**APEX** is the team. **SDD (Spec Driven Development)** is the methodology. This guide shows how to integrate the SDD framework into any target repository.
+
+The `apex-integrate` CLI command creates **read-only symlinks** from any target repository into the central APEX SDD repository. Source files in central are set read-only (`chmod a-w`) so that writing through symlinks is denied.
 
 **One-way flow:** Central → Target. Zero file duplication. Instant updates.  
-**Pull model:** Target repos pull apex — no bootstrap scripts needed in each repo.
+**Pull model:** Target repos pull SDD framework — no bootstrap scripts needed in each repo.
 
 ---
 
@@ -83,7 +85,7 @@ All repos share the same central source files. Update once in central, every lin
 Symlinks on macOS/Linux don't have their own permissions — writes go through to the target file. The script sets all central source files to `chmod a-w` (read-only), so:
 
 ```
-$ echo "test" >> .github/agents/speckit.specify.agent.md
+$ echo "test" >> .github/agents/sdd.specify.agent.md
 zsh: permission denied                  ← symlink → read-only source file
 ```
 
@@ -102,7 +104,7 @@ zsh: permission denied                  ← symlink → read-only source file
 | `.specify/instructions` | Dir symlink | `central/instructions` |
 | `.github/agents/*.agent.md` | File symlinks (flat) | `central/agents/core/` + `extensions/` |
 | `.github/prompts/*.prompt.md` | File symlinks (flat) | `central/prompts/core/` + `extensions/` |
-| `.github/copilot-instructions.md` | File symlink | `central/agents/core/speckit.constitution.agent.md` |
+| `.github/copilot-instructions.md` | File symlink | `central/agents/core/sdd.constitution.agent.md` |
 
 All source files are read-only. All symlinks use relative paths.
 
@@ -114,37 +116,37 @@ All source files are read-only. All symlinks use relative paths.
 <target-repo>/
 │
 ├── .specify/                                       ← Directory symlinks
-│   ├── templates    → ../../speckit-central/templates
-│   ├── scripts      → ../../speckit-central/scripts
-│   └── instructions → ../../speckit-central/instructions
+│   ├── templates    → ../../apex-central/templates
+│   ├── scripts      → ../../apex-central/scripts
+│   └── instructions → ../../apex-central/instructions
 │
 ├── .github/
 │   ├── copilot-instructions.md                    → constitution agent
-│   ├── agents/                                    ← Flat file symlinks
-│   │   ├── speckit.analyze.agent.md
-│   │   ├── speckit.clarify.agent.md
-│   │   ├── speckit.constitution.agent.md
-│   │   ├── speckit.groom-story.agent.md
-│   │   ├── speckit.implement.agent.md
-│   │   ├── speckit.plan.agent.md
-│   │   ├── speckit.review.agent.md
-│   │   ├── speckit.specify.agent.md
-│   │   └── speckit.tasks.agent.md
-│   ├── prompts/                                   ← Flat file symlinks
-│   │   ├── speckit.analyze.prompt.md
-│   │   ├── speckit.clarify.prompt.md
-│   │   ├── speckit.constitution.prompt.md
-│   │   ├── speckit.groom-story.prompt.md
-│   │   ├── speckit.implement.prompt.md
-│   │   ├── speckit.plan.prompt.md
-│   │   ├── speckit.review.prompt.md
-│   │   ├── speckit.specify.prompt.md
-│   │   └── speckit.tasks.prompt.md
+│   ├── agents/                                    ← Flat file symlinks (SDD agents)
+│   │   ├── sdd.analyze.agent.md
+│   │   ├── sdd.clarify.agent.md
+│   │   ├── sdd.constitution.agent.md
+│   │   ├── sdd.groom-story.agent.md
+│   │   ├── sdd.implement.agent.md
+│   │   ├── sdd.plan.agent.md
+│   │   ├── sdd.review.agent.md
+│   │   ├── sdd.specify.agent.md
+│   │   └── sdd.tasks.agent.md
+│   ├── prompts/                                   ← Flat file symlinks (SDD prompts)
+│   │   ├── sdd.analyze.prompt.md
+│   │   ├── sdd.clarify.prompt.md
+│   │   ├── sdd.constitution.prompt.md
+│   │   ├── sdd.groom-story.prompt.md
+│   │   ├── sdd.implement.prompt.md
+│   │   ├── sdd.plan.prompt.md
+│   │   ├── sdd.review.prompt.md
+│   │   ├── sdd.specify.prompt.md
+│   │   └── sdd.tasks.prompt.md
 │   ├── pull_request_template.md                   ← Existing (untouched)
 │   └── workflows/                                 ← Existing (untouched)
 │
 ├── .specify-metadata.json
-└── speckit-integration.log
+└── sdd-integration.log
 ```
 
 ---
@@ -157,11 +159,13 @@ All source files are read-only. All symlinks use relative paths.
 
 ---
 
-## How Copilot / IntelliJ Discovers apex
+## How Copilot / IDE Discovers SDD Agents
 
-1. **`.github/copilot-instructions.md`** — read automatically as global context
-2. **`.github/agents/*.agent.md`** — appear in the Copilot agent picker (`@speckit.specify`, etc.)
-3. **`.github/prompts/*.prompt.md`** — appear in the Copilot prompt picker
+1. **`.github/copilot-instructions.md`** — read automatically as global context (SDD constitution)
+2. **`.github/agents/*.agent.md`** — appear in the Copilot agent picker (`@sdd.specify`, `@sdd.plan`, etc.)
+3. **`.github/prompts/*.prompt.md`** — available for SDD workflow prompts
+
+The "sdd.*" agent names are the command interface for the SDD methodology.
 
 ---
 
