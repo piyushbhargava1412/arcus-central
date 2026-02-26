@@ -26,7 +26,6 @@
 #   .specify/instructions   → central/instructions
 #   .github/agents/*.md     → central agent files (flat)
 #   .github/prompts/*.md    → central prompt files (flat)
-#   .github/copilot-instructions.md → constitution agent
 #
 # One-way: Central → Target. Writes through symlinks are denied.
 
@@ -76,7 +75,6 @@ What gets created (all read-only symlinks):
     └── instructions → central/instructions
 
   .github/
-    ├── copilot-instructions.md → constitution agent
     ├── agents/*.agent.md       → central agent files (flat)
     └── prompts/*.prompt.md     → central prompt files (flat)
 
@@ -279,6 +277,63 @@ main() {
     echo ""
 
     # ══════════════════════════════════════════════════════════════
+    # PHASE 0.5: Cleanup existing integration (if sync mode)
+    # ══════════════════════════════════════════════════════════════
+    if [[ "$SYNC_MODE" == true ]]; then
+        log "Phase 0.5: Cleaning up existing integration artifacts..."
+        local cleanup_count=0
+
+        # Remove .specify/ symlinks
+        for name in templates scripts instructions; do
+            if [[ -L "$TARGET_REPO/$SDD_DIR/$name" ]] || [[ -e "$TARGET_REPO/$SDD_DIR/$name" ]]; then
+                rm -rf "${TARGET_REPO:?}/${SDD_DIR:?}/$name"
+                ((cleanup_count++))
+                info "Removed: .specify/$name"
+            fi
+        done
+
+        # Remove .github/agents/ symlinks
+        if [[ -d "$TARGET_REPO/.github/agents" ]]; then
+            local agent_files
+            agent_files=$(find "$TARGET_REPO/.github/agents" -type l -name "*.agent.md" 2>/dev/null | wc -l | tr -d ' ')
+            if [[ "$agent_files" -gt 0 ]]; then
+                find "$TARGET_REPO/.github/agents" -type l -name "*.agent.md" -delete
+                cleanup_count=$((cleanup_count + agent_files))
+                info "Removed: $agent_files agent symlinks"
+            fi
+        fi
+
+        # Remove .github/prompts/ symlinks
+        if [[ -d "$TARGET_REPO/.github/prompts" ]]; then
+            local prompt_files
+            prompt_files=$(find "$TARGET_REPO/.github/prompts" -type l -name "*.prompt.md" 2>/dev/null | wc -l | tr -d ' ')
+            if [[ "$prompt_files" -gt 0 ]]; then
+                find "$TARGET_REPO/.github/prompts" -type l -name "*.prompt.md" -delete
+                cleanup_count=$((cleanup_count + prompt_files))
+                info "Removed: $prompt_files prompt symlinks"
+            fi
+        fi
+
+        # Remove legacy copilot-instructions.md (if exists)
+        local copilot_instructions="$TARGET_REPO/.github/copilot-instructions.md"
+        if [[ -L "$copilot_instructions" ]] || [[ -e "$copilot_instructions" ]]; then
+            rm -f "$copilot_instructions"
+            ((cleanup_count++))
+            info "Removed: .github/copilot-instructions.md (legacy)"
+        fi
+
+        # Remove metadata file
+        if [[ -f "$TARGET_REPO/.specify-metadata.json" ]]; then
+            rm -f "$TARGET_REPO/.specify-metadata.json"
+            ((cleanup_count++))
+            info "Removed: .specify-metadata.json"
+        fi
+
+        success "Phase 0.5 done: $cleanup_count items cleaned up"
+        echo ""
+    fi
+
+    # ══════════════════════════════════════════════════════════════
     # PHASE 1: .specify/ — Symlink templates, scripts, instructions
     # ══════════════════════════════════════════════════════════════
     log "Phase 1: .specify/ directory symlinks..."
@@ -321,16 +376,7 @@ main() {
     done < <(find "$CENTRAL_REPO/prompts" -name "*.prompt.md" -print0 2>/dev/null)
     info "$prompt_count prompt symlinks in .github/prompts/"
 
-    local copilot_instructions="$TARGET_REPO/.github/copilot-instructions.md"
-    local constitution="$CENTRAL_REPO/agents/core/sdd.constitution.agent.md"
-    if [[ -f "$constitution" ]]; then
-        create_file_symlink "$constitution" "$copilot_instructions"
-        info "copilot-instructions.md -> constitution agent"
-    else
-        warning "Constitution agent not found: $constitution"
-    fi
-
-    success "Phase 2 done: $agent_count agents, $prompt_count prompts, copilot-instructions"
+    success "Phase 2 done: $agent_count agents, $prompt_count prompts"
     echo ""
 
     # ══════════════════════════════════════════════════════════════
@@ -358,9 +404,6 @@ main() {
     done
     echo ""
 
-    [[ -L "$copilot_instructions" ]] && \
-        validate_symlink "$copilot_instructions" ".github/copilot-instructions.md"
-    echo ""
 
     # ══════════════════════════════════════════════════════════════
     # PHASE 4: Metadata
@@ -382,7 +425,6 @@ main() {
     "instructions": "$SDD_DIR/instructions"
   },
   "ide_discovery": {
-    "copilot_instructions": ".github/copilot-instructions.md",
     "agents_dir": ".github/agents/",
     "prompts_dir": ".github/prompts/",
     "agent_count": $agent_count,
@@ -413,8 +455,6 @@ EOF
     done
     echo ""
     echo "  ── .github/ (IDE discovery) ──"
-    [[ -L "$copilot_instructions" ]] && \
-        printf "    ${GREEN}✓${NC} copilot-instructions.md\n"
     printf "    ${GREEN}✓${NC} agents/   (%d symlinks)\n" "$agent_count"
     printf "    ${GREEN}✓${NC} prompts/  (%d symlinks)\n" "$prompt_count"
     echo ""

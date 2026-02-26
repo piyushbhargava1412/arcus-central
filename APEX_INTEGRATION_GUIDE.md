@@ -104,7 +104,6 @@ zsh: permission denied                  ← symlink → read-only source file
 | `.specify/instructions` | Dir symlink | `central/instructions` |
 | `.github/agents/*.agent.md` | File symlinks (flat) | `central/agents/core/` + `extensions/` |
 | `.github/prompts/*.prompt.md` | File symlinks (flat) | `central/prompts/core/` + `extensions/` |
-| `.github/copilot-instructions.md` | File symlink | `central/agents/core/sdd.constitution.agent.md` |
 
 All source files are read-only. All symlinks use relative paths.
 
@@ -121,7 +120,6 @@ All source files are read-only. All symlinks use relative paths.
 │   └── instructions → ../../apex-central/instructions
 │
 ├── .github/
-│   ├── copilot-instructions.md                    → constitution agent
 │   ├── agents/                                    ← Flat file symlinks (SDD agents)
 │   │   ├── sdd.analyze.agent.md
 │   │   ├── sdd.clarify.agent.md
@@ -161,9 +159,8 @@ All source files are read-only. All symlinks use relative paths.
 
 ## How Copilot / IDE Discovers SDD Agents
 
-1. **`.github/copilot-instructions.md`** — read automatically as global context (SDD constitution)
-2. **`.github/agents/*.agent.md`** — appear in the Copilot agent picker (`@sdd.specify`, `@sdd.plan`, etc.)
-3. **`.github/prompts/*.prompt.md`** — available for SDD workflow prompts
+1. **`.github/agents/*.agent.md`** — appear in the Copilot agent picker (`@sdd.specify`, `@sdd.plan`, etc.)
+2. **`.github/prompts/*.prompt.md`** — available for SDD workflow prompts
 
 The "sdd.*" agent names are the command interface for the SDD methodology.
 
@@ -175,7 +172,7 @@ The "sdd.*" agent names are the command interface for the SDD methodology.
 |-------|--------|
 | **Phase 0** | Sets all central source files read-only (`chmod a-w`) |
 | **Phase 1** | Creates `.specify/` with 3 directory symlinks |
-| **Phase 2** | Creates flat file symlinks in `.github/agents/` and `.github/prompts/` + `copilot-instructions.md` |
+| **Phase 2** | Creates flat file symlinks in `.github/agents/` and `.github/prompts/` |
 | **Phase 3** | Validates every symlink resolves and is read-only |
 | **Phase 4** | Writes `.specify-metadata.json` |
 
