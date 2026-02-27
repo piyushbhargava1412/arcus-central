@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# uninstall.sh — Remove the `apex-integrate` CLI command
+#
+# Removes the globally installed SDD (Spec Driven Development) framework integration command.
+#
+# Usage:
+#   cd otto_apex-central
+#   ./uninstall.sh
+
+set -e
+
+GREEN='\033[0;32m'
+NC='\033[0m'
+
+INSTALL_DIR="/usr/local/bin"
+COMMAND_NAME="apex-integrate"
+
+# ─── Uninstall ────────────────────────────────────────────────────
+if [[ -f "$INSTALL_DIR/$COMMAND_NAME" ]]; then
+    sudo rm -f "$INSTALL_DIR/$COMMAND_NAME"
+    echo -e "${GREEN}✓${NC} '$COMMAND_NAME' removed."
+else
+    echo "Not installed."
+fi
