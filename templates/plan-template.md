@@ -3,7 +3,7 @@
 **Branch**: `[###-feature-name]` | **Date**: [DATE] | **Spec**: [link]
 **Input**: Feature specification from `/specs/[###-feature-name]/spec.md`
 
-**Note**: This template is filled in by the `@sdd.plan` command. See `.specify/templates/commands/plan.md` for the execution workflow.
+**Note**: This template is filled in by the `/sdd.plan` command. See `.specify/templates/commands/plan.md` for the execution workflow.
 
 ## Summary
 
@@ -35,15 +35,16 @@
 
 ```text
 specs/[###-feature]/
-├── plan.md              # This file (@sdd.plan command output)
-├── research.md          # Phase 0 output (@sdd.plan command)
-├── data-model.md        # Phase 1 output (@sdd.plan command)
-├── quickstart.md        # Phase 1 output (@sdd.plan command)
-├── contracts/           # Phase 1 output (@sdd.plan command)
-└── tasks.md             # Phase 2 output (@sdd.tasks command - NOT created by @sdd.plan)
+├── plan.md              # This file (/sdd.plan command output)
+├── research.md          # Phase 0 output (/sdd.plan command)
+├── data-model.md        # Phase 1 output (/sdd.plan command)
+├── quickstart.md        # Phase 1 output (/sdd.plan command)
+├── contracts/           # Phase 1 output (/sdd.plan command)
+└── tasks.md             # Phase 2 output (/sdd.tasks command - NOT created by /sdd.plan)
 ```
 
 ### Source Code (repository root)
+
 <!--
   ACTION REQUIRED: Replace the placeholder tree below with the concrete layout
   for this feature. Delete unused options and expand the chosen structure with
@@ -108,8 +109,8 @@ directories captured above]
 
 ## Key Design Decisions
 
-| Decision | Rationale | Alternative Considered |
-|----------|-----------|----------------------|
+| Decision     | Rationale           | Alternative Considered                     |
+| ------------ | ------------------- | ------------------------------------------ |
 | [Decision 1] | [Why this approach] | [What else was evaluated and why rejected] |
 | [Decision 2] | [Why this approach] | [What else was evaluated and why rejected] |
 
@@ -120,6 +121,7 @@ directories captured above]
 [Identify which existing components/services/modules are involved. Describe their responsibilities at a conceptual level.]
 
 Example:
+
 - **Lambda: send-email-lambda** → Orchestrates email sending workflow
 - **Service: SES Integration** → Handles communication with AWS SES
 - **Data Store: DynamoDB** → Persists delivery status (if applicable)
@@ -135,18 +137,18 @@ Example:
 [OPTIONAL - Only if new entities or significant schema changes are needed]
 
 - Entity: [Name]
-    - Fields: [list key fields]
-    - Relationships: [describe how it relates to existing entities]
-    - Validation: [any constraints]
+  - Fields: [list key fields]
+  - Relationships: [describe how it relates to existing entities]
+  - Validation: [any constraints]
 
 ### API/Contract Changes
 
 [OPTIONAL - Only if endpoints or message contracts change]
 
 - Endpoint: [HTTP method] `/[path]`
-    - Request: [payload structure]
-    - Response: [payload structure]
-    - Error Cases: [edge cases]
+  - Request: [payload structure]
+  - Response: [payload structure]
+  - Error Cases: [edge cases]
 
 ---
 
@@ -183,6 +185,5 @@ Example:
 [OPTIONAL - Only if design introduces complexity that deviates from constitution]
 
 | Complexity | Why Needed | Simpler Alternative & Why It Won't Work |
-|-----------|-----------|----------------------------------------|
-| [Example] | [Reason] | [What simpler approach was considered] |
-
+| ---------- | ---------- | --------------------------------------- |
+| [Example]  | [Reason]   | [What simpler approach was considered]  |
