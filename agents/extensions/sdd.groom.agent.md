@@ -13,6 +13,13 @@ You **MUST** consider the user input before proceeding (if not empty).
 ## Outline
 
 1. **Setup**: Receive the requirement text from user input.
+Set paths directly without running any commands:
+
+  - `FEATURE_DIR = .apex/groom/`
+  - `SPEC_FILE = FEATURE_DIR/groom.md`
+
+Do NOT run `.apex/scripts/bash/setup-plan.sh`
+Do NOT inspect or infer Git branches
    - Extract core requirement concepts
    - Identify single repository scope
    - Do NOT process cross-repository logic
