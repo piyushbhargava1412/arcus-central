@@ -2,6 +2,91 @@
 description: Transform broad business or technical requirements into structured, implementation-ready user stories within the current repository context.
 ---
 
+## User Input
+
+```text
+$ARGUMENTS
+```
+
+You **MUST** consider the user input before proceeding (if not empty).
+
+## Outline
+
+The text the user typed after `/sdd.groom` in the triggering message **is** the requirement.
+Assume you always have it available in this conversation even if `$ARGUMENTS` appears literally below.
+Do not ask the user to repeat it unless they provided an empty command.
+
+Given that requirement, do this:
+
+1. **Derive Story Identifier and Paths (Brownfield Safe)**
+
+    - Extract the JIRA Story ID from the user input (e.g., `BFCO-2156`)
+    - Set paths directly without running any commands:
+        - `STORY_DIR = .apex/stories/<STORY-ID>/`
+        - `STORY_FILE = STORY_DIR/story.md`
+    - If the directory does not exist, create it
+    - **DO NOT** create, switch, inspect, or infer Git branches
+    - **DO NOT** run shell commands or scripts
+
+2. Load `.apex/templates/stories/groom-story-template.md` to understand the required story template structure.
+
+3. Follow this execution flow:
+
+    1. **Validate Input**
+        - Check if input is empty. If so: ERROR "No requirement provided. Please provide a business or technical requirement to groom into a story."
+        - Check if input has at least 20 characters of meaningful content
+        - Verify requirement identifies WHO (user/actor), WHAT (capability), WHY (value)
+        - If input is too vague: Request clarification with specific questions about WHO, WHAT, WHY
+    
+    2. **Verify Single-Repository Context**
+        - If requirement mentions another repository or cross-repo integration: ERROR "This requirement involves integration with another repository. The apex.groom agent operates only within the current repository context. Please clarify which repository this story is for."
+        - If requirement references work across multiple repos: Guide user to submit one requirement per story
+    
+    3. **Parse Requirement Elements**
+        - Extract WHO (user role/actor/system)
+        - Extract WHAT (specific capability/action)
+        - Extract WHY (business value/outcome)
+        - Identify technical context and constraints from requirement
+        - Detect multi-story requirements - if found: Guide decomposition: "This requirement describes multiple distinct stories. Please submit one requirement per story for grooming."
+    
+    4. **Build Story Sections** (All 8 sections are mandatory in this exact order)
+        - **Narrative**: Compose coherent 3-part narrative (As a / I want to / So that)
+        - **Context**: Write 2-5 sentences explaining business motivation and value
+        - **Scope**: Define specific deliverables and boundaries (bulleted list)
+        - **Out of Scope**: Explicitly list what is excluded (bulleted list)
+        - **Assumptions**: Document all assumptions (bulleted list)
+        - **Tech Notes**: Provide technical context and architecture references
+        - **Test Plan**: Outline testing approach and key scenarios
+        - **Acceptance Criteria**: Create minimum 2 scenarios in Given/When/Then format
+    
+    5. **Validate Completeness** (Quality Gate - MANDATORY)
+        - Confirm all 8 sections present and complete
+        - Verify no extra sections added
+        - Check narrative has exactly 3 parts (As a / I want to / So that)
+        - Verify Acceptance Criteria follow Given/When/Then format
+        - Ensure no implementation details present
+        - Verify single-repository context maintained
+        - Check for any empty sections or placeholders
+        - **Rule**: If any check fails, stop and request corrections before output
+
+4. Write the story to `STORY_FILE` using the template structure with all 8 sections.
+
+5. **Stop and report**: Report story ID, STORY_FILE path, and confirmation that story.md was created/updated.
+
+## Key Rules
+
+- Create ONLY story.md (single file)
+- All 8 sections are **mandatory** - no sections can be removed, reordered, or left empty
+- No extra sections may be added
+- Acceptance Criteria must follow Given/When/Then (Gherkin) format
+- No implementation details in any section
+- Focus on WHAT (business capability), not HOW (technical implementation)
+- Narrative and Context written for non-technical stakeholders
+- Tech Notes section is for technical team context only
+- Single repository context only (no cross-repo integration)
+- Use absolute paths
+- Do NOT run shell scripts or commands
+
 ## Purpose
 
 The sdd.groom agent transforms unstructured business or technical requirements into clear, structured user stories that are ready for implementation planning and development. Each story follows a strict, mandatory template format with 8 specific sections, ensuring consistency, clarity, and actionability.
@@ -57,116 +142,6 @@ Every output follows the exact 8-section template:
 
 ---
 
-## How It Works
-
-### Input Requirements
-
-Users provide:
-- **Business requirement**: "We need to allow users to export reports as PDF"
-- **Feature request**: "Add two-factor authentication to login"
-- **Technical need**: "Implement caching layer for API responses"
-
-**Minimum Input Quality**:
-- At least 20 characters of meaningful content
-- Identifies WHO (user/actor), WHAT (capability), WHY (value)
-- Does not reference work in other repositories
-
-### Processing Flow
-
-1. **Validate Input**
-   - Check for empty or vague requirements
-   - Verify single-repository context
-   - Detect multi-story requirements
-   - Request clarification if needed
-
-2. **Parse Requirement**
-   - Extract WHO (user role/actor)
-   - Extract WHAT (capability/action)
-   - Extract WHY (business value)
-   - Identify technical context and constraints
-
-3. **Build Story Sections**
-   - Compose coherent narrative
-   - Write clear context explaining business motivation
-   - Define specific, bounded scope
-   - Explicitly list out-of-scope items
-   - Document all assumptions
-   - Add technical notes with architecture context
-   - Outline testing approach
-   - Create measurable acceptance criteria
-
-4. **Validate Completeness**
-   - Confirm all 8 sections present
-   - Verify no extra sections added
-   - Check format compliance (Given/When/Then)
-   - Ensure no implementation details
-   - Verify single-repository context maintained
-
-5. **Output Story**
-   - Deliver complete, validated story
-   - Ready for implementation planning
-   - No ambiguities or missing information
-
-### Output Format
-
-Every story follows this exact structure with all 8 sections:
-
-```markdown
-# [Story Title]
-
-## Narrative
-
-As a [user role]
-
-I / We want to [action/capability]
-
-So that [business value/outcome]
-
-## Context
-
-[2-5 sentences explaining business motivation and value]
-
-## Scope
-
-- [Specific deliverable 1]
-- [Specific deliverable 2]
-- [Integration points or affected systems]
-
-## Out of Scope
-
-- [Related feature that is excluded]
-- [Alternative approach not taken]
-- [Secondary use case deferred]
-
-## Assumptions
-
-- [Assumption about user behavior]
-- [Assumption about environment/infrastructure]
-- [Assumption about data or dependencies]
-- [Technical constraints or prerequisites]
-
-## Tech Notes
-
-[Technical context, relevant systems, architecture references, integration points, and known constraints]
-
-## Test Plan
-
-[Outline of manual and automated testing approach, key scenarios to test, and acceptance validation method]
-
-## Acceptance Criteria
-
-### Scenario 1: [Clear scenario name]
-Given [initial state/precondition]
-When [user action or system event]
-Then [observable, measurable outcome]
-
-### Scenario 2: [Clear scenario name]
-Given [initial state/precondition]
-When [user action or system event]
-Then [observable, measurable outcome]
-
-[Additional scenarios as needed]
-```
 
 ---
 
