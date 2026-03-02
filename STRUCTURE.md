@@ -20,41 +20,42 @@ otto_apex-central/
 ├── .gitignore                                     # Git ignore rules
 │
 ├── agents/                                        # Agent specifications
-│   ├── core/                                      # Core agents (7 files)
+│   ├── core/                                      # Core agents (6 files)
 │   │   ├── sdd.specify.agent.md              # Specification creation agent
 │   │   ├── sdd.clarify.agent.md              # Requirement clarification agent
 │   │   ├── sdd.plan.agent.md                 # Project planning agent
 │   │   ├── sdd.tasks.agent.md                # Task decomposition agent
 │   │   ├── sdd.analyze.agent.md              # Technical analysis agent
-│   │   ├── sdd.implement.agent.md            # Implementation guidance agent
-│   │   └── sdd.constitution.agent.md         # Standards & guidelines agent
+│   │   └── sdd.implement.agent.md            # Implementation guidance agent
 │   │
-│   └── extensions/                                # Extension agents (2 files)
+│   └── extensions/                                # Extension agents (3 files)
 │       ├── sdd.groom-story.agent.md          # Story grooming agent
+│       ├── sdd.instructions.agent.md         # Instruction architecture agent
 │       └── sdd.review.agent.md               # Review agent
 │
 ├── prompts/                                       # Agent prompts
-│   ├── core/                                      # Core prompts (7 files)
+│   ├── core/                                      # Core prompts (6 files)
 │   │   ├── sdd.specify.prompt.md             # Prompt for specify agent
 │   │   ├── sdd.clarify.prompt.md             # Prompt for clarify agent
 │   │   ├── sdd.plan.prompt.md                # Prompt for plan agent
 │   │   ├── sdd.tasks.prompt.md               # Prompt for tasks agent
 │   │   ├── sdd.analyze.prompt.md             # Prompt for analyze agent
-│   │   ├── sdd.implement.prompt.md           # Prompt for implement agent
-│   │   └── sdd.constitution.prompt.md        # Prompt for constitution agent
+│   │   └── sdd.implement.prompt.md           # Prompt for implement agent
 │   │
-│   └── extensions/                                # Extension prompts (2 files)
+│   └── extensions/                                # Extension prompts (3 files)
 │       ├── sdd.groom-story.prompt.md         # Prompt for groom-story agent
+│       ├── sdd.instructions.prompt.md        # Prompt for instructions agent
 │       └── sdd.review.prompt.md              # Prompt for review agent
 │
-├── templates/                                     # Reusable templates (7 files)
+├── templates/                                     # Reusable templates (8 files)
 │   ├── software-design-document.template.md      # SDD template
 │   ├── user-story.template.md                    # User story template
 │   ├── spec-template.md                          # Specification template
 │   ├── plan-template.md                          # Project plan template
 │   ├── tasks-template.md                         # Task breakdown template
 │   ├── checklist-template.md                     # Checklist template
-│   └── agent-file-template.md                    # Agent file template
+│   ├── agent-file-template.md                    # Agent file template
+│   └── instruction-template.md                   # Instruction architecture template
 │
 ├── instructions/                                  # Best practices & guidelines (5 files)
 │   ├── engineering/
@@ -102,11 +103,11 @@ otto_apex-central/
 
 | Directory | Purpose | File Count | Contents |
 |-----------|---------|-----------|----------|
-| `/agents` | Agent specifications | 9 | 7 core + 2 extension agents |
-| `/prompts` | Agent prompts | 9 | 7 core + 2 extension prompts |
-| `/templates` | Document templates | 7 | Reusable templates (SDD, stories, specs, plans, tasks, checklists, agent templates) |
+| `/agents` | Agent specifications | 9 | 6 core + 3 extension agents |
+| `/prompts` | Agent prompts | 9 | 6 core + 3 extension prompts |
+| `/templates` | Document templates | 8 | Reusable templates (SDD, stories, specs, plans, tasks, checklists, agent templates, instruction architecture) |
 | `/instructions` | Guidelines & best practices | 5 | Engineering, architecture, languages, infrastructure, testing guidelines |
-| `/scripts/bash` | Automation scripts | 8 | Setup, build, test, prerequisites, feature creation, planning, context update, common lib |
+| `/scripts/bash` | Automation scripts | 5 | Setup, build, test, prerequisites, common lib |
 | `/registry` | Central registry | 1 | Complete agent registry with all capabilities |
 | `/examples` | Reference examples | 3 | Orders service, notifications service, outputs documentation |
 | `/docs` | Documentation | 1 | Documentation index and quick links |
@@ -147,9 +148,9 @@ Each agent is guided by prompts and follows guidelines to produce specifications
 | **Total Files** | 43 |
 | **Agents (core + extension)** | 9 |
 | **Prompts (core + extension)** | 9 |
-| **Templates** | 7 |
+| **Templates** | 8 |
 | **Guidelines** | 5 |
-| **Automation Scripts** | 8 |
+| **Automation Scripts** | 5 |
 | **Example Services** | 2 |
 | **Root Configuration Files** | 8 |
 
@@ -160,9 +161,9 @@ Root Level
 ├── Configuration & Documentation (8 files)
 ├── agents/ (9 files)
 ├── prompts/ (9 files)
-├── templates/ (7 files)
+├── templates/ (8 files)
 ├── instructions/ (5 files)
-├── scripts/bash/ (8 files)
+├── scripts/bash/ (5 files)
 ├── registry/ (1 file)
 ├── examples/ (3 files)
 └── docs/ (1 file)
@@ -171,11 +172,11 @@ Root Level
 ## File Organization Summary
 
 - **Documentation**: 8 root files + 1 index = 9 files
-- **Agents**: 9 agent files (7 core + 2 extension)
-- **Prompts**: 9 prompt files (7 core + 2 extension)
-- **Templates**: 7 reusable templates
+- **Agents**: 9 agent files (6 core + 3 extension)
+- **Prompts**: 9 prompt files (6 core + 3 extension)
+- **Templates**: 8 reusable templates
 - **Guidelines**: 5 comprehensive guideline suites
-- **Automation**: 8 bash scripts and utilities
+- **Automation**: 5 bash scripts and utilities
 - **Registry**: 1 central registry
 - **Examples**: 3 example specifications
 

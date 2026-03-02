@@ -62,15 +62,6 @@ This file maintains a registry of all available agents, their capabilities, and 
   - Design pattern suggestions
   - Best practice enforcement
 
-### sdd.constitution
-- **File**: `agents/core/sdd.constitution.agent.md`
-- **Purpose**: Define and enforce standards and guidelines
-- **Key Capabilities**:
-  - Standard definition
-  - Guideline creation
-  - Compliance checking
-  - Policy enforcement
-  - Principle application
 
 ## Extension Agents
 
@@ -93,4 +84,23 @@ This file maintains a registry of all available agents, their capabilities, and 
   - Quality review
   - Compliance review
   - Feedback generation
+
+### sdd.instructions
+- **File**: `agents/extensions/sdd.instructions.agent.md`
+- **Purpose**: Create or update the copilot instruction architecture and ensure all dependent components stay in sync with governance standards
+- **Key Capabilities**:
+  - Repository structure analysis
+  - Architecture style identification
+  - Module and layer mapping
+  - System functionality documentation
+  - Engineering principle definition
+  - Architecture guideline documentation
+  - Infrastructure standards specification
+  - Language & coding convention enforcement
+  - Repository governance definition
+  - Agent behavioral rule enforcement
+  - Cross-reference validation
+  - Sync validation reporting
+  - Amendment tracking (MAJOR/MINOR/PATCH versioning)
+  - Dependent file synchronization
 
