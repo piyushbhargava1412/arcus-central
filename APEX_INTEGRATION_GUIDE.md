@@ -41,11 +41,11 @@ That's it. Works for 1 repo or 100 repos — same single command.
 
 ## CLI Reference
 
-| Command | Description |
-|---------|-------------|
-| `apex-integrate` | Integrate current directory |
+| Command                 | Description                             |
+| ----------------------- | --------------------------------------- |
+| `apex-integrate`        | Integrate current directory             |
 | `apex-integrate --sync` | Re-create all symlinks (re-pull latest) |
-| `apex-integrate --yes` | Skip confirmation prompts (CI/CD mode) |
+| `apex-integrate --yes`  | Skip confirmation prompts (CI/CD mode)  |
 
 ### CI/CD Usage
 
@@ -97,12 +97,12 @@ zsh: permission denied                  ← symlink → read-only source file
 
 ## What Gets Created
 
-| Location | Type | Points To |
-|----------|------|-----------|
-| `.apex/templates` | Dir symlink | `central/templates` |
-| `.apex/scripts` | Dir symlink | `central/scripts` |
-| `.apex/instructions` | Dir symlink | `central/instructions` |
-| `.github/agents/*.agent.md` | File symlinks (flat) | `central/agents/core/` + `extensions/` |
+| Location                      | Type                 | Points To                               |
+| ----------------------------- | -------------------- | --------------------------------------- |
+| `.apex/templates`             | Dir symlink          | `central/templates`                     |
+| `.apex/scripts`               | Dir symlink          | `central/scripts`                       |
+| `.apex/instructions`          | Dir symlink          | `central/instructions`                  |
+| `.github/agents/*.agent.md`   | File symlinks (flat) | `central/agents/core/` + `extensions/`  |
 | `.github/prompts/*.prompt.md` | File symlinks (flat) | `central/prompts/core/` + `extensions/` |
 
 All source files are read-only. All symlinks use relative paths.
@@ -159,22 +159,22 @@ All source files are read-only. All symlinks use relative paths.
 
 ## How Copilot / IDE Discovers SDD Agents
 
-1. **`.github/agents/*.agent.md`** — appear in the Copilot agent picker (`@sdd.specify`, `@sdd.plan`, etc.)
+1. **`.github/agents/*.agent.md`** — appear in the Copilot agent picker (`/sdd.specify`, `/sdd.plan`, etc.)
 2. **`.github/prompts/*.prompt.md`** — available for SDD workflow prompts
 
-The "sdd.*" agent names are the command interface for the SDD methodology.
+The "sdd.\*" agent names are the command interface for the SDD methodology.
 
 ---
 
 ## What the Script Does
 
-| Phase | Action |
-|-------|--------|
-| **Phase 0** | Sets all central source files read-only (`chmod a-w`) |
-| **Phase 1** | Creates `.apex/` with 3 directory symlinks |
+| Phase       | Action                                                                 |
+| ----------- | ---------------------------------------------------------------------- |
+| **Phase 0** | Sets all central source files read-only (`chmod a-w`)                  |
+| **Phase 1** | Creates `.apex/` with 3 directory symlinks                             |
 | **Phase 2** | Creates flat file symlinks in `.github/agents/` and `.github/prompts/` |
-| **Phase 3** | Validates every symlink resolves and is read-only |
-| **Phase 4** | Writes `.apex-metadata.json` |
+| **Phase 3** | Validates every symlink resolves and is read-only                      |
+| **Phase 4** | Writes `.apex-metadata.json`                                           |
 
 ---
 
@@ -186,7 +186,6 @@ The "sdd.*" agent names are the command interface for the SDD methodology.
 cd <apex-central-repo>
 ./install-cli.sh
 ```
-
 
 ### Uninstall
 
