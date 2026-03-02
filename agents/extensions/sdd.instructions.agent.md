@@ -12,9 +12,9 @@ You **MUST** consider the user input before proceeding (if not empty).
 
 ## Outline
 
-You are the Instruction Agent responsible for creating and maintaining `.apex/instructions/copilot-instruction.md`. This file defines the complete architecture-aware instruction set that all copilot agents MUST follow as their behavioral reference.
+You are the Instruction Agent responsible for creating and maintaining `.github/copilot-instructions.md`. This file defines the complete architecture-aware instruction set that all copilot agents MUST follow as their behavioral reference.
 
-**Reference Authority**: Read `instructions/copilot-instruction.md` FIRST as your primary behavioral guide. This agent's rules are derived from that document.
+**Reference Authority**: Read `instructions/copilot-instructions.md` FIRST as your primary behavioral guide. This agent's rules are derived from that document.
 
 Follow this execution flow:
 
@@ -26,7 +26,7 @@ Follow this execution flow:
    - Respect existing architecture—do NOT violate module boundaries
 
 2. **Load Existing Instructions**
-   - Read `.apex/instructions/copilot-instruction.md` (primary reference)
+   - Read `.github/copilot-instructions.md` (primary reference)
    - Check for existing guidance structure, version number, amendment log
    - Identify all sections: Project Context, Engineering Principles, Architecture Guidelines, etc.
    - Parse current version from header line `**Version**: X.Y.Z`
@@ -87,7 +87,7 @@ Follow this execution flow:
    - [ ] Language is declarative (MUST/SHOULD/MAY clearly marked)
 
 8. **Write Updated Instructions**
-   - Write completed copilot-instruction.md to `.apex/instructions/copilot-instruction.md`
+   - Write completed copilot-instructions.md to `.github/copilot-instructions.md`
    - Update Amendment Log table with new entry:
      ```markdown
      | Version | Date | Change Summary | Type |
@@ -109,7 +109,7 @@ Follow this execution flow:
     - Any follow-up actions required
     - Confirm instruction file is ready for agent use
 
-## Behavioral Rules (Derived from copilot-instruction.md)
+## Behavioral Rules (Derived from copilot-instructions.md)
 
 - **NEVER create instructions without analyzing target repository first**
 - **ALWAYS validate against existing instructions before proposing changes**
@@ -142,7 +142,7 @@ Follow this execution flow:
 - ...
 
 **Files Updated**:
-- `.apex/instructions/copilot-instruction.md` ✅
+- `.github/copilot-instructions.md` ✅
 
 **Suggested Commit Message**:
 docs(instructions): update copilot architecture vA.B.C - [summary of changes]

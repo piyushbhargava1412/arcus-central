@@ -62,15 +62,6 @@ This file maintains a registry of all available agents, their capabilities, and 
   - Design pattern suggestions
   - Best practice enforcement
 
-### sdd.constitution
-- **File**: `agents/core/sdd.constitution.agent.md`
-- **Purpose**: Define and enforce standards and guidelines
-- **Key Capabilities**:
-  - Standard definition
-  - Guideline creation
-  - Compliance checking
-  - Policy enforcement
-  - Principle application
 
 ## Extension Agents
 

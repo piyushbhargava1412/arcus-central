@@ -21,10 +21,10 @@ Complete documentation for all SDD agents:
 - [Tasks Agent](../agents/core/sdd.tasks.agent.md) - Break down into tasks
 - [Analyze Agent](../agents/core/sdd.analyze.agent.md) - Technical analysis
 - [Implement Agent](../agents/core/sdd.implement.agent.md) - Implementation guidance
-- [Constitution Agent](../agents/core/sdd.constitution.agent.md) - Standards & guidelines
 
 ### Extension Agents
 - [Groom Story Agent](../agents/extensions/sdd.groom-story.agent.md) - Story refinement
+- [Instructions Agent](../agents/extensions/sdd.instructions.agent.md) - Instruction architecture
 - [Review Agent](../agents/extensions/sdd.review.agent.md) - Code & spec review
 
 ## Prompts
@@ -38,15 +38,15 @@ Prompts used to guide agent behavior:
 - [Tasks Prompt](../prompts/core/sdd.tasks.prompt.md)
 - [Analyze Prompt](../prompts/core/sdd.analyze.prompt.md)
 - [Implement Prompt](../prompts/core/sdd.implement.prompt.md)
-- [Constitution Prompt](../prompts/core/sdd.constitution.prompt.md)
 
 ### Extension Prompts
 - [Groom Story Prompt](../prompts/extensions/sdd.groom-story.prompt.md)
+- [Instructions Prompt](../prompts/extensions/sdd.instructions.prompt.md)
 - [Review Prompt](../prompts/extensions/sdd.review.prompt.md)
 
 ## Templates
 
-Reusable templates for common documents (7 templates):
+Reusable templates for common documents (8 templates):
 
 - [Software Design Document Template](../templates/software-design-document.template.md) - Complete SDD structure
 - [User Story Template](../templates/user-story.template.md) - User story with acceptance criteria
@@ -55,6 +55,7 @@ Reusable templates for common documents (7 templates):
 - [Tasks Template](../templates/tasks-template.md) - Task breakdown and estimation template
 - [Checklist Template](../templates/checklist-template.md) - Reusable checklist template
 - [Agent File Template](../templates/agent-file-template.md) - Template for creating new agents
+- [Instruction Architecture Template](../templates/instruction-template.md) - Copilot instruction architecture template
 
 ## Guidelines
 
