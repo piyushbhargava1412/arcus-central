@@ -94,3 +94,22 @@ This file maintains a registry of all available agents, their capabilities, and 
   - Compliance review
   - Feedback generation
 
+### sdd.instructions
+- **File**: `agents/extensions/sdd.instructions.agent.md`
+- **Purpose**: Create or update the copilot instruction architecture and ensure all dependent components stay in sync with governance standards
+- **Key Capabilities**:
+  - Repository structure analysis
+  - Architecture style identification
+  - Module and layer mapping
+  - System functionality documentation
+  - Engineering principle definition
+  - Architecture guideline documentation
+  - Infrastructure standards specification
+  - Language & coding convention enforcement
+  - Repository governance definition
+  - Agent behavioral rule enforcement
+  - Cross-reference validation
+  - Sync validation reporting
+  - Amendment tracking (MAJOR/MINOR/PATCH versioning)
+  - Dependent file synchronization
+
