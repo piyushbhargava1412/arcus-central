@@ -123,9 +123,9 @@ All source files are read-only. All symlinks use relative paths.
 │   ├── agents/                                    ← Flat file symlinks (SDD agents)
 │   │   ├── sdd.analyze.agent.md
 │   │   ├── sdd.clarify.agent.md
-│   │   ├── sdd.constitution.agent.md
 │   │   ├── sdd.groom-story.agent.md
 │   │   ├── sdd.implement.agent.md
+│   │   ├── sdd.instructions.agent.md
 │   │   ├── sdd.plan.agent.md
 │   │   ├── sdd.review.agent.md
 │   │   ├── sdd.specify.agent.md
@@ -133,9 +133,9 @@ All source files are read-only. All symlinks use relative paths.
 │   ├── prompts/                                   ← Flat file symlinks (SDD prompts)
 │   │   ├── sdd.analyze.prompt.md
 │   │   ├── sdd.clarify.prompt.md
-│   │   ├── sdd.constitution.prompt.md
 │   │   ├── sdd.groom-story.prompt.md
 │   │   ├── sdd.implement.prompt.md
+│   │   ├── sdd.instructions.prompt.md
 │   │   ├── sdd.plan.prompt.md
 │   │   ├── sdd.review.prompt.md
 │   │   ├── sdd.specify.prompt.md
