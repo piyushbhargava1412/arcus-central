@@ -1,5 +1,5 @@
 ---
-agent: sdd.apex.groom
+agent: sdd.groom
 ---
 
 # Story Grooming Prompt
