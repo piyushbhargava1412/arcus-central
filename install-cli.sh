@@ -8,8 +8,7 @@
 #
 # Usage:
 #   cd otto_apex-central
-#   ./install-cli.sh                  # Install
-#   ./install-cli.sh --uninstall      # Remove
+#   ./install-cli.sh
 
 set -e
 
@@ -22,17 +21,6 @@ NC='\033[0m'
 INSTALL_DIR="/usr/local/bin"
 COMMAND_NAME="apex-integrate"
 CENTRAL_REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
-# ─── Uninstall ────────────────────────────────────────────────────
-if [[ "$1" == "--uninstall" ]]; then
-    if [[ -f "$INSTALL_DIR/$COMMAND_NAME" ]]; then
-        sudo rm -f "$INSTALL_DIR/$COMMAND_NAME"
-        echo -e "${GREEN}✓${NC} '$COMMAND_NAME' removed."
-    else
-        echo "Not installed."
-    fi
-    exit 0
-fi
 
 # ─── Validate ─────────────────────────────────────────────────────
 if [[ ! -f "$CENTRAL_REPO/integrate.sh" ]]; then
