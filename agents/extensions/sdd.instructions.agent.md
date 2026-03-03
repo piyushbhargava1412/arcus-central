@@ -21,14 +21,19 @@ Follow this execution flow:
 1. **Repository Analysis (Golden Rule)**
    - **FIRST**: Check for `.apex-ignore` file in project root
      - If present, parse ignore patterns (gitignore-style syntax)
-     - Exclude matching files/folders from analysis
-     - Common patterns: node_modules/, dist/, .git/, build/, vendor/, etc.
+     - **CRITICAL**: Completely exclude matching files/folders from analysis
+     - **CRITICAL**: Ignored files MUST NOT be mentioned anywhere in copilot-instructions.md
+     - **CRITICAL**: Do NOT list, reference, or document any ignored paths
+     - Common patterns: node_modules/, dist/, .git/, build/, vendor/, .github/agents/, .apex/
    - Analyze the entire target repository structure (if applicable)
      - Apply ignore patterns to filter out excluded paths
-     - Skip analysis of any path matching .apex-ignore patterns
-   - Identify all modules, layers, components, and technology stack
-   - Infer architecture style (monolith, microservices, layered, clean, etc.)
-   - List all implemented features and map them to responsible modules
+     - Treat ignored paths as if they don't exist in the repository
+   - **ONLY document what actually exists** (NEVER guess or assume):
+     - Identify modules, layers, components found in non-ignored paths
+     - Infer architecture style from actual code structure (if code exists)
+     - List implemented features based on actual files (NOT assumptions)
+     - Map features to responsible modules (only if modules exist)
+   - If no codebase found (empty or all-ignored): Document as "No application code found"
    - Respect existing architecture—do NOT violate module boundaries
 
 2. **Load Existing Instructions**
@@ -47,16 +52,21 @@ Follow this execution flow:
      - PATCH: Clarifications, wording fixes, typo corrections, non-semantic refinements
 
 4. **Update Instructions Document**
-   - Fill in or update all sections:
-     - Project Context (repository summary, tech stack, architecture style, key modules)
-     - System Functionalities (list all identified agents, templates, scripts, systems with descriptions)
-     - Engineering Principles (P1 non-negotiable through P3 recommended, each with rules & rationale)
-     - Architecture Guidelines (module boundaries, layering rules, dependency rules, interaction patterns)
-     - Infrastructure Standards (environment separation, configuration, deployment expectations)
-     - Language & Coding Standards (Markdown, Bash, Agent files standards)
-     - Repository Governance (folder responsibilities, registry behavior, cross-module rules, amendment procedures)
+   - **CRITICAL RULE**: Only document what actually exists in non-ignored paths
+   - **NEVER** invent, assume, or speculate about features, modules, or systems
+   - **IF a section has no real data, use "N/A" or "Not applicable" instead of examples**
+   - Fill in or update all sections based on ACTUAL findings:
+     - Project Context (ONLY if real modules/tech stack found; otherwise state "Minimal/No application code")
+     - System Functionalities (ONLY list actually implemented features; if none found, state "No features implemented yet")
+     - Key Modules (ONLY list real folders/modules; if none, omit table or state "No modules defined")
+     - Engineering Principles (user-defined or organization standards; do NOT invent)
+     - Architecture Guidelines (ONLY if actual architecture exists; otherwise state "No architecture defined")
+     - Infrastructure Standards (ONLY if infra code exists; otherwise state "Not applicable")
+     - Language & Coding Standards (based on actual files found; if none, state "No codebase to infer from")
+     - Repository Governance (based on actual folder structure, excluding ignored paths)
      - Agent Behavioral Rules (repository awareness, generation rules for specs/plans/tasks/implementation, mandatory validations, constitution enforcement)
      - Cross-Reference Enforcement (existing instruction files, template dependencies, no duplication/conflicts)
+   - **DO NOT document or reference any files matching .apex-ignore patterns**
    - Ensure NO unexplained bracket tokens `[...]` remain
    - Validate all dates in ISO format YYYY-MM-DD
    - Preserve section hierarchy and structure
@@ -119,6 +129,10 @@ Follow this execution flow:
 
 - **ALWAYS check for .apex-ignore file before analyzing repository structure**
 - **MUST respect .apex-ignore patterns and exclude matching paths from analysis**
+- **CRITICAL: Ignored files/folders MUST NOT appear anywhere in copilot-instructions.md**
+- **CRITICAL: NEVER assume, guess, or invent features that don't exist in actual code**
+- **CRITICAL: If no features found in non-ignored paths, explicitly state "No features" instead of examples**
+- **ONLY document what is actually implemented in non-ignored paths**
 - **NEVER create instructions without analyzing target repository first**
 - **ALWAYS validate against existing instructions before proposing changes**
 - **ALWAYS check cross-references in dependent files**

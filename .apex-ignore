@@ -1,7 +1,19 @@
 # .apex-ignore
 #
-# This file specifies intentionally untracked files/folders that the APEX instructions agent
-# should ignore when analyzing project structure and creating copilot-instructions.md
+# This file specifies files/folders that the APEX instructions agent should COMPLETELY IGNORE
+# when analyzing project structure and creating copilot-instructions.md
+#
+# WHAT "IGNORE" MEANS:
+#   - Files/folders matching these patterns are EXCLUDED from analysis
+#   - They will NOT be mentioned anywhere in copilot-instructions.md
+#   - They will NOT appear in feature lists, module tables, or any documentation
+#   - They are treated as if they don't exist in the repository
+#
+# USE CASES:
+#   - Exclude dependencies (node_modules/, vendor/)
+#   - Exclude build artifacts (dist/, build/, target/)
+#   - Exclude framework/tooling files that aren't your application code
+#   - Exclude symlinked directories (.apex/, .github/agents/)
 #
 # Syntax:
 #   - Lines starting with # are comments
