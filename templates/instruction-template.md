@@ -285,6 +285,20 @@ MUST NOT create circular dependencies:
 - **Architecture Decisions**: [LOCATION] (e.g., `ADR/`, `docs/architecture/`)
 - **Dependency Registry**: [LOCATION] (e.g., `go.mod`, `package.json`, `pom.xml`)
 
+### Analysis Exclusions
+
+**`.apex-ignore` File**: Controls which files/folders are excluded from repository analysis.
+
+- **Location**: Project root (`.apex-ignore`)
+- **Purpose**: Exclude build artifacts, dependencies, and irrelevant paths from structure analysis
+- **Syntax**: Gitignore-style patterns (one per line, # for comments)
+- **Common Exclusions**: 
+  - Dependencies: `node_modules/`, `vendor/`, `venv/`
+  - Build outputs: `dist/`, `build/`, `target/`
+  - VCS metadata: `.git/`, `.svn/`
+  - IDE files: `.vscode/`, `.idea/`
+- **Agent Behavior**: Instructions agent MUST respect .apex-ignore patterns when analyzing repository
+
 ### Amendment Procedure
 
 When updating this instruction file:
@@ -313,9 +327,11 @@ When updating this instruction file:
 **BEFORE** generating any code, specification, or plan:
 
 1. **Read entire repository structure**
-   - Identify all modules, layers, and components
+   - **Check for `.apex-ignore`**: If present, exclude matching patterns from analysis
+   - Identify all modules, layers, and components (respecting ignore patterns)
    - Detect technology stack and existing patterns
    - Understand existing conventions and naming
+   - Skip analysis of paths matching .apex-ignore patterns (e.g., node_modules/, dist/, .git/)
 
 2. **Infer implicit contracts**
    - What does each folder own?
