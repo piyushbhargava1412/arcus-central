@@ -52,20 +52,29 @@ Follow this execution flow:
      - PATCH: Clarifications, wording fixes, typo corrections, non-semantic refinements
 
 4. **Update Instructions Document**
+   - **CRITICAL RULE**: Keep copilot-instructions.md MINIMAL - it's a project-specific index, not documentation
+   - **CRITICAL RULE**: NEVER duplicate content from instruction files - REFERENCE them instead
    - **CRITICAL RULE**: Only document what actually exists in non-ignored paths
+   - **CRITICAL RULE**: DO NOT document framework/tooling (agents, templates, scripts) - only application code
    - **NEVER** invent, assume, or speculate about features, modules, or systems
    - **IF a section has no real data, use "N/A" or "Not applicable" instead of examples**
-   - Fill in or update all sections based on ACTUAL findings:
-     - Project Context (ONLY if real modules/tech stack found; otherwise state "Minimal/No application code")
-     - System Functionalities (ONLY list actually implemented features; if none found, state "No features implemented yet")
-     - Key Modules (ONLY list real folders/modules; if none, omit table or state "No modules defined")
-     - Engineering Principles (user-defined or organization standards; do NOT invent)
-     - Architecture Guidelines (ONLY if actual architecture exists; otherwise state "No architecture defined")
-     - Infrastructure Standards (ONLY if infra code exists; otherwise state "Not applicable")
-     - Language & Coding Standards (based on actual files found; if none, state "No codebase to infer from")
-     - Repository Governance (based on actual folder structure, excluding ignored paths)
-     - Agent Behavioral Rules (repository awareness, generation rules for specs/plans/tasks/implementation, mandatory validations, constitution enforcement)
-     - Cross-Reference Enforcement (existing instruction files, template dependencies, no duplication/conflicts)
+
+   **What to document (project-specific only)**:
+   - Project Context: Repository name, purpose, actual tech stack from non-ignored code
+   - System Functionalities: ONLY application features found in actual code (NOT framework features)
+   - Key Modules: ONLY application modules (NOT .apex/, .github/, or other framework paths)
+
+   **What NOT to document**:
+   - Engineering Principles: DO NOT repeat - just reference `.apex/instructions/engineering/engineering-guidelines.md`
+   - Architecture Guidelines: DO NOT repeat - just reference `.apex/instructions/architecture/architecture-guidelines.md`
+   - Language Standards: DO NOT repeat - just reference `.apex/instructions/languages/language-guidelines.md`
+   - Infrastructure: DO NOT repeat - just reference `.apex/instructions/infra/infrastructure-guidelines.md`
+   - Testing: DO NOT repeat - just reference `.apex/instructions/testing/testing-guidelines.md`
+   - Agents/Templates/Scripts: NEVER document these (they're in .apex-ignore)
+
+   **Agent Behavioral Rules section**:
+   - Keep minimal and focused on how agents should behave with THIS project
+   - Reference instruction files for detailed guidelines
    - **DO NOT document or reference any files matching .apex-ignore patterns**
    - Ensure NO unexplained bracket tokens `[...]` remain
    - Validate all dates in ISO format YYYY-MM-DD
@@ -130,6 +139,9 @@ Follow this execution flow:
 - **ALWAYS check for .apex-ignore file before analyzing repository structure**
 - **MUST respect .apex-ignore patterns and exclude matching paths from analysis**
 - **CRITICAL: Ignored files/folders MUST NOT appear anywhere in copilot-instructions.md**
+- **CRITICAL: NEVER document framework features (agents, templates, scripts) - only application code**
+- **CRITICAL: NEVER duplicate content from instruction files - reference them instead (DRY principle)**
+- **CRITICAL: Keep copilot-instructions.md MINIMAL - it's a lightweight index, not full documentation**
 - **CRITICAL: NEVER assume, guess, or invent features that don't exist in actual code**
 - **CRITICAL: If no features found in non-ignored paths, explicitly state "No features" instead of examples**
 - **ONLY document what is actually implemented in non-ignored paths**
