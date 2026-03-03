@@ -91,6 +91,7 @@ Follow this execution flow:
    - Read `templates/tasks-template.md` → ensure task structure aligns with principles
    - Read `registry/AGENT_REGISTRY.md` → verify all agents listed are accounted for in instructions
    - Flag any conflicts or missing cross-references with "⚠" marker
+   - **CRITICAL**: File existence/status checks belong in the VALIDATION REPORT only, NOT in copilot-instructions.md
 
 6. **Produce Sync Validation Report**
    - Version change: old → new (with bump justification)
@@ -113,6 +114,8 @@ Follow this execution flow:
 
 8. **Write Updated Instructions**
    - Write completed copilot-instructions.md to `.github/copilot-instructions.md`
+   - **CRITICAL**: Do NOT include validation status, file existence tables, or "Pending creation" notices
+   - **CRITICAL**: The file should contain ONLY project-specific content, not meta-information about instruction files
    - Update Amendment Log table with new entry:
      ```markdown
      | Version | Date       | Change Summary | Type                |
@@ -142,6 +145,8 @@ Follow this execution flow:
 - **CRITICAL: NEVER document framework features (agents, templates, scripts) - only application code**
 - **CRITICAL: NEVER duplicate content from instruction files - reference them instead (DRY principle)**
 - **CRITICAL: Keep copilot-instructions.md MINIMAL - it's a lightweight index, not full documentation**
+- **CRITICAL: NEVER add status tables about instruction files (e.g., "Pending creation") to copilot-instructions.md**
+- **CRITICAL: File validation results belong in the validation report output, NOT in copilot-instructions.md**
 - **CRITICAL: NEVER assume, guess, or invent features that don't exist in actual code**
 - **CRITICAL: If no features found in non-ignored paths, explicitly state "No features" instead of examples**
 - **ONLY document what is actually implemented in non-ignored paths**
@@ -157,6 +162,12 @@ Follow this execution flow:
 - **MUST document amendment procedure and governance review expectations**
 
 ## Output Format
+
+<!--
+  CRITICAL: The Sync Validation Report below is OUTPUT to the user as feedback.
+  It is NOT written into the copilot-instructions.md file.
+  The copilot-instructions.md file should only contain project-specific content.
+-->
 
 ```
 ## Sync Validation Report

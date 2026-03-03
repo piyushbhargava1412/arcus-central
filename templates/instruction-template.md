@@ -6,28 +6,28 @@
 
 <!--
   CRITICAL INSTRUCTIONS FOR GENERATING THIS FILE:
-  
+
   This file should be MINIMAL - it's a lightweight project-specific index, not full documentation.
-  
+
   1. RESPECT .apex-ignore:
      - Check for .apex-ignore file in project root
      - COMPLETELY EXCLUDE all matching files/folders from analysis
      - DO NOT mention ignored paths anywhere (especially NOT .apex/, .github/agents/, .github/prompts/)
      - Treat ignored paths as if they don't exist
-  
+
   2. NEVER DUPLICATE CONTENT:
      - DO NOT repeat engineering principles from instruction files
      - DO NOT repeat architecture guidelines from instruction files
      - DO NOT repeat language/testing/infra standards from instruction files
      - REFERENCE these files instead - users will read them directly
      - This avoids violating DRY (Don't Repeat Yourself)
-  
+
   3. DOCUMENT ONLY PROJECT-SPECIFIC CONTENT:
      - Project context (name, purpose, actual tech stack)
      - Application features found in actual code (NOT framework features)
      - Application modules found in actual code (NOT .apex/ or .github/)
      - If no application code exists, state "No application code found"
-  
+
   4. NEVER DOCUMENT FRAMEWORK/TOOLING:
      - DO NOT document agents (they're in .apex-ignore)
      - DO NOT document templates (they're in .apex-ignore)
@@ -78,10 +78,10 @@
 
 OR
 
-| Module          | Purpose   | Location        |
-| --------------- | --------- | --------------- |
-| [MODULE_NAME_1] | [PURPOSE] | [FOLDER_PATH]   |
-| [MODULE_NAME_2] | [PURPOSE] | [FOLDER_PATH]   |
+| Module          | Purpose   | Location      |
+| --------------- | --------- | ------------- |
+| [MODULE_NAME_1] | [PURPOSE] | [FOLDER_PATH] |
+| [MODULE_NAME_2] | [PURPOSE] | [FOLDER_PATH] |
 
 ---
 
@@ -100,11 +100,13 @@ OR
 OR
 
 ### [FEATURE_NAME_1]
+
 - **Location**: [FILE_OR_FOLDER_PATH]
 - **Description**: [WHAT_IT_DOES]
 - **Layer**: [API_SERVICE_DOMAIN_INFRA]
 
 ### [FEATURE_NAME_2]
+
 - **Location**: [FILE_OR_FOLDER_PATH]
 - **Description**: [WHAT_IT_DOES]
 - **Layer**: [API_SERVICE_DOMAIN_INFRA]
@@ -117,6 +119,9 @@ OR
   DO NOT repeat content from instruction files here.
   Instruction files are the source of truth - reference them instead.
   This follows DRY (Don't Repeat Yourself) principle.
+
+  DO NOT add status tables showing whether instruction files exist.
+  Just reference the files - users will see if they exist when they follow the links.
 -->
 
 All engineering principles, architecture guidelines, language standards, testing requirements, and infrastructure patterns are defined in the following instruction files:
@@ -157,18 +162,21 @@ OR
 ## Agent Behavioral Rules
 
 ### Repository Analysis
+
 1. **ALWAYS** check `.apex-ignore` before analyzing repository
 2. **ALWAYS** exclude paths matching `.apex-ignore` patterns
 3. **NEVER** mention ignored paths in any artifacts
 4. **ONLY** document application code (not framework/tooling)
 
 ### Code Generation
+
 1. **READ** architecture guidelines from `.apex/instructions/architecture/` before generating code
 2. **READ** language standards from `.apex/instructions/languages/` before generating code
 3. **VALIDATE** against engineering principles from `.apex/instructions/engineering/`
 4. **RESPECT** existing architecture and module boundaries
 
 ### Quality Assurance
+
 1. **ENFORCE** testing requirements defined in `.apex/instructions/testing/`
 2. **VALIDATE** infrastructure changes against `.apex/instructions/infra/`
 3. **CHECK** cross-references point to valid files
