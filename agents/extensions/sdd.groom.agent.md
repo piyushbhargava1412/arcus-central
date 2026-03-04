@@ -15,6 +15,7 @@ You **MUST** consider the user input before proceeding (if not empty).
 1. **Setup**: Receive the requirement text from user input.
    Set paths directly without running any commands:
   - `FEATURE_DIR = .apex/groom/`
+  - Do not delete any existing files in the groom folder. Simply add a new file inside the groom folder with a name that reflects the requirement.
   - in that groom dir the .md file has to create
    - Extract core requirement concepts
    - Identify single repository scope
