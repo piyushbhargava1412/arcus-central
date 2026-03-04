@@ -4,383 +4,195 @@
 **Last Updated**: [DATE_ISO_FORMAT]  
 **Framework**: [SDD_OR_FRAMEWORK_NAME]
 
+<!--
+  CRITICAL INSTRUCTIONS FOR GENERATING THIS FILE:
+
+  This file should be MINIMAL - it's a lightweight project-specific index, not full documentation.
+
+  1. RESPECT .apex-ignore:
+     - Check for .apex-ignore file in project root
+     - COMPLETELY EXCLUDE all matching files/folders from analysis
+     - DO NOT mention ignored paths anywhere (especially NOT .apex/, .github/agents/, .github/prompts/)
+     - Treat ignored paths as if they don't exist
+
+  2. NEVER DUPLICATE CONTENT:
+     - DO NOT repeat engineering principles from instruction files
+     - DO NOT repeat architecture guidelines from instruction files
+     - DO NOT repeat language/testing/infra standards from instruction files
+     - REFERENCE these files instead - users will read them directly
+     - This avoids violating DRY (Don't Repeat Yourself)
+
+  3. DOCUMENT ONLY PROJECT-SPECIFIC CONTENT:
+     - Project context (name, purpose, actual tech stack)
+     - Application features found in actual code (NOT framework features)
+     - Application modules found in actual code (NOT .apex/ or .github/)
+     - If no application code exists, state "No application code found"
+
+  4. NEVER DOCUMENT FRAMEWORK/TOOLING:
+     - DO NOT document agents (they're in .apex-ignore)
+     - DO NOT document templates (they're in .apex-ignore)
+     - DO NOT document scripts (they're in .apex-ignore)
+     - DO NOT document .apex/ or .github/ directories
+-->
+
 ---
 
 ## Project Context
 
 ### Repository Summary
 
-**[PROJECT_NAME]** is a [PROJECT_DESCRIPTION].
+**[PROJECT_NAME]** is [PROJECT_DESCRIPTION or "a new project with no application code yet"].
 
-**Key Purpose**: [PRIMARY_BUSINESS_OBJECTIVE]
+**Current State**: [e.g., "Initial setup" or "Active development" or "No application code found"]
 
 ### Technology Stack
 
-- **Languages**: [e.g., Python 3.11, TypeScript, Java 17]
-- **Frameworks**: [e.g., FastAPI, React, Spring Boot]
-- **Data Storage**: [e.g., PostgreSQL, MongoDB, DynamoDB or N/A]
-- **Infrastructure**: [e.g., Docker, Kubernetes, AWS, GCP]
-- **Testing Tools**: [e.g., pytest, Jest, JUnit]
-- **Build/Deploy**: [e.g., GitHub Actions, GitLab CI, Jenkins]
+<!--
+  List ONLY technologies found in actual application code (non-ignored paths).
+  If no application code exists, state "No application code to infer from" for each category.
+-->
+
+- **Languages**: [e.g., Python 3.11, TypeScript, Java 17 or "Not yet determined"]
+- **Frameworks**: [e.g., FastAPI, React, Spring Boot or "Not yet determined"]
+- **Data Storage**: [e.g., PostgreSQL, MongoDB, DynamoDB or "Not applicable"]
+- **Infrastructure**: [e.g., Docker, Kubernetes, AWS, GCP or "Not applicable"]
 
 ### Architecture Style
 
-**[ARCHITECTURE_CLASSIFICATION]** (e.g., monolith, microservices, modular monolith, layered, clean, etc.)
-
-**Key Characteristics**:
-- [CHARACTERISTIC_1]
-- [CHARACTERISTIC_2]
-- [CHARACTERISTIC_3]
-
-### Key Modules
-
-| Module | Purpose | Responsibility |
-|--------|---------|-----------------|
-| [MODULE_NAME_1] | [PURPOSE] | [RESPONSIBLE_TEAM] |
-| [MODULE_NAME_2] | [PURPOSE] | [RESPONSIBLE_TEAM] |
-| [MODULE_NAME_3] | [PURPOSE] | [RESPONSIBLE_TEAM] |
-
----
-
-## System Functionalities
+**[ARCHITECTURE_CLASSIFICATION or "No architecture defined yet"]**
 
 <!--
-  ACTION REQUIRED: Identify and document ALL implemented functionalities.
-  For each system/feature, capture:
-  - Name and location (file/folder path)
-  - What it does (description)
-  - Why it exists (responsibility)
-  - Which layer it operates in (API, Service, Domain, Infrastructure, etc.)
-  - Dependencies on other systems
-  
-  Do NOT guess or speculate. List ONLY what is implemented.
+  Only describe architecture if application code exists.
+  Don't assume architecture patterns that aren't implemented.
 -->
 
-### Core Features
-
-#### [FEATURE_NAME_1]
-- **Location**: [FILE_OR_FOLDER_PATH]
-- **Description**: [WHAT_IT_DOES]
-- **Responsibility**: [WHO_OWNS_IT]
-- **Layer**: [API_SERVICE_DOMAIN_INFRA_ETC]
-
-#### [FEATURE_NAME_2]
-- **Location**: [FILE_OR_FOLDER_PATH]
-- **Description**: [WHAT_IT_DOES]
-- **Responsibility**: [WHO_OWNS_IT]
-- **Layer**: [API_SERVICE_DOMAIN_INFRA_ETC]
-
-### Supporting Systems
-
-#### [SYSTEM_NAME]
-- **Location**: [FILE_OR_FOLDER_PATH]
-- **Description**: [WHAT_IT_DOES]
-- **Layer**: [INFRASTRUCTURE_TESTING_DEPLOYMENT_ETC]
-
----
-
-## Engineering Principles
+### Key Application Modules
 
 <!--
-  ACTION REQUIRED: Define the non-negotiable values and constraints of this project.
-  Each principle should have:
-  - A P-level (P1=Non-negotiable, P2=Mandatory, P3=Recommended)
-  - A clear definition
-  - Specific rules (use MUST/SHOULD/MAY)
-  - Rationale explaining why this principle matters
+  CRITICAL: Only list APPLICATION modules that actually exist in non-ignored paths.
+  DO NOT list .apex/, .github/, node_modules/, or any ignored directories.
+  If no application modules found, state "No application modules defined yet".
 -->
 
-### P1 - Non-Negotiable Principles
+[No application modules defined yet]
 
-#### Principle 1: [PRINCIPLE_NAME]
+OR
 
-**Definition**: [CLEAR_DEFINITION]
-
-**Rules**:
-- MUST [RULE_1]
-- MUST [RULE_2]
-- MUST NOT [VIOLATION]
-
-**Rationale**: [WHY_THIS_MATTERS]
+| Module          | Purpose   | Location      |
+| --------------- | --------- | ------------- |
+| [MODULE_NAME_1] | [PURPOSE] | [FOLDER_PATH] |
+| [MODULE_NAME_2] | [PURPOSE] | [FOLDER_PATH] |
 
 ---
 
-#### Principle 2: [PRINCIPLE_NAME]
-
-**Definition**: [CLEAR_DEFINITION]
-
-**Rules**:
-- MUST [RULE_1]
-- MUST NOT [VIOLATION]
-
-**Rationale**: [WHY_THIS_MATTERS]
-
----
-
-### P2 - Mandatory Principles
-
-#### Principle 3: [PRINCIPLE_NAME]
-
-**Definition**: [CLEAR_DEFINITION]
-
-**Rules**:
-- MUST [RULE_1]
-- SHOULD [GUIDANCE]
-
-**Rationale**: [WHY_THIS_MATTERS]
-
----
-
-### P3 - Recommended Principles
-
-#### Principle 4: [PRINCIPLE_NAME]
-
-**Definition**: [CLEAR_DEFINITION]
-
-**Rules**:
-- SHOULD [GUIDANCE]
-- MAY [OPTION]
-
-**Rationale**: [WHY_THIS_MATTERS]
-
----
-
-## Architecture Guidelines
-
-### System Boundaries
+## Application Features
 
 <!--
-  Define the major systems or modules and their boundaries.
-  Use folder structure as the primary organizational principle.
-  Define what each system owns and what it doesn't own.
+  CRITICAL RULES:
+  - ONLY document APPLICATION features that actually exist in code
+  - DO NOT document framework features (agents, templates, scripts)
+  - DO NOT document hypothetical or example features
+  - If NO features found, state "No features implemented yet"
 -->
 
-```
-[PROJECT_ROOT]/
-├── [MODULE_A]/          ← Owns: [RESPONSIBILITY]
-├── [MODULE_B]/          ← Owns: [RESPONSIBILITY]
-├── [MODULE_C]/          ← Owns: [RESPONSIBILITY]
-└── shared/              ← Owns: [SHARED_RESPONSIBILITY]
-```
+[No features implemented yet]
 
-### Module Interaction Rules
+OR
 
-| From | To | Allowed | Reason |
-|------|-----|---------|--------|
-| [MODULE_A] | [MODULE_B] | ✅/❌ | [REASON] |
-| [MODULE_B] | [MODULE_C] | ✅/❌ | [REASON] |
+### [FEATURE_NAME_1]
 
-### Dependency Management Rules
+- **Location**: [FILE_OR_FOLDER_PATH]
+- **Description**: [WHAT_IT_DOES]
+- **Layer**: [API_SERVICE_DOMAIN_INFRA]
 
-- [MODULE_A] MUST NOT depend on [MODULE_B] (forward dependency violation)
-- [MODULE_C] SHOULD depend on [INTERFACE] instead of [IMPLEMENTATION]
-- Circular dependencies MUST NOT exist between [MODULE_X] and [MODULE_Y]
-- All external dependencies MUST be declared in [DEPENDENCY_FILE]
+### [FEATURE_NAME_2]
 
-### Layering Rules
-
-**Layer 1: [LAYER_NAME]** (e.g., API, Presentation)
-- Responsibility: [WHAT]
-- Constraints: [WHAT_NOT]
-
-**Layer 2: [LAYER_NAME]** (e.g., Business Logic, Service)
-- Responsibility: [WHAT]
-- Constraints: [WHAT_NOT]
-
-**Layer 3: [LAYER_NAME]** (e.g., Data Access, Repository)
-- Responsibility: [WHAT]
-- Constraints: [WHAT_NOT]
-
-### No Circular Dependencies
-
-MUST NOT create circular dependencies:
-- [MODULE_A] → [MODULE_B] → [MODULE_A] ❌
-- [SYSTEM_X] → [SYSTEM_Y] → [SYSTEM_Z] → [SYSTEM_X] ❌
+- **Location**: [FILE_OR_FOLDER_PATH]
+- **Description**: [WHAT_IT_DOES]
+- **Layer**: [API_SERVICE_DOMAIN_INFRA]
 
 ---
 
-## Infrastructure Standards
+## Engineering Standards & Guidelines
 
-### Deployment Model
+<!--
+  DO NOT repeat content from instruction files here.
+  Instruction files are the source of truth - reference them instead.
+  This follows DRY (Don't Repeat Yourself) principle.
 
-**Environment Separation**:
+  DO NOT add status tables showing whether instruction files exist.
+  Just reference the files - users will see if they exist when they follow the links.
+-->
 
-| Environment | Purpose | Deployment Strategy |
-|-------------|---------|---------------------|
-| [ENV_NAME] | [PURPOSE] | [HOW] |
-| [ENV_NAME] | [PURPOSE] | [HOW] |
-| [ENV_NAME] | [PURPOSE] | [HOW] |
+All engineering principles, architecture guidelines, language standards, testing requirements, and infrastructure patterns are defined in the following instruction files:
 
-### Configuration Management
+### Core Guidelines
 
-- **Environment Variables**: [WHICH_TOOL] for [WHICH_CONFIGS]
-- **Secrets Storage**: [VAULT/TOOL] for [SENSITIVE_DATA]
-- **Feature Flags**: [TOOL_OR_MECHANISM]
-- **Database Migrations**: [TOOL] (e.g., Flyway, Alembic)
+- **Engineering Principles**: See [.apex/instructions/engineering/engineering-guidelines.md](.apex/instructions/engineering/engineering-guidelines.md)
+  - Code quality standards, testing requirements, code review checklist, documentation expectations, Git workflow
 
-### Deployment Expectations
+- **Architecture Guidelines**: See [.apex/instructions/architecture/architecture-guidelines.md](.apex/instructions/architecture/architecture-guidelines.md)
+  - Architecture principles, patterns, technology decisions, security architecture, disaster recovery
 
-- **Build Pipeline**: [DESCRIPTION]
-- **Test Before Deployment**: [MINIMUM_REQUIRED]
-- **Rollback Strategy**: [HOW]
-- **Health Checks**: [WHAT_TO_MONITOR]
-- **Monitoring/Logging**: [WHICH_TOOLS]
+- **Language & Coding Standards**: See [.apex/instructions/languages/language-guidelines.md](.apex/instructions/languages/language-guidelines.md)
+  - Language-specific conventions for Python, JavaScript/TypeScript, Java, Go, SQL
 
----
+- **Infrastructure Standards**: See [.apex/instructions/infra/infrastructure-guidelines.md](.apex/instructions/infra/infrastructure-guidelines.md)
+  - Environment management, deployment strategies, monitoring, logging, network security
 
-## Language & Code Conventions
+- **Testing Guidelines**: See [.apex/instructions/testing/testing-guidelines.md](.apex/instructions/testing/testing-guidelines.md)
+  - Testing strategy, unit/integration/E2E testing, performance testing, coverage goals
 
-### Naming Conventions
+### Project-Specific Overrides
 
-- **Files**: [CONVENTION] (e.g., snake_case for Python, camelCase for JS)
-- **Classes/Types**: [CONVENTION]
-- **Functions/Methods**: [CONVENTION]
-- **Constants**: [CONVENTION]
-- **Folders**: [CONVENTION]
+<!--
+  Only add content here if this project has SPECIFIC overrides or exceptions
+  to the standards defined in instruction files.
+  If no overrides exist, leave this section empty or state "None".
+-->
 
-### Error Handling Rules
+[None - Follow all standards defined in instruction files]
 
-- MUST catch errors at [WHICH_LAYER]
-- MUST log errors with [REQUIRED_INFORMATION]
-- MUST NOT expose internal details to [EXTERNAL_CONSUMER]
-- Recovery strategy: [HOW_TO_RECOVER]
+OR
 
-### Testing Requirements
-
-- **Unit Tests**: [COVERAGE_TARGET]% coverage required
-- **Integration Tests**: MUST test [WHICH_INTERACTIONS]
-- **End-to-End Tests**: MUST test [WHICH_USER_WORKFLOWS]
-- **Test Framework**: [TOOL] (e.g., pytest, Jest, JUnit)
-- **Test Location**: [FOLDER_CONVENTION]
-
-### Logging Standards
-
-- **Format**: [LOG_FORMAT] (e.g., JSON, plaintext)
-- **Levels**: Use [LOG_LEVEL] for [USE_CASE]
-- **What to Log**: [REQUIRED_INFORMATION]
-- **What NOT to Log**: [SENSITIVE_DATA_NEVER]
-- **Log Retention**: [TIME_PERIOD]
-
----
-
-## Repository Governance
-
-### Folder Responsibilities
-
-| Folder | Owner | Responsibilities | Rules |
-|--------|-------|------------------|-------|
-| [FOLDER_PATH] | [TEAM] | [WHAT_THEY_OWN] | [CONSTRAINTS] |
-| [FOLDER_PATH] | [TEAM] | [WHAT_THEY_OWN] | [CONSTRAINTS] |
-
-### Ownership Boundaries
-
-- **[OWNER_A]** owns all files in [FOLDER_A], responsible for [DECISIONS]
-- **[OWNER_B]** owns all files in [FOLDER_B], responsible for [DECISIONS]
-- Cross-ownership decisions: [HOW_TO_RESOLVE_CONFLICTS]
-
-### Registry/Discovery Rules
-
-- **Service Registry**: [LOCATION_OR_TOOL]
-- **API Documentation**: [LOCATION] (e.g., `/docs`, OpenAPI)
-- **Architecture Decisions**: [LOCATION] (e.g., `ADR/`, `docs/architecture/`)
-- **Dependency Registry**: [LOCATION] (e.g., `go.mod`, `package.json`, `pom.xml`)
-
-### Amendment Procedure
-
-When updating this instruction file:
-
-1. **Identify Change Type**:
-   - MAJOR: Principle removal, fundamental redefinition
-   - MINOR: New principle, expanded guidance, new mandatory rule
-   - PATCH: Clarification, wording fixes, typo corrections
-
-2. **Version Bump**: Update header `**Version**: X.Y.Z`
-
-3. **Date Update**: Set `**Last Updated**: [ISO_DATE]`
-
-4. **Amendment Log**: Add entry to log below
-
-5. **Sync Dependent Files**: Update all referenced files
-
-6. **Communication**: Notify teams of changes
+- [Specific override with justification]
 
 ---
 
 ## Agent Behavioral Rules
 
-### Golden Rule: Repository Awareness First
+### Repository Analysis
 
-**BEFORE** generating any code, specification, or plan:
+1. **ALWAYS** check `.apex-ignore` before analyzing repository
+2. **ALWAYS** exclude paths matching `.apex-ignore` patterns
+3. **NEVER** mention ignored paths in any artifacts
+4. **ONLY** document application code (not framework/tooling)
 
-1. **Read entire repository structure**
-   - Identify all modules, layers, and components
-   - Detect technology stack and existing patterns
-   - Understand existing conventions and naming
+### Code Generation
 
-2. **Infer implicit contracts**
-   - What does each folder own?
-   - What dependencies already exist?
-   - What patterns are being followed?
+1. **READ** architecture guidelines from `.apex/instructions/architecture/` before generating code
+2. **READ** language standards from `.apex/instructions/languages/` before generating code
+3. **VALIDATE** against engineering principles from `.apex/instructions/engineering/`
+4. **RESPECT** existing architecture and module boundaries
 
-3. **Identify functional capabilities**
-   - What features exist (do NOT guess)
-   - Who owns each feature (responsibility)
-   - How do features interact?
+### Quality Assurance
 
-4. **Respect existing architecture**
-   - MUST NOT violate defined boundaries
-   - MUST NOT introduce circular dependencies
-   - MUST NOT break separation of concerns
-   - MUST follow existing naming and patterns
+1. **ENFORCE** testing requirements defined in `.apex/instructions/testing/`
+2. **VALIDATE** infrastructure changes against `.apex/instructions/infra/`
+3. **CHECK** cross-references point to valid files
+4. **ENSURE** no unexplained bracket tokens `[...]` remain in artifacts
 
-### Code Generation Rules
-
-When creating code or specifications:
-
-- **Validate against architecture**: Check boundary compliance before generation
-- **Preserve contracts**: Respect defined module responsibilities
-- **No speculative abstractions**: Only implement what's explicitly needed
-- **Minimal code**: Avoid unnecessary abstractions or comments
-- **Explicit over implicit**: Prefer clear contracts over implicit behavior
-
-### Mandatory Validations
-
-Before finalizing any artifact:
-
-- [ ] No architectural boundaries violated
-- [ ] No circular dependencies introduced
-- [ ] No duplicate logic across modules
-- [ ] All naming conventions followed
-- [ ] All dependencies explicitly declared
-- [ ] No speculative abstractions added
-- [ ] Code is minimal and testable
-
-### Escalation Rules
-
-If a request would:
-- Break module boundaries
-- Introduce circular dependencies
-- Violate the architecture
-- Conflict with existing patterns
-
-**STOP and EXPLAIN**:
-1. The architectural violation
-2. Why it's a problem
-3. Compliant alternatives (if any)
-4. Request confirmation before proceeding
+For detailed agent behavior rules, see instruction files referenced above.
 
 ---
 
 ## Amendment Log
 
-| Version | Date | Change Summary | Type |
-|---------|------|-----------------|------|
-| [VERSION_1] | [DATE_ISO] | [SUMMARY] | [MAJOR/MINOR/PATCH] |
-| [VERSION_2] | [DATE_ISO] | [SUMMARY] | [MAJOR/MINOR/PATCH] |
+| Version     | Date       | Change Summary | Type                |
+| ----------- | ---------- | -------------- | ------------------- |
+| [VERSION_1] | [DATE_ISO] | [SUMMARY]      | [MAJOR/MINOR/PATCH] |
 
 ---
 
-**Document Owner**: [OWNER_NAME_OR_TEAM]  
-**Last Review**: [DATE_ISO]  
+**Maintained by**: `sdd.instructions` agent  
 **Next Review**: [DATE_ISO]
-

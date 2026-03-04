@@ -26,6 +26,7 @@
 #   .apex/instructions   → central/instructions
 #   .github/agents/*.md     → central agent files (flat)
 #   .github/prompts/*.md    → central prompt files (flat)
+#   .apex-ignore            → copied template (if not exists)
 #
 # One-way: Central → Target. Writes through symlinks are denied.
 
@@ -77,6 +78,8 @@ What gets created (all read-only symlinks):
   .github/
     ├── agents/*.agent.md       → central agent files (flat)
     └── prompts/*.prompt.md     → central prompt files (flat)
+
+  .apex-ignore                  → copied template (if not exists)
 
 Protection: Source files in central are set read-only (chmod a-w).
 Writing through symlinks → "permission denied".
@@ -380,6 +383,27 @@ main() {
     echo ""
 
     # ══════════════════════════════════════════════════════════════
+    # PHASE 2.5: Copy .apex-ignore template
+    # ══════════════════════════════════════════════════════════════
+    log "Phase 2.5: .apex-ignore template..."
+    local apex_ignore_source="$CENTRAL_REPO/.apex-ignore"
+    local apex_ignore_target="$TARGET_REPO/.apex-ignore"
+    local apex_ignore_copied=false
+
+    if [[ -f "$apex_ignore_source" ]]; then
+        if [[ -f "$apex_ignore_target" ]]; then
+            info ".apex-ignore already exists in target (keeping existing)"
+        else
+            cp "$apex_ignore_source" "$apex_ignore_target"
+            apex_ignore_copied=true
+            success "Copied .apex-ignore template to target"
+        fi
+    else
+        warning ".apex-ignore not found in central repo (skipping)"
+    fi
+    echo ""
+
+    # ══════════════════════════════════════════════════════════════
     # PHASE 3: Validate
     # ══════════════════════════════════════════════════════════════
     log "Phase 3: Validating symlinks and read-only protection..."
@@ -430,6 +454,10 @@ main() {
     "agent_count": $agent_count,
     "prompt_count": $prompt_count
   },
+  "configuration": {
+    "apex_ignore_file": ".apex-ignore",
+    "apex_ignore_copied": $apex_ignore_copied
+  },
   "version": "4.0"
 }
 EOF
@@ -458,6 +486,11 @@ EOF
     printf "    ${GREEN}✓${NC} agents/   (%d symlinks)\n" "$agent_count"
     printf "    ${GREEN}✓${NC} prompts/  (%d symlinks)\n" "$prompt_count"
     echo ""
+    if [[ "$apex_ignore_copied" == true ]]; then
+        echo "  ── Configuration ──"
+        printf "    ${GREEN}✓${NC} .apex-ignore (template copied)\n"
+        echo ""
+    fi
     echo "  ── How to use ──"
     echo "    Sync:  apex-integrate --sync"
     echo "    Write protection: all source files are read-only"
