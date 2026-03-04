@@ -36,7 +36,14 @@ You **MUST** consider the user input before proceeding (if not empty).
    - Do NOT add extra commentary or sections
    - Do NOT include code blocks
 
-4. **Output**: 
+4. **Story Splitting Decision**:
+   - For complex features, automatically decompose into multiple independent, implementable stories.
+   - Treat each logical action, workflow step, or AC scenario that can stand alone as a candidate for a separate story.
+   - Avoid creating trivial stories (like handling validation errors); include these inside Acceptance Criteria only.
+   - Ensure each story is independently testable and implementable.
+   - For large features, aim for 2–5 stories per feature to maintain granularity.
+   - Stories must remain cohesive; do not split if it breaks logical flow or dependencies.
+5. **Output**: 
    - Generate single Markdown (.md) document
    - If multiple stories: all stories in same file with --- separator
    - Follow template format strictly
