@@ -4,10 +4,15 @@
 
 **APEX** is the team. **SDD (Spec Driven Development)** is the methodology. This guide shows how to integrate the SDD framework into any target repository.
 
-The `apex-integrate` CLI command creates **read-only symlinks** from any target repository into the central APEX SDD repository. Source files in central are set read-only (`chmod a-w`) so that writing through symlinks is denied.
+The integration uses a **hybrid approach**:
 
-**One-way flow:** Central → Target. Zero file duplication. Instant updates.  
-**Pull model:** Target repos pull SDD framework — no bootstrap scripts needed in each repo.
+| What | How | Why |
+|------|-----|-----|
+| `.apex/` (templates, scripts, instructions) | **Symlinks** to central repo | Zero duplication, instant updates |
+| `.github/agents/` and `.github/prompts/` | **Read-only copies** (chmod 444) | IntelliJ agent tab does not follow symlinks |
+| `.apex-ignore` | **Copied once** (never overwritten) | Tells agents which paths to skip during analysis |
+
+**One-way flow:** Central → Target. Pull model — target repos run the central script.
 
 ---
 
@@ -41,11 +46,11 @@ That's it. Works for 1 repo or 100 repos — same single command.
 
 ## CLI Reference
 
-| Command                 | Description                             |
-| ----------------------- | --------------------------------------- |
-| `apex-integrate`        | Integrate current directory             |
-| `apex-integrate --sync` | Re-create all symlinks (re-pull latest) |
-| `apex-integrate --yes`  | Skip confirmation prompts (CI/CD mode)  |
+| Command                 | Description                                       |
+| ----------------------- | ------------------------------------------------- |
+| `apex-integrate`        | Integrate current directory                       |
+| `apex-integrate --sync` | Re-create symlinks and re-copy agent/prompt files |
+| `apex-integrate --yes`  | Skip confirmation prompts (CI/CD mode)            |
 
 ### CI/CD Usage
 
@@ -76,36 +81,35 @@ cd ~/projects/notifications-api  && apex-integrate
 cd ~/projects/frontend-app       && apex-integrate
 ```
 
-All repos share the same central source files. Update once in central, every linked repo sees it instantly.
+`.apex/` symlinks share central files — instant updates.
+`.github/` copies need `apex-integrate --sync` to pull latest agent/prompt changes.
+`.apex-ignore` is copied once on first integration — customize it per project.
 
 ---
 
 ## How Protection Works
 
-Symlinks on macOS/Linux don't have their own permissions — writes go through to the target file. The script sets all central source files to `chmod a-w` (read-only), so:
+**Symlinks (`.apex/`):** Central source files are set `chmod a-w`. Writing through symlinks → `permission denied`.
+
+**Copies (`.github/`):** Agent and prompt files are copied with `chmod 444`. Cannot be edited in any IDE.
 
 ```
 $ echo "test" >> .github/agents/sdd.specify.agent.md
-zsh: permission denied                  ← symlink → read-only source file
+zsh: permission denied
 ```
-
-- Symlinks = zero duplication, changes in central are instantly visible
-- Read-only source = writes through symlinks are denied
-- No copies to drift out of sync
 
 ---
 
 ## What Gets Created
 
-| Location                      | Type                 | Points To                               |
-| ----------------------------- | -------------------- | --------------------------------------- |
-| `.apex/templates`             | Dir symlink          | `central/templates`                     |
-| `.apex/scripts`               | Dir symlink          | `central/scripts`                       |
-| `.apex/instructions`          | Dir symlink          | `central/instructions`                  |
-| `.github/agents/*.agent.md`   | File symlinks (flat) | `central/agents/core/` + `extensions/`  |
-| `.github/prompts/*.prompt.md` | File symlinks (flat) | `central/prompts/core/` + `extensions/` |
-
-All source files are read-only. All symlinks use relative paths.
+| Location                      | Type               | Source                                  | Protection              |
+| ----------------------------- | ------------------ | --------------------------------------- | ----------------------- |
+| `.apex/templates`             | Symlink            | `central/templates`                     | Read-only source (a-w)  |
+| `.apex/scripts`               | Symlink            | `central/scripts`                       | Read-only source (a-w)  |
+| `.apex/instructions`          | Symlink            | `central/instructions`                  | Read-only source (a-w)  |
+| `.github/agents/*.agent.md`   | Copied files       | `central/agents/core/` + `extensions/`  | chmod 444               |
+| `.github/prompts/*.prompt.md` | Copied files       | `central/prompts/core/` + `extensions/` | chmod 444               |
+| `.apex-ignore`                | Copied once        | `central/.apex-ignore`                  | Editable (user-owned)   |
 
 ---
 
@@ -114,15 +118,16 @@ All source files are read-only. All symlinks use relative paths.
 ```
 <target-repo>/
 │
-├── .apex/                                       ← Directory symlinks
+├── .apex/                                       ← Symlinks to central
 │   ├── templates    → ../../apex-central/templates
 │   ├── scripts      → ../../apex-central/scripts
 │   └── instructions → ../../apex-central/instructions
 │
 ├── .github/
-│   ├── agents/                                    ← Flat file symlinks (SDD agents)
+│   ├── agents/                                  ← Read-only copies (chmod 444)
 │   │   ├── sdd.analyze.agent.md
 │   │   ├── sdd.clarify.agent.md
+│   │   ├── sdd.groom.agent.md
 │   │   ├── sdd.groom-story.agent.md
 │   │   ├── sdd.implement.agent.md
 │   │   ├── sdd.instructions.agent.md
@@ -130,22 +135,34 @@ All source files are read-only. All symlinks use relative paths.
 │   │   ├── sdd.review.agent.md
 │   │   ├── sdd.specify.agent.md
 │   │   └── sdd.tasks.agent.md
-│   ├── prompts/                                   ← Flat file symlinks (SDD prompts)
-│   │   ├── sdd.analyze.prompt.md
-│   │   ├── sdd.clarify.prompt.md
-│   │   ├── sdd.groom-story.prompt.md
-│   │   ├── sdd.implement.prompt.md
-│   │   ├── sdd.instructions.prompt.md
-│   │   ├── sdd.plan.prompt.md
-│   │   ├── sdd.review.prompt.md
-│   │   ├── sdd.specify.prompt.md
-│   │   └── sdd.tasks.prompt.md
-│   ├── pull_request_template.md                   ← Existing (untouched)
-│   └── workflows/                                 ← Existing (untouched)
+│   └── prompts/                                 ← Read-only copies (chmod 444)
+│       ├── sdd.analyze.prompt.md
+│       ├── sdd.clarify.prompt.md
+│       ├── sdd.groom.prompt.md
+│       ├── sdd.groom-story.prompt.md
+│       ├── sdd.implement.prompt.md
+│       ├── sdd.instructions.prompt.md
+│       ├── sdd.plan.prompt.md
+│       ├── sdd.review.prompt.md
+│       ├── sdd.specify.prompt.md
+│       └── sdd.tasks.prompt.md
 │
+├── .apex-ignore                                 ← Copied once (editable per project)
 ├── .apex-metadata.json
 └── sdd-integration.log
 ```
+
+---
+
+## .apex-ignore
+
+The `.apex-ignore` file tells the `sdd.instructions` agent which paths to skip when analyzing a target repo's structure. It works like `.gitignore` — one pattern per line.
+
+- Copied from central on **first integration only** — never overwritten
+- Users can **customize** it per project (e.g. add project-specific exclusions)
+- Re-running `apex-integrate --sync` does **not** replace an existing `.apex-ignore`
+
+Default exclusions include: `node_modules/`, `dist/`, `build/`, `.idea/`, `.git/`, `.apex/`, `.github/agents/`, `.github/prompts/`, etc.
 
 ---
 
@@ -153,7 +170,7 @@ All source files are read-only. All symlinks use relative paths.
 
 - macOS or Linux
 - Python 3 (for relative path calculation)
-- Both repositories cloned on the local machine (any location)
+- Both repositories cloned on the local machine
 
 ---
 
@@ -162,19 +179,21 @@ All source files are read-only. All symlinks use relative paths.
 1. **`.github/agents/*.agent.md`** — appear in the Copilot agent picker (`/sdd.specify`, `/sdd.plan`, etc.)
 2. **`.github/prompts/*.prompt.md`** — available for SDD workflow prompts
 
-The "sdd.\*" agent names are the command interface for the SDD methodology.
+These must be real files (not symlinks) for IntelliJ to discover them.
 
 ---
 
 ## What the Script Does
 
-| Phase       | Action                                                                 |
-| ----------- | ---------------------------------------------------------------------- |
-| **Phase 0** | Sets all central source files read-only (`chmod a-w`)                  |
-| **Phase 1** | Creates `.apex/` with 3 directory symlinks                             |
-| **Phase 2** | Creates flat file symlinks in `.github/agents/` and `.github/prompts/` |
-| **Phase 3** | Validates every symlink resolves and is read-only                      |
-| **Phase 4** | Writes `.apex-metadata.json`                                           |
+| Phase         | Action                                                                 |
+| ------------- | ---------------------------------------------------------------------- |
+| **Phase 0**   | Sets all central source files read-only (`chmod a-w`)                  |
+| **Phase 0.5** | (Sync only) Cleans up existing symlinks and copied files               |
+| **Phase 1**   | Creates `.apex/` with 3 directory symlinks                             |
+| **Phase 2**   | Copies agent/prompt files into `.github/` as read-only (chmod 444)     |
+| **Phase 2.5** | Copies `.apex-ignore` template (only if not already present)           |
+| **Phase 3**   | Validates symlinks resolve and copied files are read-only              |
+| **Phase 4**   | Writes `.apex-metadata.json`                                           |
 
 ---
 
@@ -190,8 +209,11 @@ cd <apex-central-repo>
 ### Uninstall
 
 ```bash
-./install-cli.sh --uninstall
+cd <apex-central-repo>
+./uninstall.sh
 ```
+
+This removes the `apex-integrate` command from `/usr/local/bin/`.
 
 ### If central repo moves
 
