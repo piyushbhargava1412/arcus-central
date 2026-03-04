@@ -1,183 +1,166 @@
-# APEX SDD Framework - Repository Structure
+# APEX SDD Framework — Repository Structure
 
 **APEX** = Team name  
 **SDD** = Spec Driven Development methodology  
 **This repo** = Central distribution point for SDD framework components
 
-## Complete Folder & File Layout
+## Repository Layout
 
 ```
 otto_apex-central/
-├── README.md                                      # Main project documentation
-├── CHANGELOG.md                                   # Version history and changes
-├── CONTRIBUTING.md                                # Contribution guidelines
-├── FINAL_VERIFICATION.md                          # Setup verification document
-├── STRUCTURE.md                                   # This file - repository structure
-├── VERSION                                        # Version file (1.1.0)
-├── integrate.sh                                   # Core integration script
-├── install-cli.sh                                 # CLI installer (installs apex-integrate command)
+├── README.md                                      # Project overview
+├── STRUCTURE.md                                   # This file — repo layout & quick links
+├── APEX_INTEGRATION_GUIDE.md                      # Integration guide & CLI reference
+├── VERSION                                        # Current version
+├── integrate.sh                                   # Integration script (symlinks + read-only copies)
+├── install-cli.sh                                 # CLI installer (apex-integrate command)
+├── uninstall.sh                                   # CLI uninstaller (removes apex-integrate)
+├── .apex-ignore                                   # Ignore patterns for sdd.instructions agent
 ├── .editorconfig                                  # Editor configuration
 ├── .gitignore                                     # Git ignore rules
 │
-├── agents/                                        # Agent specifications
+├── agents/                                        # Agent definitions
 │   ├── core/                                      # Core agents (7 files)
-│   │   ├── sdd.specify.agent.md              # Specification creation agent
-│   │   ├── sdd.clarify.agent.md              # Requirement clarification agent
-│   │   ├── sdd.plan.agent.md                 # Project planning agent
-│   │   ├── sdd.tasks.agent.md                # Task decomposition agent
-│   │   ├── sdd.analyze.agent.md              # Technical analysis agent
-│   │   ├── sdd.implement.agent.md            # Implementation guidance agent
-│   │   └── sdd.constitution.agent.md         # Standards & guidelines agent
+│   │   ├── sdd.specify.agent.md                   # Specification creation
+│   │   ├── sdd.clarify.agent.md                   # Requirement clarification
+│   │   ├── sdd.plan.agent.md                      # Project planning
+│   │   ├── sdd.tasks.agent.md                     # Task decomposition
+│   │   ├── sdd.analyze.agent.md                   # Technical analysis
+│   │   ├── sdd.implement.agent.md                 # Implementation guidance
+│   │   └── sdd.groom.agent.md                     # Story grooming (core)
 │   │
-│   └── extensions/                                # Extension agents (2 files)
-│       ├── sdd.groom-story.agent.md          # Story grooming agent
-│       └── sdd.review.agent.md               # Review agent
+│   └── extensions/                                # Extension agents (3 files)
+│       ├── sdd.groom-story.agent.md               # Story grooming (extended)
+│       ├── sdd.instructions.agent.md              # Instruction architecture
+│       └── sdd.review.agent.md                    # Code & spec review
 │
 ├── prompts/                                       # Agent prompts
-│   ├── core/                                      # Core prompts (7 files)
-│   │   ├── sdd.specify.prompt.md             # Prompt for specify agent
-│   │   ├── sdd.clarify.prompt.md             # Prompt for clarify agent
-│   │   ├── sdd.plan.prompt.md                # Prompt for plan agent
-│   │   ├── sdd.tasks.prompt.md               # Prompt for tasks agent
-│   │   ├── sdd.analyze.prompt.md             # Prompt for analyze agent
-│   │   ├── sdd.implement.prompt.md           # Prompt for implement agent
-│   │   └── sdd.constitution.prompt.md        # Prompt for constitution agent
+│   ├── core/                                      # Core prompts (6 files)
+│   │   ├── sdd.specify.prompt.md
+│   │   ├── sdd.clarify.prompt.md
+│   │   ├── sdd.plan.prompt.md
+│   │   ├── sdd.tasks.prompt.md
+│   │   ├── sdd.analyze.prompt.md
+│   │   └── sdd.implement.prompt.md
 │   │
-│   └── extensions/                                # Extension prompts (2 files)
-│       ├── sdd.groom-story.prompt.md         # Prompt for groom-story agent
-│       └── sdd.review.prompt.md              # Prompt for review agent
+│   └── extensions/                                # Extension prompts (4 files)
+│       ├── sdd.groom-story.prompt.md
+│       ├── sdd.groom.prompt.md
+│       ├── sdd.instructions.prompt.md
+│       └── sdd.review.prompt.md
 │
-├── templates/                                     # Reusable templates (7 files)
-│   ├── software-design-document.template.md      # SDD template
-│   ├── user-story.template.md                    # User story template
-│   ├── spec-template.md                          # Specification template
-│   ├── plan-template.md                          # Project plan template
-│   ├── tasks-template.md                         # Task breakdown template
-│   ├── checklist-template.md                     # Checklist template
-│   └── agent-file-template.md                    # Agent file template
+├── templates/                                     # Reusable templates (9 files)
+│   ├── spec-template.md                           # Specification template
+│   ├── plan-template.md                           # Project plan template
+│   ├── tasks-template.md                          # Task breakdown template
+│   ├── checklist-template.md                      # Checklist template
+│   ├── user-story.template.md                     # User story template
+│   ├── software-design-document.template.md       # SDD template
+│   ├── agent-file-template.md                     # New agent template
+│   ├── instruction-template.md                    # Instruction architecture template
+│   └── stories/
+│       └── groom-story-template.md                # Groom story template
 │
-├── instructions/                                  # Best practices & guidelines (5 files)
+├── instructions/                                  # Best practices & guidelines
 │   ├── engineering/
-│   │   └── engineering-guidelines.md             # Code quality, testing, review, documentation
-│   │
+│   │   └── engineering-guidelines.md
 │   ├── architecture/
-│   │   └── architecture-guidelines.md            # Architecture patterns, design, scalability
-│   │
+│   │   └── architecture-guidelines.md
 │   ├── languages/
-│   │   └── language-guidelines.md                # Python, JS/TS, Java, Go, SQL guidelines
-│   │
+│   │   └── language-guidelines.md
 │   ├── infra/
-│   │   └── infrastructure-guidelines.md          # DevOps, deployment, monitoring, security
-│   │
+│   │   └── infrastructure-guidelines.md
 │   └── testing/
-│       └── testing-guidelines.md                 # Test strategies, coverage, CI/CD
+│       └── testing-guidelines.md
 │
-├── scripts/                                       # Automation scripts
-│   ├── bash/                                      # Bash scripts (5 files)
-│   │   ├── check-prerequisites.sh                # Check system requirements
-│   │   ├── create-new-feature.sh                 # Feature creation helper
-│   │   ├── setup-plan.sh                         # Setup planning script
-│   │   ├── update-agent-context.sh               # Update agent context
-│   │   └── common.sh                             # Shared utilities library
+├── scripts/bash/                                  # Automation scripts (5 files)
+│   ├── common.sh                                  # Shared utilities
+│   ├── check-prerequisites.sh                     # System requirements check
+│   ├── create-new-feature.sh                      # Feature creation helper
+│   ├── setup-plan.sh                              # Planning setup
+│   └── update-agent-context.sh                    # Agent context updater
 │
-├── registry/                                      # Agent & resource registry
-│   └── AGENT_REGISTRY.md                         # Complete agent registry with capabilities
+├── registry/
+│   └── AGENT_REGISTRY.md                          # Agent registry & capabilities
 │
-├── examples/                                      # Example specifications & outputs
+├── examples/
 │   ├── sandbox/
-│   │   ├── orders-service/
-│   │   │   └── SPECIFICATION.md                  # Orders service API specification example
-│   │   │
-│   │   └── notifications-service/
-│   │       └── SPECIFICATION.md                  # Notifications service specification example
-│   │
+│   │   ├── orders-service/SPECIFICATION.md
+│   │   └── notifications-service/SPECIFICATION.md
 │   └── outputs/
-│       └── README.md                             # Guide to example outputs and workflows
-│
-└── docs/                                          # Documentation
-    └── INDEX.md                                  # Documentation index & quick links
+│       └── README.md
 ```
+
+---
+
+## Quick Links
+
+### Getting Started
+
+- [README.md](README.md) — Project overview
+- [APEX_INTEGRATION_GUIDE.md](APEX_INTEGRATION_GUIDE.md) — Integration guide & CLI reference
+- [registry/AGENT_REGISTRY.md](registry/AGENT_REGISTRY.md) — All agents & capabilities
+
+### Agents
+
+| Agent | Purpose |
+|-------|---------|
+| [sdd.specify](agents/core/sdd.specify.agent.md) | Create specifications |
+| [sdd.clarify](agents/core/sdd.clarify.agent.md) | Clarify requirements |
+| [sdd.plan](agents/core/sdd.plan.agent.md) | Create project plans |
+| [sdd.tasks](agents/core/sdd.tasks.agent.md) | Break down into tasks |
+| [sdd.analyze](agents/core/sdd.analyze.agent.md) | Technical analysis |
+| [sdd.implement](agents/core/sdd.implement.agent.md) | Implementation guidance |
+| [sdd.groom](agents/core/sdd.groom.agent.md) | Story grooming |
+| [sdd.groom-story](agents/extensions/sdd.groom-story.agent.md) | Story grooming (extended) |
+| [sdd.instructions](agents/extensions/sdd.instructions.agent.md) | Instruction architecture |
+| [sdd.review](agents/extensions/sdd.review.agent.md) | Code & spec review |
+
+### Templates
+
+- [Specification](templates/spec-template.md) · [Plan](templates/plan-template.md) · [Tasks](templates/tasks-template.md) · [Checklist](templates/checklist-template.md)
+- [User Story](templates/user-story.template.md) · [SDD](templates/software-design-document.template.md) · [Agent File](templates/agent-file-template.md)
+- [Instruction Architecture](templates/instruction-template.md) · [Groom Story](templates/stories/groom-story-template.md)
+
+### Guidelines
+
+- [Engineering](instructions/engineering/engineering-guidelines.md) · [Architecture](instructions/architecture/architecture-guidelines.md) · [Languages](instructions/languages/language-guidelines.md) · [Infrastructure](instructions/infra/infrastructure-guidelines.md) · [Testing](instructions/testing/testing-guidelines.md)
+
+### Examples
+
+- [Orders Service](examples/sandbox/orders-service/SPECIFICATION.md) · [Notifications Service](examples/sandbox/notifications-service/SPECIFICATION.md) · [Example Outputs](examples/outputs/README.md)
+
+---
 
 ## Directory Summary
 
-| Directory | Purpose | File Count | Contents |
-|-----------|---------|-----------|----------|
-| `/agents` | Agent specifications | 9 | 7 core + 2 extension agents |
-| `/prompts` | Agent prompts | 9 | 7 core + 2 extension prompts |
-| `/templates` | Document templates | 7 | Reusable templates (SDD, stories, specs, plans, tasks, checklists, agent templates) |
-| `/instructions` | Guidelines & best practices | 5 | Engineering, architecture, languages, infrastructure, testing guidelines |
-| `/scripts/bash` | Automation scripts | 8 | Setup, build, test, prerequisites, feature creation, planning, context update, common lib |
-| `/registry` | Central registry | 1 | Complete agent registry with all capabilities |
-| `/examples` | Reference examples | 3 | Orders service, notifications service, outputs documentation |
-| `/docs` | Documentation | 1 | Documentation index and quick links |
-| **Root** | Project configuration | 8 | README, Changelog, Contributing, Verification, Structure, Version, Editor config, Git ignore |
+| Directory              | Contents                                                      | Files |
+|------------------------|---------------------------------------------------------------|-------|
+| `/agents/core`         | Core SDD agents                                               | 7     |
+| `/agents/extensions`   | Extension agents                                              | 3     |
+| `/prompts/core`        | Core agent prompts                                            | 6     |
+| `/prompts/extensions`  | Extension agent prompts                                       | 4     |
+| `/templates`           | Document templates (+ stories/ subfolder)                     | 9     |
+| `/instructions`        | Engineering, architecture, language, infra, testing guidelines | 5     |
+| `/scripts/bash`        | Automation scripts                                            | 5     |
+| `/registry`            | Agent registry                                                | 1     |
+| `/examples`            | Sandbox specs & output guide                                  | 3     |
 
 ## Key Files
 
 | File | Purpose |
 |------|---------|
-| `README.md` | Main project documentation |
-| `integrate.sh` | Core integration script (creates symlinks in target repos) |
-| `install-cli.sh` | CLI installer (installs `apex-integrate` command globally) |
+| `integrate.sh` | Distributes framework to target repos (symlinks for `.apex/`, read-only copies for `.github/agents/` and `.github/prompts/`) |
+| `install-cli.sh` | Installs `apex-integrate` CLI command globally |
+| `uninstall.sh` | Removes `apex-integrate` CLI command from `/usr/local/bin/` |
+| `.apex-ignore` | Ignore patterns for `sdd.instructions` agent — copied to target repos on first integration |
 | `APEX_INTEGRATION_GUIDE.md` | Full integration guide and CLI reference |
-| `STRUCTURE.md` | This file - complete repository structure |
-| `VERSION` | Current version |
-| `.editorconfig` | Editor configuration for consistent formatting |
-| `.gitignore` | Git ignore patterns |
+| `registry/AGENT_REGISTRY.md` | All agents, their capabilities, and usage |
 
 ## Getting Started
 
-1. Read [README.md](README.md) for project overview and quick start
-2. Run `./install-cli.sh` to install the `apex-integrate` CLI command
-3. Check [APEX_INTEGRATION_GUIDE.md](APEX_INTEGRATION_GUIDE.md) for full integration details
-4. Review [registry/AGENT_REGISTRY.md](registry/AGENT_REGISTRY.md) for available agents
-5. Explore [examples/](examples/) for reference implementations
-
-## Architecture
-
-**Agents** → **Prompts** → **Guidelines** → **Templates** → **Examples** → **Outputs**
-
-Each agent is guided by prompts and follows guidelines to produce specifications and documentation based on templates, with examples showing best practices.
-
-## Repository Statistics
-
-| Metric | Count |
-|--------|-------|
-| **Total Directories** | 16 |
-| **Total Files** | 43 |
-| **Agents (core + extension)** | 9 |
-| **Prompts (core + extension)** | 9 |
-| **Templates** | 7 |
-| **Guidelines** | 5 |
-| **Automation Scripts** | 8 |
-| **Example Services** | 2 |
-| **Root Configuration Files** | 8 |
-
-## Directory Organization
-
-```
-Root Level
-├── Configuration & Documentation (8 files)
-├── agents/ (9 files)
-├── prompts/ (9 files)
-├── templates/ (7 files)
-├── instructions/ (5 files)
-├── scripts/bash/ (8 files)
-├── registry/ (1 file)
-├── examples/ (3 files)
-└── docs/ (1 file)
-```
-
-## File Organization Summary
-
-- **Documentation**: 8 root files + 1 index = 9 files
-- **Agents**: 9 agent files (7 core + 2 extension)
-- **Prompts**: 9 prompt files (7 core + 2 extension)
-- **Templates**: 7 reusable templates
-- **Guidelines**: 5 comprehensive guideline suites
-- **Automation**: 8 bash scripts and utilities
-- **Registry**: 1 central registry
-- **Examples**: 3 example specifications
-
-**Total: 43 files across 16 directories**
-
+1. Read [README.md](README.md)
+2. Run `./install-cli.sh` to install the CLI
+3. See [APEX_INTEGRATION_GUIDE.md](APEX_INTEGRATION_GUIDE.md) for integration details
+4. Run `./uninstall.sh` to remove the CLI when no longer needed
+5. Browse [registry/AGENT_REGISTRY.md](registry/AGENT_REGISTRY.md) for available agents

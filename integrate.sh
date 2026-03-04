@@ -1,33 +1,25 @@
 #!/bin/bash
 
-# integrate.sh — APEX SDD Framework Integration Script v4.0
+# integrate.sh — APEX SDD Framework Integration Script v5.0
 #
 # Distributes the SDD (Spec Driven Development) framework to target repos.
-# Centralized pull-model integration. Target repos run THIS script
-# to obtain SDD framework files as read-only symlinks.
+# Centralized pull-model integration.
 #
-# Recommended: Install the CLI command once, then use it everywhere:
+# Strategy:
+#   .apex/          → SYMLINKS (templates, scripts, instructions)
+#                     Zero duplication, instant central updates.
+#   .github/agents/ → READ-ONLY COPIES of agent files
+#   .github/prompts/→ READ-ONLY COPIES of prompt files
+#                     Copies required because IntelliJ agent tab
+#                     does not follow symlinks for IDE discovery.
+#   .apex-ignore    → COPIED (only if not already present)
+#                     Tells sdd.instructions agent which paths to skip.
 #
-#   cd otto_apex-central && ./install-cli.sh    # one-time install
-#   cd my-project && apex-integrate             # use from any repo
-#   apex-integrate --sync                       # re-link latest
-#   apex-integrate --yes                        # non-interactive
-#
-# Direct usage (without CLI install):
-#
-#   cd my-project
-#   ../otto_apex-central/integrate.sh              # current dir = target
-#   ../otto_apex-central/integrate.sh --sync       # re-link latest
-#   ../otto_apex-central/integrate.sh --yes        # non-interactive
-#
-# Creates (all read-only symlinks):
-#   .apex/templates      → central/templates
-#   .apex/scripts        → central/scripts
-#   .apex/instructions   → central/instructions
-#   .github/agents/*.md     → central agent files (flat)
-#   .github/prompts/*.md    → central prompt files (flat)
-#
-# One-way: Central → Target. Writes through symlinks are denied.
+# Usage:
+#   cd my-project && ../otto_apex-central/integrate.sh
+#   apex-integrate              # if CLI installed
+#   apex-integrate --sync       # re-sync everything
+#   apex-integrate --yes        # non-interactive (CI/CD)
 
 set -e
 
@@ -36,13 +28,12 @@ show_help() {
     cat <<'HELP'
 Usage: integrate.sh [target-repo-path] [options]
 
-Distributes the SDD (Spec Driven Development) framework to a target repository
-as read-only symlinks. Central repo is always auto-detected from the script's
-own location.
+Distributes the SDD framework to a target repository.
 
-APEX = Team name
-SDD = Spec Driven Development methodology
-This script = Distribution mechanism
+  .apex/          → symlinks to central (templates, scripts, instructions)
+  .github/agents/ → read-only copies   (IntelliJ agent tab needs real files)
+  .github/prompts/→ read-only copies   (IntelliJ agent tab needs real files)
+  .apex-ignore    → copied once        (tells agents which paths to skip)
 
 Arguments:
   target-repo-path    Path to integrate (default: current directory)
@@ -50,36 +41,12 @@ Arguments:
 Options:
   -h, --help          Show this help message
   -y, --yes           Skip confirmation prompts (for CI/CD)
-  --sync              Re-create all symlinks (replaces existing)
+  --sync              Re-create symlinks and re-copy agent/prompt files
 
-How target repos use it:
-
-  # Recommended: Install CLI once, use everywhere
-  cd otto_apex-central && ./install-cli.sh     # one-time
-  cd <your-project> && apex-integrate          # integrate
-  apex-integrate --sync                        # re-sync
-  apex-integrate --yes                         # non-interactive (CI/CD)
-
-  # Direct usage (without CLI install)
-  ../otto_apex-central/integrate.sh
-
-  # In your Makefile
-  apex:
-      apex-integrate --yes
-
-What gets created (all read-only symlinks):
-
-  .apex/
-    ├── templates    → central/templates
-    ├── scripts      → central/scripts
-    └── instructions → central/instructions
-
-  .github/
-    ├── agents/*.agent.md       → central agent files (flat)
-    └── prompts/*.prompt.md     → central prompt files (flat)
-
-Protection: Source files in central are set read-only (chmod a-w).
-Writing through symlinks → "permission denied".
+Examples:
+  cd my-project && ../otto_apex-central/integrate.sh
+  apex-integrate --sync
+  apex-integrate --yes
 HELP
     exit 0
 }
@@ -152,7 +119,7 @@ get_relative_path() {
     python3 -c "import os.path; print(os.path.relpath('$2', '$1'))"
 }
 
-# ─── Symlink helpers ──────────────────────────────────────────────
+# ─── Symlink helpers (for .apex/) ─────────────────────────────────
 create_dir_symlink() {
     local target="$1"
     local link_name="$2"
@@ -174,28 +141,6 @@ create_dir_symlink() {
     rel_path=$(get_relative_path "$(dirname "$link_name")" "$target")
     ln -s "$rel_path" "$link_name"
     info "Symlink: $(basename "$link_name") -> $rel_path"
-}
-
-create_file_symlink() {
-    local target="$1"
-    local link_name="$2"
-
-    if [[ ! -f "$target" ]]; then
-        warning "Source file not found: $target"
-        return 1
-    fi
-
-    if [[ -e "$link_name" ]] || [[ -L "$link_name" ]]; then
-        if confirm_or_skip "  $(basename "$link_name") exists. Replace?"; then
-            rm -f "$link_name"
-        else
-            return 1
-        fi
-    fi
-
-    local rel_path
-    rel_path=$(get_relative_path "$(dirname "$link_name")" "$target")
-    ln -s "$rel_path" "$link_name"
 }
 
 validate_symlink() {
@@ -226,6 +171,31 @@ validate_symlink() {
     success "  ✓ $label -> $(readlink "$link_path") (read-only)"
 }
 
+# ─── Copy helpers (for .github/agents & prompts) ─────────────────
+copy_file_readonly() {
+    local src_file="$1"
+    local dst_file="$2"
+
+    if [[ ! -f "$src_file" ]]; then
+        warning "Source file not found: $src_file"
+        return 1
+    fi
+
+    if [[ -e "$dst_file" ]] || [[ -L "$dst_file" ]]; then
+        if confirm_or_skip "  $(basename "$dst_file") exists. Replace?"; then
+            chmod u+w "$dst_file" 2>/dev/null || true
+            rm -f "$dst_file"
+        else
+            return 1
+        fi
+    fi
+
+    mkdir -p "$(dirname "$dst_file")"
+    cp "$src_file" "$dst_file"
+    chmod 444 "$dst_file"
+    return 0
+}
+
 # ─── Validation ───────────────────────────────────────────────────
 validate_central_structure() {
     local central_path="$1"
@@ -245,9 +215,9 @@ main() {
     echo ""
     echo "╔══════════════════════════════════════════════════════════╗"
     if [[ "$SYNC_MODE" == true ]]; then
-        echo "║   APEX SDD Framework Integration v4.0 (SYNC)            ║"
+        echo "║   APEX SDD Framework Integration v5.0 (SYNC)           ║"
     else
-        echo "║   APEX SDD Framework Integration v4.0                   ║"
+        echo "║   APEX SDD Framework Integration v5.0                  ║"
     fi
     echo "╚══════════════════════════════════════════════════════════╝"
     echo ""
@@ -256,7 +226,7 @@ main() {
 
     log "Target:  $(basename "$TARGET_REPO") ($TARGET_REPO)"
     log "Central: $(basename "$CENTRAL_REPO") ($CENTRAL_REPO)"
-    log "Mode:    $(if [[ "$SYNC_MODE" == true ]]; then echo "SYNC (re-link)"; else echo "INTEGRATE (fresh)"; fi)"
+    log "Mode:    $(if [[ "$SYNC_MODE" == true ]]; then echo "SYNC"; else echo "INTEGRATE"; fi)"
     echo ""
 
     validate_central_structure "$CENTRAL_REPO"
@@ -292,34 +262,28 @@ main() {
             fi
         done
 
-        # Remove .github/agents/ symlinks
+        # Remove .github/agents/ files (could be old symlinks or copies)
         if [[ -d "$TARGET_REPO/.github/agents" ]]; then
-            local agent_files
-            agent_files=$(find "$TARGET_REPO/.github/agents" -type l -name "*.agent.md" 2>/dev/null | wc -l | tr -d ' ')
-            if [[ "$agent_files" -gt 0 ]]; then
-                find "$TARGET_REPO/.github/agents" -type l -name "*.agent.md" -delete
-                cleanup_count=$((cleanup_count + agent_files))
-                info "Removed: $agent_files agent symlinks"
+            while IFS= read -r -d '' file; do
+                chmod u+w "$file" 2>/dev/null || true
+                rm -f "$file"
+                ((cleanup_count++))
+            done < <(find "$TARGET_REPO/.github/agents" \( -type f -o -type l \) -name "*.agent.md" -print0 2>/dev/null)
+            if [[ "$cleanup_count" -gt 0 ]]; then
+                info "Removed agent files from .github/agents/"
             fi
         fi
 
-        # Remove .github/prompts/ symlinks
+        # Remove .github/prompts/ files (could be old symlinks or copies)
         if [[ -d "$TARGET_REPO/.github/prompts" ]]; then
-            local prompt_files
-            prompt_files=$(find "$TARGET_REPO/.github/prompts" -type l -name "*.prompt.md" 2>/dev/null | wc -l | tr -d ' ')
-            if [[ "$prompt_files" -gt 0 ]]; then
-                find "$TARGET_REPO/.github/prompts" -type l -name "*.prompt.md" -delete
-                cleanup_count=$((cleanup_count + prompt_files))
-                info "Removed: $prompt_files prompt symlinks"
+            while IFS= read -r -d '' file; do
+                chmod u+w "$file" 2>/dev/null || true
+                rm -f "$file"
+                ((cleanup_count++))
+            done < <(find "$TARGET_REPO/.github/prompts" \( -type f -o -type l \) -name "*.prompt.md" -print0 2>/dev/null)
+            if [[ "$cleanup_count" -gt 0 ]]; then
+                info "Removed prompt files from .github/prompts/"
             fi
-        fi
-
-        # Remove legacy copilot-instructions.md (if exists)
-        local copilot_instructions="$TARGET_REPO/.github/copilot-instructions.md"
-        if [[ -L "$copilot_instructions" ]] || [[ -e "$copilot_instructions" ]]; then
-            rm -f "$copilot_instructions"
-            ((cleanup_count++))
-            info "Removed: .github/copilot-instructions.md (legacy)"
         fi
 
         # Remove metadata file
@@ -334,7 +298,7 @@ main() {
     fi
 
     # ══════════════════════════════════════════════════════════════
-    # PHASE 1: .apex/ — Symlink templates, scripts, instructions
+    # PHASE 1: .apex/ — SYMLINKS for templates, scripts, instructions
     # ══════════════════════════════════════════════════════════════
     log "Phase 1: .apex/ directory symlinks..."
     mkdir -p "$TARGET_REPO/$SDD_DIR"
@@ -350,9 +314,11 @@ main() {
     echo ""
 
     # ══════════════════════════════════════════════════════════════
-    # PHASE 2: .github/ — Flat file symlinks for IDE discovery
+    # PHASE 2: .github/ — READ-ONLY COPIES for IDE agent discovery
+    #          IntelliJ agent tab does NOT follow symlinks,
+    #          so we must copy agent and prompt files here.
     # ══════════════════════════════════════════════════════════════
-    log "Phase 2: .github/ flat file symlinks (IDE Copilot discovery)..."
+    log "Phase 2: .github/ read-only copies (IDE agent discovery)..."
     mkdir -p "$TARGET_REPO/.github/agents"
     mkdir -p "$TARGET_REPO/.github/prompts"
 
@@ -360,50 +326,77 @@ main() {
     while IFS= read -r -d '' agent_file; do
         local filename
         filename=$(basename "$agent_file")
-        if create_file_symlink "$agent_file" "$TARGET_REPO/.github/agents/$filename"; then
+        if copy_file_readonly "$agent_file" "$TARGET_REPO/.github/agents/$filename"; then
             ((agent_count++))
         fi
-    done < <(find "$CENTRAL_REPO/agents" -name "*.agent.md" -print0 2>/dev/null)
-    info "$agent_count agent symlinks in .github/agents/"
+    done < <(find "$CENTRAL_REPO/agents" -name "*.agent.md" -type f -print0 2>/dev/null)
+    info "$agent_count agent files copied to .github/agents/"
 
     local prompt_count=0
     while IFS= read -r -d '' prompt_file; do
         local filename
         filename=$(basename "$prompt_file")
-        if create_file_symlink "$prompt_file" "$TARGET_REPO/.github/prompts/$filename"; then
+        if copy_file_readonly "$prompt_file" "$TARGET_REPO/.github/prompts/$filename"; then
             ((prompt_count++))
         fi
-    done < <(find "$CENTRAL_REPO/prompts" -name "*.prompt.md" -print0 2>/dev/null)
-    info "$prompt_count prompt symlinks in .github/prompts/"
+    done < <(find "$CENTRAL_REPO/prompts" -name "*.prompt.md" -type f -print0 2>/dev/null)
+    info "$prompt_count prompt files copied to .github/prompts/"
 
     success "Phase 2 done: $agent_count agents, $prompt_count prompts"
     echo ""
 
     # ══════════════════════════════════════════════════════════════
-    # PHASE 3: Validate
+    # PHASE 2.5: .apex-ignore — copy template (only if not exists)
+    #            Users may customize this file, so never overwrite.
     # ══════════════════════════════════════════════════════════════
-    log "Phase 3: Validating symlinks and read-only protection..."
+    local apex_ignore_copied=false
+    if [[ -f "$CENTRAL_REPO/.apex-ignore" ]]; then
+        if [[ -f "$TARGET_REPO/.apex-ignore" ]]; then
+            info ".apex-ignore already exists in target — keeping existing (user may have customized)"
+        else
+            cp "$CENTRAL_REPO/.apex-ignore" "$TARGET_REPO/.apex-ignore"
+            apex_ignore_copied=true
+            success "Copied .apex-ignore template to target"
+        fi
+    else
+        warning ".apex-ignore not found in central repo — skipping"
+    fi
     echo ""
 
-    log ".apex/:"
+    # ══════════════════════════════════════════════════════════════
+    # PHASE 3: Validate
+    # ══════════════════════════════════════════════════════════════
+    log "Phase 3: Validating integration..."
+    echo ""
+
+    log ".apex/ (symlinks):"
     for name in "${SDD_DIRS[@]}"; do
         [[ -L "$TARGET_REPO/$SDD_DIR/$name" ]] && \
             validate_symlink "$TARGET_REPO/$SDD_DIR/$name" ".apex/$name"
     done
     echo ""
 
-    log ".github/agents/:"
+    log ".github/agents/ (read-only copies):"
     for f in "$TARGET_REPO/.github/agents"/*.agent.md; do
-        [[ -L "$f" ]] && validate_symlink "$f" ".github/agents/$(basename "$f")"
+        [[ -f "$f" ]] || continue
+        if [[ -w "$f" ]]; then
+            warning "  ⚠ $(basename "$f") (writable!)"
+        else
+            success "  ✓ $(basename "$f") (read-only)"
+        fi
     done
     echo ""
 
-    log ".github/prompts/:"
+    log ".github/prompts/ (read-only copies):"
     for f in "$TARGET_REPO/.github/prompts"/*.prompt.md; do
-        [[ -L "$f" ]] && validate_symlink "$f" ".github/prompts/$(basename "$f")"
+        [[ -f "$f" ]] || continue
+        if [[ -w "$f" ]]; then
+            warning "  ⚠ $(basename "$f") (writable!)"
+        else
+            success "  ✓ $(basename "$f") (read-only)"
+        fi
     done
     echo ""
-
 
     # ══════════════════════════════════════════════════════════════
     # PHASE 4: Metadata
@@ -416,21 +409,27 @@ main() {
   "target_repo": "$(basename "$TARGET_REPO")",
   "framework": "SDD (Spec Driven Development)",
   "team": "APEX",
-  "integration_type": "symlink (read-only source)",
+  "integration_type": "hybrid (symlinks + read-only copies)",
   "flow": "pull (target runs central script)",
   "sdd_framework": {
     "sdd_dir": "$SDD_DIR",
-    "templates": "$SDD_DIR/templates",
-    "scripts": "$SDD_DIR/scripts",
-    "instructions": "$SDD_DIR/instructions"
+    "templates": "$SDD_DIR/templates (symlink)",
+    "scripts": "$SDD_DIR/scripts (symlink)",
+    "instructions": "$SDD_DIR/instructions (symlink)"
   },
   "ide_discovery": {
-    "agents_dir": ".github/agents/",
-    "prompts_dir": ".github/prompts/",
+    "agents_dir": ".github/agents/ (read-only copies)",
+    "prompts_dir": ".github/prompts/ (read-only copies)",
     "agent_count": $agent_count,
-    "prompt_count": $prompt_count
+    "prompt_count": $prompt_count,
+    "reason": "IntelliJ agent tab does not follow symlinks"
   },
-  "version": "4.0"
+  "apex_ignore": {
+    "file": ".apex-ignore",
+    "copied": $apex_ignore_copied,
+    "note": "Tells sdd.instructions agent which paths to skip during analysis"
+  },
+  "version": "5.0"
 }
 EOF
     log "Metadata: .apex-metadata.json"
@@ -446,22 +445,26 @@ EOF
     printf "  Status:  ${GREEN}SUCCESS${NC}\n"
     printf "  Target:  %s\n" "$(basename "$TARGET_REPO")"
     printf "  Central: %s\n" "$(basename "$CENTRAL_REPO")"
-    printf "  Type:    READ-ONLY SYMLINKS (pull model)\n"
     echo ""
-    echo "  ── .apex/ ──"
+    echo "  ── .apex/ (symlinks → central) ──"
     for name in "${SDD_DIRS[@]}"; do
         [[ -L "$TARGET_REPO/$SDD_DIR/$name" ]] && \
             printf "    ${GREEN}✓${NC} .apex/%-15s -> %s\n" "$name" "$(readlink "$TARGET_REPO/$SDD_DIR/$name")"
     done
     echo ""
-    echo "  ── .github/ (IDE discovery) ──"
-    printf "    ${GREEN}✓${NC} agents/   (%d symlinks)\n" "$agent_count"
-    printf "    ${GREEN}✓${NC} prompts/  (%d symlinks)\n" "$prompt_count"
+    echo "  ── .github/ (read-only copies for IDE) ──"
+    printf "    ${GREEN}✓${NC} agents/   (%d files, chmod 444)\n" "$agent_count"
+    printf "    ${GREEN}✓${NC} prompts/  (%d files, chmod 444)\n" "$prompt_count"
     echo ""
+    if [[ "$apex_ignore_copied" == true ]]; then
+        echo "  ── Configuration ──"
+        printf "    ${GREEN}✓${NC} .apex-ignore (template copied)\n"
+        echo ""
+    fi
     echo "  ── How to use ──"
-    echo "    Sync:  apex-integrate --sync"
-    echo "    Write protection: all source files are read-only"
-    echo "    Zero duplication: symlinks point to central"
+    echo "    Sync:    apex-integrate --sync"
+    echo "    .apex/:  symlinks — instant central updates"
+    echo "    .github: read-only copies — run --sync to update"
     echo ""
 
     success "Integration complete."
