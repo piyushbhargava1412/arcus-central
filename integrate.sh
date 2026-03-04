@@ -12,6 +12,8 @@
 #   .github/prompts/→ READ-ONLY COPIES of prompt files
 #                     Copies required because IntelliJ agent tab
 #                     does not follow symlinks for IDE discovery.
+#   .apex-ignore    → COPIED (only if not already present)
+#                     Tells sdd.instructions agent which paths to skip.
 #
 # Usage:
 #   cd my-project && ../otto_apex-central/integrate.sh
@@ -31,6 +33,7 @@ Distributes the SDD framework to a target repository.
   .apex/          → symlinks to central (templates, scripts, instructions)
   .github/agents/ → read-only copies   (IntelliJ agent tab needs real files)
   .github/prompts/→ read-only copies   (IntelliJ agent tab needs real files)
+  .apex-ignore    → copied once        (tells agents which paths to skip)
 
 Arguments:
   target-repo-path    Path to integrate (default: current directory)
@@ -343,6 +346,24 @@ main() {
     echo ""
 
     # ══════════════════════════════════════════════════════════════
+    # PHASE 2.5: .apex-ignore — copy template (only if not exists)
+    #            Users may customize this file, so never overwrite.
+    # ══════════════════════════════════════════════════════════════
+    local apex_ignore_copied=false
+    if [[ -f "$CENTRAL_REPO/.apex-ignore" ]]; then
+        if [[ -f "$TARGET_REPO/.apex-ignore" ]]; then
+            info ".apex-ignore already exists in target — keeping existing (user may have customized)"
+        else
+            cp "$CENTRAL_REPO/.apex-ignore" "$TARGET_REPO/.apex-ignore"
+            apex_ignore_copied=true
+            success "Copied .apex-ignore template to target"
+        fi
+    else
+        warning ".apex-ignore not found in central repo — skipping"
+    fi
+    echo ""
+
+    # ══════════════════════════════════════════════════════════════
     # PHASE 3: Validate
     # ══════════════════════════════════════════════════════════════
     log "Phase 3: Validating integration..."
@@ -403,6 +424,11 @@ main() {
     "prompt_count": $prompt_count,
     "reason": "IntelliJ agent tab does not follow symlinks"
   },
+  "apex_ignore": {
+    "file": ".apex-ignore",
+    "copied": $apex_ignore_copied,
+    "note": "Tells sdd.instructions agent which paths to skip during analysis"
+  },
   "version": "5.0"
 }
 EOF
@@ -430,6 +456,11 @@ EOF
     printf "    ${GREEN}✓${NC} agents/   (%d files, chmod 444)\n" "$agent_count"
     printf "    ${GREEN}✓${NC} prompts/  (%d files, chmod 444)\n" "$prompt_count"
     echo ""
+    if [[ "$apex_ignore_copied" == true ]]; then
+        echo "  ── Configuration ──"
+        printf "    ${GREEN}✓${NC} .apex-ignore (template copied)\n"
+        echo ""
+    fi
     echo "  ── How to use ──"
     echo "    Sync:    apex-integrate --sync"
     echo "    .apex/:  symlinks — instant central updates"
