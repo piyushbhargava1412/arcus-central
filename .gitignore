@@ -17,3 +17,6 @@ out/
 .gradle/
 .mvn/
 
+.specify
+.github/agents
+.github/prompts
