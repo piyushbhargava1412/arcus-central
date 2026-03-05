@@ -104,3 +104,17 @@ This file maintains a registry of all available agents, their capabilities, and 
   - Amendment tracking (MAJOR/MINOR/PATCH versioning)
   - Dependent file synchronization
 
+### sdd.setup
+- **File**: `agents/extensions/sdd.setup.agent.md`
+- **Purpose**: Generate a professional README.md file for the repository by scanning project structure, identifying technologies, and documenting existing functionality
+- **Key Capabilities**:
+  - Repository structure analysis
+  - Technology stack identification
+  - Feature and capability documentation
+  - Professional README.md generation
+  - Documentation accuracy validation
+  - Project overview creation
+  - Installation instructions documentation
+  - Usage guide generation
+  - Repository structure documentation
+
