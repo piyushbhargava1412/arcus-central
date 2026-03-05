@@ -442,6 +442,48 @@ main() {
     echo ""
 
     # ══════════════════════════════════════════════════════════════
+    # PHASE 2.6: Update .gitignore with APEX integration entries
+    # ══════════════════════════════════════════════════════════════
+    log "Phase 2.6: Updating .gitignore..."
+    local gitignore_file="$TARGET_REPO/.gitignore"
+    local gitignore_updated=false
+
+    # APEX entries to add
+    local apex_entries=(
+        "### APEX Integration ###"
+        ".apex-ignore"
+        ".apex-metadata.json"
+        ".apex/"
+        ".github/"
+        "sdd-integration.log"
+    )
+
+    # Create .gitignore if it doesn't exist
+    if [[ ! -f "$gitignore_file" ]]; then
+        touch "$gitignore_file"
+        info "Created new .gitignore file"
+    fi
+
+    # Check if APEX section already exists
+    if grep -q "### APEX Integration ###" "$gitignore_file" 2>/dev/null; then
+        info ".gitignore already contains APEX Integration section — skipping"
+    else
+        # Add APEX entries to .gitignore
+        {
+            echo ""
+            echo "### APEX Integration ###"
+            echo ".apex-ignore"
+            echo ".apex-metadata.json"
+            echo ".apex/"
+            echo ".github/"
+            echo "sdd-integration.log"
+        } >> "$gitignore_file"
+        gitignore_updated=true
+        success "Added APEX Integration entries to .gitignore"
+    fi
+    echo ""
+
+    # ══════════════════════════════════════════════════════════════
     # PHASE 3: Validate
     # ══════════════════════════════════════════════════════════════
     log "Phase 3: Validating integration..."
