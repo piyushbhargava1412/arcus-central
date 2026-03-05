@@ -33,9 +33,13 @@ otto_apex-central/
 │       ├── sdd.instructions.agent.md         # Instruction architecture agent
 │       └── sdd.review.agent.md               # Review agent
 │
-├── skills/                                        # Agent skills (skills-based abstraction)
-│   └── instruction-architecture/             # Instruction architecture skill
-│       └── SKILL.md                       # Skill definition (Copilot naming convention)
+├── skills/                                        # Reusable agent skills
+│   ├── repository-analysis/                  # Repository analysis skill (reusable)
+│   │   └── SKILL.md
+│   ├── markdown-validation/                  # Markdown validation skill (reusable)
+│   │   └── SKILL.md
+│   └── markdown-generation/                  # Markdown generation skill (reusable)
+│       └── SKILL.md
 │
 ├── prompts/                                       # Agent prompts
 │   ├── core/                                      # Core prompts (6 files)
@@ -166,7 +170,7 @@ Each agent is guided by prompts and follows guidelines to produce specifications
 Root Level
 ├── Configuration & Documentation (8 files)
 ├── agents/ (9 files)
-├── skills/ (1 file)
+├── skills/ (3 skills)
 ├── prompts/ (9 files)
 ├── templates/ (8 files)
 ├── instructions/ (5 files)
