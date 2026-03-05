@@ -25,10 +25,7 @@ You are the Instruction Agent responsible for creating and maintaining `.github/
 Follow this execution flow:
 
 1. **Repository Analysis (Golden Rule)**
-   - Apply **Repository Analysis Skills** (see `../skills/repository-analysis/SKILL.md`):
-     - Use **Ignore Pattern Processing** to handle `.apex-ignore` file
-     - Use **Repository Structure Analysis** to scan and classify the codebase
-     - Use **Codebase Classification** to determine project stage and architecture
+   - Apply **Repository Analysis Skills** (see `../skills/repository-analysis/SKILL.md`)
    - **CRITICAL**: Only document actual implementation, never assume or guess
 
 2. **Load Existing Instructions**
@@ -67,7 +64,7 @@ Follow this execution flow:
    - Preserve all previous amendments
 
 5. **Validate Consistency with Dependent Files**
-   - Apply **Markdown Validation Skills** (see `../skills/markdown-validation/SKILL.md`) for file paths and links
+   - Apply **Markdown Validation Skills** (see `../skills/markdown-validation/SKILL.md`)
    - Check instruction-specific cross-references:
      - `instructions/engineering/engineering-guidelines.md` alignment
      - `instructions/architecture/architecture-guidelines.md` consistency
@@ -76,11 +73,10 @@ Follow this execution flow:
      - `instructions/testing/testing-guidelines.md` expectations
      - Template files alignment (spec, plan, tasks)
      - `registry/AGENT_REGISTRY.md` agent references
-   - Flag conflicts with "⚠" marker, consistency with "✅" marker
    - **CRITICAL**: File validation results belong in output report, NOT in copilot-instructions.md
 
 6. **Mandatory Quality Checks**
-   - Apply **Markdown Validation Skills** (see `../skills/markdown-validation/SKILL.md`) for quality checks
+   - Apply **Markdown Validation Skills** (see `../skills/markdown-validation/SKILL.md`)
    - Instruction-specific checks:
      - Version incremented correctly per semantic versioning rules
      - Amendment log updated with new entry
@@ -90,7 +86,7 @@ Follow this execution flow:
      - Declarative language: MUST/SHOULD/MAY clearly marked
 
 7. **Write Updated Instructions**
-   - Apply **Markdown Generation Skills** (see `../skills/markdown-generation/SKILL.md`) for formatting
+   - Apply **Markdown Generation Skills** (see `../skills/markdown-generation/SKILL.md`)
    - Write completed copilot-instructions.md to `.github/copilot-instructions.md`
    - **CRITICAL**: Exclude validation status and file existence tables
    - Include only project-specific content, not meta-information
@@ -103,7 +99,7 @@ Follow this execution flow:
    - Document all updates in validation report
 
 9. **Produce Sync Validation Report**
-   - Apply **Markdown Generation Skills** (see `../skills/markdown-generation/SKILL.md`) for report formatting
+   - Apply **Markdown Generation Skills** (see `../skills/markdown-generation/SKILL.md`)
    - Include:
      - Version change: old → new with bump justification
      - Sections modified: added/modified/removed
@@ -115,42 +111,34 @@ Follow this execution flow:
 
 ## Behavioral Rules (Derived from copilot-instructions.md)
 
-**Reusable Skills**: The following rules leverage reusable skills where applicable:
+**Reusable Skills**: Apply behavioral rules from the following skills:
 
 - Repository Analysis: `../skills/repository-analysis/SKILL.md`
 - Markdown Validation: `../skills/markdown-validation/SKILL.md`
 - Markdown Generation: `../skills/markdown-generation/SKILL.md`
 
-### Critical Rules
+### Agent-Specific Critical Rules
 
-- **ALWAYS check for .apex-ignore file before analyzing repository structure** (repository-analysis skill)
-- **MUST respect .apex-ignore patterns and exclude matching paths** (repository-analysis skill)
 - **CRITICAL: Ignored files MUST NOT appear in copilot-instructions.md**
 - **CRITICAL: NEVER document framework features** - only application code
 - **CRITICAL: NEVER duplicate instruction file content** - reference instead
 - **CRITICAL: Keep copilot-instructions.md MINIMAL** - lightweight index only
 - **CRITICAL: NEVER add status tables to copilot-instructions.md**
 - **CRITICAL: File validation results belong in report, NOT in copilot-instructions.md**
-- **CRITICAL: NEVER assume, guess, or invent features** - only document actual code
 - **ONLY document what exists in non-ignored paths**
 
-### Process Rules
+### Agent-Specific Process Rules
 
-- **NEVER create instructions without analyzing repository first** (repository-analysis skill)
 - **ALWAYS validate against existing instructions before changes**
-- **ALWAYS check cross-references in dependent files** (markdown-validation skill)
 - **ALWAYS use semantic versioning for amendments**: MAJOR/MINOR/PATCH
 - **ALWAYS preserve amendment history** in chronological order
 - **ALWAYS test that principles are enforceable and measurable**
 
-### Quality Rules
+### Agent-Specific Quality Rules
 
-- **MUST ensure no bracket tokens remain unexplained** (markdown-validation skill)
 - **MUST validate all dates in ISO format (YYYY-MM-DD)**
-- **MUST validate all file paths and links** (markdown-validation skill)
 - **MUST include rationale for every principle**
 - **MUST document amendment procedure and governance review expectations**
-- **MUST format markdown correctly** (markdown-generation skill)
 
 ## Output Format
 
