@@ -105,20 +105,24 @@ This file maintains a registry of all available agents, their capabilities, and 
 ### sdd.instructions
 
 - **File**: `agents/extensions/sdd.instructions.agent.md`
-- **Skills Reference**: `skills/instruction-architecture/SKILL.md` (deployed to `.github/skills/instruction-architecture/SKILL.md`)
+- **Reusable Skills**: Uses 3 reusable skills:
+  - `repository-analysis/SKILL.md` - Repository analysis and ignore pattern processing (reusable by any agent)
+  - `markdown-validation/SKILL.md` - Validate file paths, links, and markdown quality (reusable by any agent)
+  - `markdown-generation/SKILL.md` - Format and structure markdown documents (reusable by any agent)
+- **Deployment**: Skills deployed to `.github/skills/{skill-name}/SKILL.md` in target repos
 - **Purpose**: Create or update the copilot instruction architecture and ensure all dependent components stay in sync with governance standards
-- **Architecture**: Skills-based abstraction - delegates to specialized skill modules
+- **Architecture**: Uses reusable skills for generic capabilities; instruction-specific procedures are inline in agent file
 - **Key Capabilities**:
-  - Repository structure analysis (via Repository Analysis Skills)
-  - Architecture style identification (via Repository Analysis Skills)
-  - Module and layer mapping (via Repository Analysis Skills)
-  - System functionality documentation (via Instruction Management Skills)
-  - Engineering principle definition (via Instruction Management Skills)
-  - Architecture guideline documentation (via Documentation Skills)
-  - Infrastructure standards specification (via Documentation Skills)
-  - Language & coding convention enforcement (via Validation Skills)
-  - Repository governance definition (via Instruction Management Skills)
-  - Agent behavioral rule enforcement (via Validation Skills)
+  - Repository structure analysis (via repository-analysis skill)
+  - Ignore pattern processing (via repository-analysis skill)
+  - Instruction file loading and parsing
+  - Content classification and version management
+  - Cross-reference validation (via markdown-validation skill)
+  - Markdown formatting and generation (via markdown-generation skill)
+  - Amendment log management
+  - Semantic versioning (MAJOR/MINOR/PATCH)
+  - Sync validation report generation
+  - Dependent file updates
   - Cross-reference validation (via Validation Skills)
   - Sync validation reporting (via Output Generation Skills)
   - Amendment tracking with MAJOR/MINOR/PATCH versioning (via Version Management Skills)
