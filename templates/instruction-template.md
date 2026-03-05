@@ -128,19 +128,19 @@ All engineering principles, architecture guidelines, language standards, testing
 
 ### Core Guidelines
 
-- **Engineering Principles**: See [.apex/instructions/engineering/engineering-guidelines.md](.apex/instructions/engineering/engineering-guidelines.md)
+- **Engineering Principles**: See [../.apex/instructions/engineering/engineering-guidelines.md](../.apex/instructions/engineering/engineering-guidelines.md)
   - Code quality standards, testing requirements, code review checklist, documentation expectations, Git workflow
 
-- **Architecture Guidelines**: See [.apex/instructions/architecture/architecture-guidelines.md](.apex/instructions/architecture/architecture-guidelines.md)
+- **Architecture Guidelines**: See [../.apex/instructions/architecture/architecture-guidelines.md](../.apex/instructions/architecture/architecture-guidelines.md)
   - Architecture principles, patterns, technology decisions, security architecture, disaster recovery
 
-- **Language & Coding Standards**: See [.apex/instructions/languages/language-guidelines.md](.apex/instructions/languages/language-guidelines.md)
+- **Language & Coding Standards**: See [../.apex/instructions/languages/language-guidelines.md](../.apex/instructions/languages/language-guidelines.md)
   - Language-specific conventions for Python, JavaScript/TypeScript, Java, Go, SQL
 
-- **Infrastructure Standards**: See [.apex/instructions/infra/infrastructure-guidelines.md](.apex/instructions/infra/infrastructure-guidelines.md)
+- **Infrastructure Standards**: See [../.apex/instructions/infra/infrastructure-guidelines.md](../.apex/instructions/infra/infrastructure-guidelines.md)
   - Environment management, deployment strategies, monitoring, logging, network security
 
-- **Testing Guidelines**: See [.apex/instructions/testing/testing-guidelines.md](.apex/instructions/testing/testing-guidelines.md)
+- **Testing Guidelines**: See [../.apex/instructions/testing/testing-guidelines.md](../.apex/instructions/testing/testing-guidelines.md)
   - Testing strategy, unit/integration/E2E testing, performance testing, coverage goals
 
 ### Project-Specific Overrides
@@ -170,15 +170,15 @@ OR
 
 ### Code Generation
 
-1. **READ** architecture guidelines from `.apex/instructions/architecture/` before generating code
-2. **READ** language standards from `.apex/instructions/languages/` before generating code
-3. **VALIDATE** against engineering principles from `.apex/instructions/engineering/`
+1. **READ** architecture guidelines from `../.apex/instructions/architecture/` before generating code
+2. **READ** language standards from `../.apex/instructions/languages/` before generating code
+3. **VALIDATE** against engineering principles from `../.apex/instructions/engineering/`
 4. **RESPECT** existing architecture and module boundaries
 
 ### Quality Assurance
 
-1. **ENFORCE** testing requirements defined in `.apex/instructions/testing/`
-2. **VALIDATE** infrastructure changes against `.apex/instructions/infra/`
+1. **ENFORCE** testing requirements defined in `../.apex/instructions/testing/`
+2. **VALIDATE** infrastructure changes against `../.apex/instructions/infra/`
 3. **CHECK** cross-references point to valid files
 4. **ENSURE** no unexplained bracket tokens `[...]` remain in artifacts
 
