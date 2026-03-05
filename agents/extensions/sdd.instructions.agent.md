@@ -65,11 +65,11 @@ Follow this execution flow:
    - Key Modules: ONLY application modules (NOT .apex/, .github/, or other framework paths)
 
    **What NOT to document**:
-   - Engineering Principles: DO NOT repeat - just reference `.apex/instructions/engineering/engineering-guidelines.md`
-   - Architecture Guidelines: DO NOT repeat - just reference `.apex/instructions/architecture/architecture-guidelines.md`
-   - Language Standards: DO NOT repeat - just reference `.apex/instructions/languages/language-guidelines.md`
-   - Infrastructure: DO NOT repeat - just reference `.apex/instructions/infra/infrastructure-guidelines.md`
-   - Testing: DO NOT repeat - just reference `.apex/instructions/testing/testing-guidelines.md`
+   - Engineering Principles: DO NOT repeat - just reference `../.apex/instructions/engineering/engineering-guidelines.md`
+   - Architecture Guidelines: DO NOT repeat - just reference `../.apex/instructions/architecture/architecture-guidelines.md`
+   - Language Standards: DO NOT repeat - just reference `../.apex/instructions/languages/language-guidelines.md`
+   - Infrastructure: DO NOT repeat - just reference `../.apex/instructions/infra/infrastructure-guidelines.md`
+   - Testing: DO NOT repeat - just reference `../.apex/instructions/testing/testing-guidelines.md`
    - Agents/Templates/Scripts: NEVER document these (they're in .apex-ignore)
 
    **Agent Behavioral Rules section**:
