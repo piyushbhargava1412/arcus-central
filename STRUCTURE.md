@@ -34,6 +34,10 @@ otto_apex-central/
        ├── sdd.instructions.agent.md              # Instruction architecture
        └── sdd.repo-intelligence.agent.md         # Repository intelligence
 │
+├── skills/                                        # Agent skills (skills-based abstraction)
+│   └── instruction-architecture/             # Instruction architecture skill
+│       └── SKILL.md                       # Skill definition (Copilot naming convention)
+│
 ├── prompts/                                       # Agent prompts
 │   ├── core/                                      # Core prompts (6 files)
 │   │   ├── sdd.specify.prompt.md

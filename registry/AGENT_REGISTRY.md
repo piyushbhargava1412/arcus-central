@@ -5,6 +5,7 @@ This file maintains a registry of all available agents, their capabilities, and 
 ## Core Agents (6)
 
 ### sdd.specify
+
 - **File**: `agents/core/sdd.specify.agent.md`
 - **Prompt**: `prompts/core/sdd.specify.prompt.md`
 - **Command**: `/sdd.specify <feature description>`
@@ -16,6 +17,7 @@ This file maintains a registry of all available agents, their capabilities, and 
   - Clarification question formatting (max 3)
 
 ### sdd.clarify
+
 - **File**: `agents/core/sdd.clarify.agent.md`
 - **Prompt**: `prompts/core/sdd.clarify.prompt.md`
 - **Command**: `/sdd.clarify`
@@ -27,6 +29,7 @@ This file maintains a registry of all available agents, their capabilities, and 
   - Incremental spec updates after each answer
 
 ### sdd.plan
+
 - **File**: `agents/core/sdd.plan.agent.md`
 - **Prompt**: `prompts/core/sdd.plan.prompt.md`
 - **Command**: `/sdd.plan`
@@ -38,6 +41,7 @@ This file maintains a registry of all available agents, their capabilities, and 
   - Error handling, observability, and rollout planning
 
 ### sdd.tasks
+
 - **File**: `agents/core/sdd.tasks.agent.md`
 - **Prompt**: `prompts/core/sdd.tasks.prompt.md`
 - **Command**: `/sdd.tasks`
@@ -49,6 +53,7 @@ This file maintains a registry of all available agents, their capabilities, and 
   - User story independence and independent test criteria
 
 ### sdd.analyze
+
 - **File**: `agents/core/sdd.analyze.agent.md`
 - **Prompt**: `prompts/core/sdd.analyze.prompt.md`
 - **Command**: `/sdd.analyze`
@@ -60,6 +65,7 @@ This file maintains a registry of all available agents, their capabilities, and 
   - Severity-based finding classification (CRITICAL / HIGH / MEDIUM / LOW)
 
 ### sdd.implement
+
 - **File**: `agents/core/sdd.implement.agent.md`
 - **Prompt**: `prompts/core/sdd.implement.prompt.md`
 - **Command**: `/sdd.implement`
@@ -85,17 +91,46 @@ This file maintains a registry of all available agents, their capabilities, and 
   - Acceptance criteria definition
   - Repository-context-aware story scoping
 
-### sdd.instructions
-- **File**: `agents/extensions/sdd.instructions.agent.md`
-- **Prompt**: `prompts/extensions/sdd.instructions.prompt.md`
-- **Command**: `/sdd.instructions`
-- **Purpose**: Create or update `.github/copilot-instructions.md` and ensure governance sync
-- **Key Capabilities**:
-  - Repository structure analysis (respects `.apex-ignore`)
-  - Copilot instruction architecture creation
-  - Cross-reference validation against instruction files
-  - Sync validation reporting with amendment tracking (semver)
+### sdd.review
 
+- **File**: `agents/extensions/sdd.review.agent.md`
+- **Purpose**: Review specifications, code, and deliverables
+- **Key Capabilities**:
+  - Code review
+  - Specification review
+  - Quality review
+  - Compliance review
+  - Feedback generation
+
+### sdd.instructions
+
+- **File**: `agents/extensions/sdd.instructions.agent.md`
+- **Skills Reference**: `skills/instruction-architecture/SKILL.md` (deployed to `.github/skills/instruction-architecture/SKILL.md`)
+- **Purpose**: Create or update the copilot instruction architecture and ensure all dependent components stay in sync with governance standards
+- **Architecture**: Skills-based abstraction - delegates to specialized skill modules
+- **Key Capabilities**:
+  - Repository structure analysis (via Repository Analysis Skills)
+  - Architecture style identification (via Repository Analysis Skills)
+  - Module and layer mapping (via Repository Analysis Skills)
+  - System functionality documentation (via Instruction Management Skills)
+  - Engineering principle definition (via Instruction Management Skills)
+  - Architecture guideline documentation (via Documentation Skills)
+  - Infrastructure standards specification (via Documentation Skills)
+  - Language & coding convention enforcement (via Validation Skills)
+  - Repository governance definition (via Instruction Management Skills)
+  - Agent behavioral rule enforcement (via Validation Skills)
+  - Cross-reference validation (via Validation Skills)
+  - Sync validation reporting (via Output Generation Skills)
+  - Amendment tracking with MAJOR/MINOR/PATCH versioning (via Version Management Skills)
+  - Dependent file synchronization (via Documentation Skills)
+- **Skills Categories**:
+  1. Repository Analysis Skills
+  2. Instruction Management Skills
+  3. Validation Skills
+  4. Documentation Skills
+  5. Version Management Skills
+  6. Output Generation Skills
+  
 ### sdd.repo-intelligence
 - **File**: `agents/extensions/sdd.repo-intelligence.agent.md`
 - **Prompt**: `prompts/extensions/sdd.repo-intelligence.prompt.md`

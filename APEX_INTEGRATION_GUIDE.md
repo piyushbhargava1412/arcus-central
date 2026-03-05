@@ -103,14 +103,17 @@ zsh: permission denied
 
 ## What Gets Created
 
-| Location                      | Type               | Source                                  | Protection              |
-| ----------------------------- | ------------------ | --------------------------------------- | ----------------------- |
-| `.apex/templates`             | Symlink            | `central/templates`                     | Read-only source (a-w)  |
-| `.apex/scripts`               | Symlink            | `central/scripts`                       | Read-only source (a-w)  |
-| `.apex/instructions`          | Symlink            | `central/instructions`                  | Read-only source (a-w)  |
-| `.github/agents/*.agent.md`   | Copied files       | `central/agents/core/` + `extensions/`  | chmod 444               |
-| `.github/prompts/*.prompt.md` | Copied files       | `central/prompts/core/` + `extensions/` | chmod 444               |
+| Location                      | Type                 | Points To                               |
+| ----------------------------- | -------------------- | --------------------------------------- |
+| `.apex/templates`             | Dir symlink          | `central/templates`                     |
+| `.apex/scripts`               | Dir symlink          | `central/scripts`                       |
+| `.apex/instructions`          | Dir symlink          | `central/instructions`                  |
+| `.github/agents/*.agent.md`   | File symlinks (flat) | `central/agents/core/` + `extensions/`  |
+| `.github/prompts/*.prompt.md` | File symlinks (flat) | `central/prompts/core/` + `extensions/` |
+| `.github/skills/`             | Dir symlink          | `central/skills`                        |
 | `.apex-ignore`                | Copied once        | `central/.apex-ignore`                  | Editable (user-owned)   |
+
+All source files are read-only. All symlinks use relative paths.
 
 ---
 
@@ -136,17 +139,20 @@ zsh: permission denied
 │   │   ├── sdd.repo-intelligence.agent.md
 │   │   ├── sdd.specify.agent.md
 │   │   └── sdd.tasks.agent.md
-│   └── prompts/                                 ← Read-only copies (chmod 444)
-│       ├── sdd.analyze.prompt.md
-│       ├── sdd.clarify.prompt.md
-│       ├── sdd.groom.prompt.md
-│       ├── sdd.groom-story.prompt.md
-│       ├── sdd.implement.prompt.md
-│       ├── sdd.instructions.prompt.md
-│       ├── sdd.plan.prompt.md
-│       ├── sdd.repo-intelligence.prompt.md
-│       ├── sdd.specify.prompt.md
-│       └── sdd.tasks.prompt.md
+│   ├── prompts/                                   ← Flat file symlinks (SDD prompts)
+│   │   ├── sdd.analyze.prompt.md
+│   │   ├── sdd.clarify.prompt.md
+│   │   ├── sdd.groom.prompt.md
+│   │   ├── sdd.implement.prompt.md
+│   │   ├── sdd.instructions.prompt.md
+│   │   ├── sdd.plan.prompt.md
+│   │   ├── sdd.repo-intelligence.prompt.md
+│   │   ├── sdd.specify.prompt.md
+│   │   └── sdd.tasks.prompt.md
+│   ├── skills/                                    ← Directory symlink (Agent skills)
+│   │   └── instruction-architecture.skills.md
+│   ├── pull_request_template.md                   ← Existing (untouched)
+│   └── workflows/                                 ← Existing (untouched)
 │
 ├── .apex-ignore                                 ← Copied once (editable per project)
 └── .apex-metadata.json

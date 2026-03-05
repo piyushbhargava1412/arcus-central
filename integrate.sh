@@ -202,12 +202,24 @@ copy_file_readonly() {
 # ─── Validation ───────────────────────────────────────────────────
 validate_central_structure() {
     local central_path="$1"
-    local required_dirs=("agents" "prompts" "templates" "scripts" "instructions")
+    local required_dirs=("agents" "prompts" "skills" "templates" "scripts" "instructions")
     for dir in "${required_dirs[@]}"; do
         if [[ ! -d "$central_path/$dir" ]]; then
             error "Missing required directory in central repo: $dir"
         fi
     done
+
+    # Validate at least one skill directory with SKILL.md exists
+    local skill_count=0
+    while IFS= read -r -d '' skill_file; do
+        ((skill_count++))
+    done < <(find "$central_path/skills" -mindepth 2 -maxdepth 2 -name "SKILL.md" -print0 2>/dev/null)
+
+    if [[ $skill_count -eq 0 ]]; then
+        error "No valid skills found (expected skills/{skill-name}/SKILL.md structure)"
+    fi
+    info "Found $skill_count skill(s)"
+
     success "Central repo structure valid"
 }
 
@@ -315,7 +327,7 @@ main() {
     fi
     log "Phase 0: Setting central source files read-only..."
     local readonly_count=0
-    for dir in agents prompts templates scripts instructions; do
+    for dir in agents prompts skills templates scripts instructions; do
         find "$CENTRAL_REPO/$dir" -type f -exec chmod a-w {} \;
         local cnt
         cnt=$(find "$CENTRAL_REPO/$dir" -type f | wc -l | tr -d ' ')
@@ -420,7 +432,14 @@ main() {
     done < <(find "$CENTRAL_REPO/prompts" -name "*.prompt.md" -type f -print0 2>/dev/null)
     info "$prompt_count prompt files copied to .github/prompts/"
 
-    success "Phase 2 done: $agent_count agents, $prompt_count prompts"
+    # Skills directory symlink (for Copilot Skills interface)
+    local skills_linked=false
+    if create_dir_symlink "$CENTRAL_REPO/skills" "$TARGET_REPO/.github/skills"; then
+        skills_linked=true
+        info "Skills directory symlinked to .github/skills/ (for Copilot Skills)"
+    fi
+
+    success "Phase 2 done: $agent_count agents, $prompt_count prompts, skills linked"
     echo ""
 
     # ══════════════════════════════════════════════════════════════
@@ -510,6 +529,12 @@ main() {
         fi
     done
     echo ""
+
+    log ".github/skills/:"
+    [[ -L "$TARGET_REPO/.github/skills" ]] && \
+        validate_symlink "$TARGET_REPO/.github/skills" ".github/skills"
+    echo ""
+
 
     # ══════════════════════════════════════════════════════════════
     # PHASE 4: Metadata
