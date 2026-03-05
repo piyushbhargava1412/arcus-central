@@ -33,6 +33,10 @@ otto_apex-central/
 │       ├── sdd.instructions.agent.md         # Instruction architecture agent
 │       └── sdd.review.agent.md               # Review agent
 │
+├── skills/                                        # Agent skills (skills-based abstraction)
+│   └── instruction-architecture/             # Instruction architecture skill
+│       └── SKILL.md                       # Skill definition (Copilot naming convention)
+│
 ├── prompts/                                       # Agent prompts
 │   ├── core/                                      # Core prompts (6 files)
 │   │   ├── sdd.specify.prompt.md             # Prompt for specify agent
@@ -101,30 +105,31 @@ otto_apex-central/
 
 ## Directory Summary
 
-| Directory | Purpose | File Count | Contents |
-|-----------|---------|-----------|----------|
-| `/agents` | Agent specifications | 9 | 6 core + 3 extension agents |
-| `/prompts` | Agent prompts | 9 | 6 core + 3 extension prompts |
-| `/templates` | Document templates | 8 | Reusable templates (SDD, stories, specs, plans, tasks, checklists, agent templates, instruction architecture) |
-| `/instructions` | Guidelines & best practices | 5 | Engineering, architecture, languages, infrastructure, testing guidelines |
-| `/scripts/bash` | Automation scripts | 5 | Setup, build, test, prerequisites, common lib |
-| `/registry` | Central registry | 1 | Complete agent registry with all capabilities |
-| `/examples` | Reference examples | 3 | Orders service, notifications service, outputs documentation |
-| `/docs` | Documentation | 1 | Documentation index and quick links |
-| **Root** | Project configuration | 8 | README, Changelog, Contributing, Verification, Structure, Version, Editor config, Git ignore |
+| Directory       | Purpose                     | File Count | Contents                                                                                                      |
+| --------------- | --------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------- |
+| `/agents`       | Agent specifications        | 9          | 6 core + 3 extension agents                                                                                   |
+| `/skills`       | Agent skills                | 1          | Skills-based abstraction for reusable capabilities                                                            |
+| `/prompts`      | Agent prompts               | 9          | 6 core + 3 extension prompts                                                                                  |
+| `/templates`    | Document templates          | 8          | Reusable templates (SDD, stories, specs, plans, tasks, checklists, agent templates, instruction architecture) |
+| `/instructions` | Guidelines & best practices | 5          | Engineering, architecture, languages, infrastructure, testing guidelines                                      |
+| `/scripts/bash` | Automation scripts          | 5          | Setup, build, test, prerequisites, common lib                                                                 |
+| `/registry`     | Central registry            | 1          | Complete agent registry with all capabilities                                                                 |
+| `/examples`     | Reference examples          | 3          | Orders service, notifications service, outputs documentation                                                  |
+| `/docs`         | Documentation               | 1          | Documentation index and quick links                                                                           |
+| **Root**        | Project configuration       | 8          | README, Changelog, Contributing, Verification, Structure, Version, Editor config, Git ignore                  |
 
 ## Key Files
 
-| File | Purpose |
-|------|---------|
-| `README.md` | Main project documentation |
-| `integrate.sh` | Core integration script (creates symlinks in target repos) |
-| `install-cli.sh` | CLI installer (installs `apex-integrate` command globally) |
-| `APEX_INTEGRATION_GUIDE.md` | Full integration guide and CLI reference |
-| `STRUCTURE.md` | This file - complete repository structure |
-| `VERSION` | Current version |
-| `.editorconfig` | Editor configuration for consistent formatting |
-| `.gitignore` | Git ignore patterns |
+| File                        | Purpose                                                    |
+| --------------------------- | ---------------------------------------------------------- |
+| `README.md`                 | Main project documentation                                 |
+| `integrate.sh`              | Core integration script (creates symlinks in target repos) |
+| `install-cli.sh`            | CLI installer (installs `apex-integrate` command globally) |
+| `APEX_INTEGRATION_GUIDE.md` | Full integration guide and CLI reference                   |
+| `STRUCTURE.md`              | This file - complete repository structure                  |
+| `VERSION`                   | Current version                                            |
+| `.editorconfig`             | Editor configuration for consistent formatting             |
+| `.gitignore`                | Git ignore patterns                                        |
 
 ## Getting Started
 
@@ -142,17 +147,18 @@ Each agent is guided by prompts and follows guidelines to produce specifications
 
 ## Repository Statistics
 
-| Metric | Count |
-|--------|-------|
-| **Total Directories** | 16 |
-| **Total Files** | 43 |
-| **Agents (core + extension)** | 9 |
-| **Prompts (core + extension)** | 9 |
-| **Templates** | 8 |
-| **Guidelines** | 5 |
-| **Automation Scripts** | 5 |
-| **Example Services** | 2 |
-| **Root Configuration Files** | 8 |
+| Metric                         | Count |
+| ------------------------------ | ----- |
+| **Total Directories**          | 17    |
+| **Total Files**                | 43    |
+| **Agents (core + extension)**  | 9     |
+| **Skills**                     | 1     |
+| **Prompts (core + extension)** | 9     |
+| **Templates**                  | 8     |
+| **Guidelines**                 | 5     |
+| **Automation Scripts**         | 5     |
+| **Example Services**           | 2     |
+| **Root Configuration Files**   | 8     |
 
 ## Directory Organization
 
@@ -160,6 +166,7 @@ Each agent is guided by prompts and follows guidelines to produce specifications
 Root Level
 ├── Configuration & Documentation (8 files)
 ├── agents/ (9 files)
+├── skills/ (1 file)
 ├── prompts/ (9 files)
 ├── templates/ (8 files)
 ├── instructions/ (5 files)
@@ -173,6 +180,7 @@ Root Level
 
 - **Documentation**: 8 root files + 1 index = 9 files
 - **Agents**: 9 agent files (6 core + 3 extension)
+- **Skills**: 1 skills file (skills-based abstraction)
 - **Prompts**: 9 prompt files (6 core + 3 extension)
 - **Templates**: 8 reusable templates
 - **Guidelines**: 5 comprehensive guideline suites
@@ -181,4 +189,3 @@ Root Level
 - **Examples**: 3 example specifications
 
 **Total: 43 files across 16 directories**
-

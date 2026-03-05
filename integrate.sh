@@ -26,6 +26,7 @@
 #   .apex/instructions   → central/instructions
 #   .github/agents/*.md     → central agent files (flat)
 #   .github/prompts/*.md    → central prompt files (flat)
+#   .github/skills/         → central/skills (for Copilot Skills)
 #   .apex-ignore            → copied template (if not exists)
 #
 # One-way: Central → Target. Writes through symlinks are denied.
@@ -77,7 +78,8 @@ What gets created (all read-only symlinks):
 
   .github/
     ├── agents/*.agent.md       → central agent files (flat)
-    └── prompts/*.prompt.md     → central prompt files (flat)
+    ├── prompts/*.prompt.md     → central prompt files (flat)
+    └── skills/                 → central/skills (for Copilot Skills)
 
   .apex-ignore                  → copied template (if not exists)
 
@@ -232,12 +234,24 @@ validate_symlink() {
 # ─── Validation ───────────────────────────────────────────────────
 validate_central_structure() {
     local central_path="$1"
-    local required_dirs=("agents" "prompts" "templates" "scripts" "instructions")
+    local required_dirs=("agents" "prompts" "skills" "templates" "scripts" "instructions")
     for dir in "${required_dirs[@]}"; do
         if [[ ! -d "$central_path/$dir" ]]; then
             error "Missing required directory in central repo: $dir"
         fi
     done
+    
+    # Validate at least one skill directory with SKILL.md exists
+    local skill_count=0
+    while IFS= read -r -d '' skill_file; do
+        ((skill_count++))
+    done < <(find "$central_path/skills" -mindepth 2 -maxdepth 2 -name "SKILL.md" -print0 2>/dev/null)
+    
+    if [[ $skill_count -eq 0 ]]; then
+        error "No valid skills found (expected skills/{skill-name}/SKILL.md structure)"
+    fi
+    info "Found $skill_count skill(s)"
+    
     success "Central repo structure valid"
 }
 
@@ -270,7 +284,7 @@ main() {
     # ══════════════════════════════════════════════════════════════
     log "Phase 0: Setting central source files read-only..."
     local readonly_count=0
-    for dir in agents prompts templates scripts instructions; do
+    for dir in agents prompts skills templates scripts instructions; do
         find "$CENTRAL_REPO/$dir" -type f -exec chmod a-w {} \;
         local cnt
         cnt=$(find "$CENTRAL_REPO/$dir" -type f | wc -l | tr -d ' ')
@@ -315,6 +329,13 @@ main() {
                 cleanup_count=$((cleanup_count + prompt_files))
                 info "Removed: $prompt_files prompt symlinks"
             fi
+        fi
+
+        # Remove .github/skills/ symlink
+        if [[ -L "$TARGET_REPO/.github/skills" ]] || [[ -e "$TARGET_REPO/.github/skills" ]]; then
+            rm -rf "${TARGET_REPO:?}/.github/skills"
+            ((cleanup_count++))
+            info "Removed: .github/skills"
         fi
 
         # Remove legacy copilot-instructions.md (if exists)
@@ -379,7 +400,14 @@ main() {
     done < <(find "$CENTRAL_REPO/prompts" -name "*.prompt.md" -print0 2>/dev/null)
     info "$prompt_count prompt symlinks in .github/prompts/"
 
-    success "Phase 2 done: $agent_count agents, $prompt_count prompts"
+    # Skills directory symlink (for Copilot Skills interface)
+    local skills_linked=false
+    if create_dir_symlink "$CENTRAL_REPO/skills" "$TARGET_REPO/.github/skills"; then
+        skills_linked=true
+        info "Skills directory symlinked to .github/skills/ (for Copilot Skills)"
+    fi
+
+    success "Phase 2 done: $agent_count agents, $prompt_count prompts, skills linked"
     echo ""
 
     # ══════════════════════════════════════════════════════════════
@@ -428,6 +456,11 @@ main() {
     done
     echo ""
 
+    log ".github/skills/:"
+    [[ -L "$TARGET_REPO/.github/skills" ]] && \
+        validate_symlink "$TARGET_REPO/.github/skills" ".github/skills"
+    echo ""
+
 
     # ══════════════════════════════════════════════════════════════
     # PHASE 4: Metadata
@@ -451,8 +484,10 @@ main() {
   "ide_discovery": {
     "agents_dir": ".github/agents/",
     "prompts_dir": ".github/prompts/",
+    "skills_dir": ".github/skills/",
     "agent_count": $agent_count,
-    "prompt_count": $prompt_count
+    "prompt_count": $prompt_count,
+    "skills_linked": $skills_linked
   },
   "configuration": {
     "apex_ignore_file": ".apex-ignore",
@@ -485,6 +520,7 @@ EOF
     echo "  ── .github/ (IDE discovery) ──"
     printf "    ${GREEN}✓${NC} agents/   (%d symlinks)\n" "$agent_count"
     printf "    ${GREEN}✓${NC} prompts/  (%d symlinks)\n" "$prompt_count"
+    [[ "$skills_linked" == true ]] && printf "    ${GREEN}✓${NC} skills/   (directory symlink)\n"
     echo ""
     if [[ "$apex_ignore_copied" == true ]]; then
         echo "  ── Configuration ──"
