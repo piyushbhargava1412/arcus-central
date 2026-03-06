@@ -31,4 +31,4 @@ apex-integrate
 
 - [Integration Guide](APEX_INTEGRATION_GUIDE.md) — Full setup and usage details
 - [Repository Structure](STRUCTURE.md) — Central repo layout
-- [Docs Index](docs/INDEX.md) — All documentation
+- [Docs Index](docs/INDEX.md) — All documentation 
