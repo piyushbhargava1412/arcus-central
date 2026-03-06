@@ -12,38 +12,33 @@
 
 ## Context
 
-[Background information explaining why this work is important. Include relevant market context, user pain points, strategic goals, or business drivers.]
-
+[Summarize the purpose and value of this story in a clear, focused sentence. Highlight the problem or user need it addresses.]
 ---
 
 ## Scope
 
-[Define what IS included in this story. Be specific about boundaries, features, and behaviors that are part of this work.]
-
+[Define the main functionality and features included in this story. Focus on user-visible actions or system behaviors, keeping it brief.]
 ---
 
 ## Out of Scope
 
-[Define what IS NOT included in this story. Explicitly list features or work that are intentionally excluded.]
-
+[List any features, behaviors, or scenarios explicitly excluded. Keep each item short and precise.]
 ---
 
 ## Assumptions
 
-[List all assumptions made about the requirement, environment, users, or technical constraints.]
+[State essential conditions or dependencies assumed for this story. Include user behavior, data availability, or technical requirements.]
 
 ---
 
 ## Tech Notes
 
-[Provide technical context, architecture considerations, integration points, or technology-specific guidance.]
-
+[Provide concise guidance on technical implementation, architecture, APIs, or constraints relevant to this story.]
 ---
 
 ## Test Plan
 
-[Outline the testing approach and key test scenarios. Include manual and automated test coverage needs.]
-
+[Outline the core approach to verifying this story. Include key scenarios, validations, or critical checks in brief.]
 ---
 
 ## Acceptance Criteria

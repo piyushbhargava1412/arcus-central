@@ -1,6 +1,4 @@
----
-description: Convert requirements into structured implementation-ready user stories for single repository context.
----
+## description: Convert requirements into structured implementation-ready user stories for a single repository context.
 
 ## User Input
 
@@ -10,127 +8,121 @@ $ARGUMENTS
 
 You **MUST** consider the user input before proceeding (if not empty).
 
-## Outline
-
-1. **Setup**: Receive the requirement text from user input.
-   Set paths directly without running any commands:
-  - `FEATURE_DIR = .apex/groom/`
-  - Do not delete any existing files in the groom folder. Simply add a new file inside the groom folder with a name that reflects the requirement.
-  - in that groom dir the .md file has to create
-   - Extract core requirement concepts
-   - Identify single repository scope
-   - Do NOT process cross-repository logic
-   - Validate requirement is scoped to single repository only
-
-2. **Analyze requirement**: 
-   - Parse user requirement description
-   - Identify logical story boundaries
-   - Determine if requirement splits into multiple stories or single story
-   - Map requirement to repository context only
-
-3. **Generate stories**: For each identified story:
-   - Load `.apex/templates/stories/story-template.md` as strict format reference
-   - Create comprehensive story following template structure
-   - Fill ALL sections (no empty sections allowed)
-   - Do NOT modify section names or order
-   - Do NOT add extra commentary or sections
-   - Do NOT include code blocks
-
-4. **Story Splitting Decision**:
-   - For complex features, automatically decompose into multiple independent, implementable stories.
-   - Treat each logical action, workflow step, or AC scenario that can stand alone as a candidate for a separate story.
-   - Avoid creating trivial stories (like handling validation errors); include these inside Acceptance Criteria only.
-   - Ensure each story is independently testable and implementable.
-   - For large features, aim for 2–5 stories per feature to maintain granularity.
-   - Stories must remain cohesive; do not split if it breaks logical flow or dependencies.
-5. **Output**: 
-   - Generate single Markdown (.md) document
-   - If multiple stories: all stories in same file with --- separator
-   - Follow template format strictly
-   - No explanatory text outside structured stories
-   - Report: Output story document(s) to chat only
-
-## Key Rules
-
-- Create ONLY story document(s) - no code
-- Operate within single repository context exclusively
-- Do NOT include cross-repository logic
-- Do NOT ask questions (make informed decisions)
-- Do NOT request clarification
-- Do NOT provide explanations outside stories
-- Do NOT leave any section empty
-- Do NOT remove any template sections
-- Do NOT add extra sections
-- Do NOT modify section names
-- Do NOT generate code
-- Follow template strictly
-- Each story must follow exact format from story-template.md
-- If requirement logically splits: create multiple stories in same file with --- separator
-- Do NOT repeat section headings across stories
-
-## Story Generation Rules
-
-**Format Rules**:
-- Each story must strictly follow template structure
-- Section order MUST match template exactly
-- Do NOT modify section names
-- All sections MUST be filled (no empty sections)
-- Do NOT include code blocks
-- Do NOT add extra commentary
-
-**Requirement Analysis**:
-- Extract explicit requirements from input
-- Make informed decisions for ambiguous aspects (do NOT ask questions)
-- Identify test scenarios from requirement
-- Map acceptance criteria to requirement intent
-- Scope to single repository only
-
-**Story Splitting Decision**:
-- If requirement naturally separates into independent, testable units: create multiple stories
-- If requirement is cohesive: create single story
-- Each story must be independently implementable
-- Place all stories in single output file with --- separator
-
-**Content Rules**:
-- Narrative: Standard "As a / I want / So that" format
-- Context: Repository-specific details, background information
-- Scope: Clear boundaries of what IS included
-- Out of Scope: Clear boundaries of what IS NOT included
-- Assumptions: Documented assumptions for unspecified details
-- Tech Notes: Technology hints (framework, language references only, no implementation details)
-- Test Plan: High-level testing approach
-- Acceptance Criteria: BDD format (Given / When / Then)
-
-## Story Output Format
-
-```
 ---
 
-Narrative:
-As a ____
-I / We want to ____
-So that ____
+# Groom Agent Workflow
 
-Context:
+## 1. Setup
 
-Scope:
+Receive the requirement text from user input and prepare the grooming workspace.
 
-Out of Scope:
+Set paths directly (do not execute commands):
 
-Assumptions:
+* `FEATURE_DIR = .apex/groom/`
 
-Tech Notes:
+Rules:
 
-Test Plan:
-
-Acceptance Criteria:
-
-Given ____
-When ____
-Then ____
+* Do **NOT** delete any existing files in the groom directory.
+* Create a new `.md` file inside `.apex/groom/` with a filename derived from the requirement.
+* Operate strictly within the current repository context.
 
 ---
-```
 
-Context for story generation: $ARGUMENTS
+## 2. Requirement Analysis
 
+Analyze the provided requirement and determine how it should be represented as user stories.
+
+Tasks:
+
+* Parse the requirement description
+* Identify the primary goal of the feature
+* Determine logical story boundaries
+* Detect whether the requirement should produce:
+
+  * a **single story**, or
+  * **multiple independent stories**
+
+Constraints:
+
+* Operate **only within the current repository**
+* Ignore cross-repository considerations
+* Make informed decisions without asking follow-up questions
+
+---
+
+## 3. Story Generation
+
+Generate stories based on the analyzed requirement.
+
+Rules:
+
+* Use the template located at
+  `.apex/templates/stories/story-template.md`
+* Follow the template **exactly**
+* Fill **all template sections**
+* Do **not modify section names or structure**
+
+Story generation guidelines are provided by the **story-generation skill**.
+
+---
+
+## 4. Story Splitting Decision
+
+Determine whether the requirement should be split into multiple stories.
+
+Guidelines:
+
+* Split stories when the feature contains **multiple independent capabilities**
+* Ensure each story is:
+
+  * independently implementable
+  * logically cohesive
+  * testable
+
+Avoid:
+
+* creating trivial stories for small validations or edge cases
+* splitting stories if it breaks logical feature flow
+
+Typical decomposition:
+
+* Complex feature → **2–5 stories**
+* Simple feature → **single story**
+
+---
+
+## 5. Output
+
+Produce the final story document.
+
+Requirements:
+
+* Generate a **single Markdown document**
+* If multiple stories are created:
+
+  * place them in the **same file**
+  * separate stories using `---`
+
+Output rules:
+
+* Only output structured stories
+* Do not include explanations
+* Do not include commentary
+* Do not generate code
+
+Return the story document content directly in the response.
+
+---
+
+# Key Rules
+
+* Generate **story documents only**
+* Do **not generate code**
+* Operate strictly within **single repository scope**
+* Do **not include cross-repository logic**
+* Do **not ask clarification questions**
+* Do **not output content outside structured stories**
+* Follow the **story template exactly**
+* Story generation logic is handled by the **story-generation skill**
+
+---
