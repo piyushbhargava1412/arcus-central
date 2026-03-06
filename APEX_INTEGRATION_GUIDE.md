@@ -144,6 +144,7 @@ zsh: permission denied
 │       ├── sdd.implement.prompt.md
 │       ├── sdd.instructions.prompt.md
 │       ├── sdd.plan.prompt.md
+│       ├── sdd.repo-intelligence.prompt.md
 │       ├── sdd.review.prompt.md
 │       ├── sdd.specify.prompt.md
 │       └── sdd.tasks.prompt.md

@@ -137,10 +137,10 @@ otto_apex-central/
 | Directory              | Contents                                                      | Files |
 |------------------------|---------------------------------------------------------------|-------|
 | `/agents/core`         | Core SDD agents                                               | 7     |
-| `/agents/extensions`   | Extension agents                                              | 3     |
+| `/agents/extensions`   | Extension agents                                              | 4     |
 | `/prompts/core`        | Core agent prompts                                            | 6     |
-| `/prompts/extensions`  | Extension agent prompts                                       | 4     |
-| `/templates`           | Document templates (+ stories/ subfolder)                     | 9     |
+| `/prompts/extensions`  | Extension agent prompts                                       | 5     |
+| `/templates`           | Document templates (+ stories/ subfolder)                     | 11    |
 | `/instructions`        | Engineering, architecture, language, infra, testing guidelines | 5     |
 | `/scripts/bash`        | Automation scripts                                            | 5     |
 | `/registry`            | Agent registry                                                | 1     |
