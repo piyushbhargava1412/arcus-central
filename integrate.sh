@@ -42,7 +42,7 @@ Options:
   -h, --help          Show this help message
   -y, --yes           Skip confirmation prompts (for CI/CD)
   --sync              Re-create symlinks and re-copy agent/prompt files
-  --remove            Remove all integration artifacts (.apex/, .github/agents, .github/prompts, .apex-ignore, .apex-metadata.json)
+  --remove            Remove managed integration artifacts (preserves .apex/instructions and .apex/ directory)
 
 Examples:
   cd my-project && ../otto_apex-central/integrate.sh
@@ -446,16 +446,13 @@ main() {
     # ══════════════════════════════════════════════════════════════
     log "Phase 2.6: Updating .gitignore..."
     local gitignore_file="$TARGET_REPO/.gitignore"
-    local gitignore_updated=false
 
     # APEX entries to add
     local apex_entries=(
         "### APEX Integration ###"
-        ".apex-ignore"
-        ".apex-metadata.json"
-        ".apex/"
-        ".github/"
-        "sdd-integration.log"
+        ".apex*"
+        ".github/agents"
+        ".github/prompts"
     )
 
     # Create .gitignore if it doesn't exist
@@ -471,14 +468,10 @@ main() {
         # Add APEX entries to .gitignore
         {
             echo ""
-            echo "### APEX Integration ###"
-            echo ".apex-ignore"
-            echo ".apex-metadata.json"
-            echo ".apex/"
-            echo ".github/"
-            echo "sdd-integration.log"
+            for entry in "${apex_entries[@]}"; do
+                echo "$entry"
+            done
         } >> "$gitignore_file"
-        gitignore_updated=true
         success "Added APEX Integration entries to .gitignore"
     fi
     echo ""

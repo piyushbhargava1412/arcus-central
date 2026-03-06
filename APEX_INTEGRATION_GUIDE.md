@@ -50,7 +50,7 @@ That's it. Works for 1 repo or 100 repos — same single command.
 | -------------------------- | ------------------------------------------------- |
 | `apex-integrate`           | Integrate current directory                       |
 | `apex-integrate --sync`    | Re-create symlinks and re-copy agent/prompt files |
-| `apex-integrate --remove`  | Remove all integration artifacts                  |
+| `apex-integrate --remove`  | Remove managed integration artifacts (preserves `.apex/instructions`) |
 | `apex-integrate --yes`     | Skip confirmation prompts (CI/CD mode)            |
 
 ### CI/CD Usage
