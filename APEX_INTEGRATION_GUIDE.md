@@ -209,13 +209,13 @@ apex-integrate --remove
 **What gets removed:**
 - ✅ `.apex/templates/` (symlink)
 - ✅ `.apex/scripts/` (symlink)
-- ✅ `.apex/instructions/` (symlink)
 - ✅ `.github/agents/*.agent.md` (copied agent files)
 - ✅ `.github/prompts/*.prompt.md` (copied prompt files)
 - ✅ `.apex-ignore` (configuration file)
 - ✅ `.apex-metadata.json` (metadata)
 
 **What is preserved:**
+- ✅ `.apex/instructions/` (symlink) — developers may reference this in their `.github/copilot-instructions.md`
 - ✅ `.apex/` folder itself (in case you've added local artifacts)
 - ✅ Other `.github/` files and subdirectories (workflows, actions, etc.)
 - ✅ Project source code and configuration

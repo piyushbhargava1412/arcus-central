@@ -244,8 +244,9 @@ main() {
         local removal_count=0
 
         # Remove symlinked directories inside .apex/ (but preserve .apex/ folder itself)
+        # DO NOT remove .apex/instructions/ — developers may reference it in their copilot-instructions.md
         # Developers may have created local artifacts in .apex/ that they want to keep
-        local symlink_dirs=("templates" "scripts" "instructions")
+        local symlink_dirs=("templates" "scripts")
         for symdir in "${symlink_dirs[@]}"; do
             local sympath="$TARGET_REPO/$SDD_DIR/$symdir"
             if [[ -L "$sympath" ]]; then
