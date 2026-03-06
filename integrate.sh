@@ -42,11 +42,13 @@ Options:
   -h, --help          Show this help message
   -y, --yes           Skip confirmation prompts (for CI/CD)
   --sync              Re-create symlinks and re-copy agent/prompt files
+  --remove            Remove all integration artifacts (.apex/, .github/agents, .github/prompts, .apex-ignore, .apex-metadata.json)
 
 Examples:
   cd my-project && ../otto_apex-central/integrate.sh
   apex-integrate --sync
   apex-integrate --yes
+  apex-integrate --remove
 HELP
     exit 0
 }
@@ -54,12 +56,14 @@ HELP
 # ─── Parse arguments ──────────────────────────────────────────────
 AUTO_YES=false
 SYNC_MODE=false
+REMOVE_MODE=false
 POSITIONAL_ARGS=()
 for arg in "$@"; do
     case "$arg" in
         -h|--help) show_help ;;
         -y|--yes)  AUTO_YES=true ;;
         --sync)    SYNC_MODE=true; AUTO_YES=true ;;
+        --remove)  REMOVE_MODE=true; AUTO_YES=true ;;
         *)         POSITIONAL_ARGS+=("$arg") ;;
     esac
 done
@@ -213,7 +217,9 @@ validate_central_structure() {
 main() {
     echo ""
     echo "╔══════════════════════════════════════════════════════════╗"
-    if [[ "$SYNC_MODE" == true ]]; then
+    if [[ "$REMOVE_MODE" == true ]]; then
+        echo "║   APEX SDD Framework Integration v5.0 (REMOVE)          ║"
+    elif [[ "$SYNC_MODE" == true ]]; then
         echo "║   APEX SDD Framework Integration v5.0 (SYNC)           ║"
     else
         echo "║   APEX SDD Framework Integration v5.0                  ║"
@@ -231,8 +237,81 @@ main() {
     echo ""
 
     # ══════════════════════════════════════════════════════════════
-    # PHASE 0: Make central source files read-only
+    # REMOVE MODE: Exit early if --remove flag was used
     # ══════════════════════════════════════════════════════════════
+    if [[ "$REMOVE_MODE" == true ]]; then
+        log "Removing integration artifacts..."
+        local removal_count=0
+
+        # Remove symlinked directories inside .apex/ (but preserve .apex/ folder itself)
+        # Developers may have created local artifacts in .apex/ that they want to keep
+        local symlink_dirs=("templates" "scripts" "instructions")
+        for symdir in "${symlink_dirs[@]}"; do
+            local sympath="$TARGET_REPO/$SDD_DIR/$symdir"
+            if [[ -L "$sympath" ]]; then
+                rm -f "$sympath"
+                ((removal_count++))
+                success "Removed: .apex/$symdir (symlink)"
+            fi
+        done
+
+        # Remove .github/agents/ files
+        if [[ -d "$TARGET_REPO/.github/agents" ]]; then
+            local agent_removals=0
+            while IFS= read -r -d '' file; do
+                chmod u+w "$file" 2>/dev/null || true
+                rm -f "$file"
+                ((agent_removals++))
+            done < <(find "$TARGET_REPO/.github/agents" -name "*.agent.md" -type f -print0 2>/dev/null)
+            if [[ "$agent_removals" -gt 0 ]]; then
+                ((removal_count += agent_removals))
+                success "Removed: $agent_removals agent files from .github/agents/"
+            fi
+        fi
+
+        # Remove .github/prompts/ files
+        if [[ -d "$TARGET_REPO/.github/prompts" ]]; then
+            local prompt_removals=0
+            while IFS= read -r -d '' file; do
+                chmod u+w "$file" 2>/dev/null || true
+                rm -f "$file"
+                ((prompt_removals++))
+            done < <(find "$TARGET_REPO/.github/prompts" -name "*.prompt.md" -type f -print0 2>/dev/null)
+            if [[ "$prompt_removals" -gt 0 ]]; then
+                ((removal_count += prompt_removals))
+                success "Removed: $prompt_removals prompt files from .github/prompts/"
+            fi
+        fi
+
+        # Remove .apex-ignore
+        if [[ -f "$TARGET_REPO/.apex-ignore" ]]; then
+            rm -f "$TARGET_REPO/.apex-ignore"
+            ((removal_count++))
+            success "Removed: .apex-ignore"
+        fi
+
+        # Remove .apex-metadata.json
+        if [[ -f "$TARGET_REPO/.apex-metadata.json" ]]; then
+            rm -f "$TARGET_REPO/.apex-metadata.json"
+            ((removal_count++))
+            success "Removed: .apex-metadata.json"
+        fi
+
+        echo ""
+        echo "╔══════════════════════════════════════════════════════════╗"
+        echo "║                   REMOVAL SUMMARY                       ║"
+        echo "╚══════════════════════════════════════════════════════════╝"
+        echo ""
+        printf "  Status:  ${GREEN}SUCCESS${NC}\n"
+        printf "  Target:  %s\n" "$(basename "$TARGET_REPO")"
+        echo ""
+        printf "  ${GREEN}✓${NC} Removed $removal_count framework artifacts\n"
+        echo ""
+        info "Note: .apex/ folder preserved (may contain local developer artifacts)"
+        echo ""
+        success "Removal complete."
+        exit 0
+    fi
     log "Phase 0: Setting central source files read-only..."
     local readonly_count=0
     for dir in agents prompts templates scripts instructions; do

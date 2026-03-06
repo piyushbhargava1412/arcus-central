@@ -46,11 +46,12 @@ That's it. Works for 1 repo or 100 repos — same single command.
 
 ## CLI Reference
 
-| Command                 | Description                                       |
-| ----------------------- | ------------------------------------------------- |
-| `apex-integrate`        | Integrate current directory                       |
-| `apex-integrate --sync` | Re-create symlinks and re-copy agent/prompt files |
-| `apex-integrate --yes`  | Skip confirmation prompts (CI/CD mode)            |
+| Command                    | Description                                       |
+| -------------------------- | ------------------------------------------------- |
+| `apex-integrate`           | Integrate current directory                       |
+| `apex-integrate --sync`    | Re-create symlinks and re-copy agent/prompt files |
+| `apex-integrate --remove`  | Remove all integration artifacts                  |
+| `apex-integrate --yes`     | Skip confirmation prompts (CI/CD mode)            |
 
 ### CI/CD Usage
 
@@ -193,6 +194,43 @@ These must be real files (not symlinks) for IntelliJ to discover them.
 | **Phase 2.5** | Copies `.apex-ignore` template (only if not already present)           |
 | **Phase 3**   | Validates symlinks resolve and copied files are read-only              |
 | **Phase 4**   | Writes `.apex-metadata.json`                                           |
+
+---
+
+## Removing the Framework
+
+To remove all integration artifacts from a target repository:
+
+```bash
+cd ~/projects/my-service
+apex-integrate --remove
+```
+
+**What gets removed:**
+- ✅ `.apex/templates/` (symlink)
+- ✅ `.apex/scripts/` (symlink)
+- ✅ `.apex/instructions/` (symlink)
+- ✅ `.github/agents/*.agent.md` (copied agent files)
+- ✅ `.github/prompts/*.prompt.md` (copied prompt files)
+- ✅ `.apex-ignore` (configuration file)
+- ✅ `.apex-metadata.json` (metadata)
+
+**What is preserved:**
+- ✅ `.apex/` folder itself (in case you've added local artifacts)
+- ✅ Other `.github/` files and subdirectories (workflows, actions, etc.)
+- ✅ Project source code and configuration
+- ✅ Git history and other files
+
+**Use cases:**
+- Testing integration/removal workflows
+- Cleaning up after evaluating the framework
+- Switching integration strategies
+- CI/CD cleanup tasks
+
+**Non-interactive usage (CI/CD):**
+```bash
+apex-integrate --remove --yes
+```
 
 ---
 
