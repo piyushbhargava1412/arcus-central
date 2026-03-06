@@ -8,17 +8,17 @@ ARGS=()
 
 for arg in "$@"; do
     case "$arg" in
-        --json) 
-            JSON_MODE=true 
+        --json)
+            JSON_MODE=true
             ;;
-        --help|-h) 
+        --help|-h)
             echo "Usage: $0 [--json]"
             echo "  --json    Output results in JSON format"
             echo "  --help    Show this help message"
-            exit 0 
+            exit 0
             ;;
-        *) 
-            ARGS+=("$arg") 
+        *)
+            ARGS+=("$arg")
             ;;
     esac
 done
@@ -30,11 +30,11 @@ source "$SCRIPT_DIR/common.sh"
 # Get all paths and variables from common functions
 eval $(get_feature_paths)
 
-# Canonicalize feature directory: if branch is BFCO-<num>-... and .specify/specs/BFCO-<num> exists, prefer it
+# Canonicalize feature directory: if branch is BFCO-<num>-... and .apex/specs/BFCO-<num> exists, prefer it
 if [[ "$CURRENT_BRANCH" =~ ^BFCO-([0-9]+)- ]]; then
     REPO_ROOT_PATH="$REPO_ROOT"
     CANON="BFCO-${BASH_REMATCH[1]}"
-    CANON_PATH="$REPO_ROOT_PATH/.specify/specs/$CANON"
+    CANON_PATH="$REPO_ROOT_PATH/.apex/specs/$CANON"
     if [[ -d "$CANON_PATH" ]]; then
         FEATURE_DIR="$CANON_PATH"
         FEATURE_SPEC="$FEATURE_DIR/spec.md"
@@ -50,7 +50,7 @@ check_feature_branch "$CURRENT_BRANCH" "$HAS_GIT" || exit 1
 mkdir -p "$FEATURE_DIR"
 
 # Copy plan template if it exists
-TEMPLATE="$REPO_ROOT/.specify/templates/plan-template.md"
+TEMPLATE="$REPO_ROOT/.apex/templates/plan-template.md"
 if [[ -f "$TEMPLATE" ]]; then
     cp "$TEMPLATE" "$IMPL_PLAN"
     echo "Copied plan template to $IMPL_PLAN"

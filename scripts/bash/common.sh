@@ -28,7 +28,7 @@ get_current_branch() {
 
     # For non-git repos, try to find the latest feature directory
     local repo_root=$(get_repo_root)
-    local specs_dir="$repo_root/.specify/specs"
+    local specs_dir="$repo_root/.apex/specs"
 
     if [[ -d "$specs_dir" ]]; then
         local latest_feature=""
@@ -90,13 +90,13 @@ check_feature_branch() {
     return 0
 }
 
-get_feature_dir() { echo "$1/.specify/specs/$2"; }
+get_feature_dir() { echo "$1/.apex/specs/$2"; }
 
 # Find feature directory by prefix (BFCO-<num>- or numeric) instead of exact branch match
 find_feature_dir_by_prefix() {
     local repo_root="$1"
     local branch_name="$2"
-    local specs_dir="$repo_root/.specify/specs"
+    local specs_dir="$repo_root/.apex/specs"
 
     # If branch uses BFCO-<num> prefix, derive canonical spec dir name BFCO-<num>
     if [[ "$branch_name" =~ ^BFCO-([0-9]+)(-|$) ]]; then
