@@ -90,7 +90,6 @@ if [[ ! -d "$TARGET_REPO" ]]; then
 fi
 
 TARGET_REPO=$(cd "$TARGET_REPO" && pwd)
-LOG_FILE="${TARGET_REPO}/sdd-integration.log"
 
 # Guard: don't integrate central into itself
 if [[ "$TARGET_REPO" == "$CENTRAL_REPO" ]]; then
@@ -102,11 +101,11 @@ if [[ "$TARGET_REPO" == "$CENTRAL_REPO" ]]; then
 fi
 
 # ─── Helper functions ─────────────────────────────────────────────
-log()     { echo -e "${GREEN}[INFO]${NC} $1"    | tee -a "$LOG_FILE"; }
-error()   { echo -e "${RED}[ERROR]${NC} $1"     | tee -a "$LOG_FILE"; exit 1; }
-warning() { echo -e "${YELLOW}[WARN]${NC} $1"   | tee -a "$LOG_FILE"; }
-success() { echo -e "${GREEN}[OK]${NC} $1"      | tee -a "$LOG_FILE"; }
-info()    { echo -e "${BLUE}[DEBUG]${NC} $1"     | tee -a "$LOG_FILE"; }
+log()     { echo -e "${GREEN}[INFO]${NC} $1"; }
+error()   { echo -e "${RED}[ERROR]${NC} $1"; exit 1; }
+warning() { echo -e "${YELLOW}[WARN]${NC} $1"; }
+success() { echo -e "${GREEN}[OK]${NC} $1"; }
+info()    { echo -e "${BLUE}[DEBUG]${NC} $1"; }
 
 confirm_or_skip() {
     if [[ "$AUTO_YES" == true ]]; then return 0; fi
@@ -222,7 +221,6 @@ main() {
     echo "╚══════════════════════════════════════════════════════════╝"
     echo ""
 
-    true > "$LOG_FILE"
 
     log "Target:  $(basename "$TARGET_REPO") ($TARGET_REPO)"
     log "Central: $(basename "$CENTRAL_REPO") ($CENTRAL_REPO)"

@@ -18,5 +18,4 @@ out/
 .mvn/
 
 .specify
-.github/agents
-.github/prompts
+.github/

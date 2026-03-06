@@ -20,7 +20,7 @@ You **MUST** consider the user input before proceeding (if not empty).
    - FEATURE_SPEC (spec.md)
    - requirements.md
    - clarifications.md (if present)
-   - `.apex/memory/constitution.md`
+   - `.github/copilot-instructions.md`
    - IMPL_PLAN template
 
 3. **Generate plan.md**: Fill the template with all design details:

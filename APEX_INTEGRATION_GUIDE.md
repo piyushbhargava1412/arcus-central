@@ -148,8 +148,7 @@ zsh: permission denied
 │       └── sdd.tasks.prompt.md
 │
 ├── .apex-ignore                                 ← Copied once (editable per project)
-├── .apex-metadata.json
-└── sdd-integration.log
+└── .apex-metadata.json
 ```
 
 ---

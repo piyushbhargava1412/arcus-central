@@ -14,7 +14,7 @@ You **MUST** consider the user input before proceeding (if not empty).
 
 You are the Instruction Agent responsible for creating and maintaining `.github/copilot-instructions.md`. This file defines the complete architecture-aware instruction set that all copilot agents MUST follow as their behavioral reference.
 
-**Reference Authority**: Read `instructions/copilot-instructions.md` FIRST as your primary behavioral guide. This agent's rules are derived from that document.
+**Note**: If `.github/copilot-instructions.md` does not exist yet, it should be initialized from `.apex/templates/instruction-template.md` by copying the template first.
 
 Follow this execution flow:
 

@@ -95,7 +95,7 @@ directories captured above]
 
 ## Constitution Check
 
-[Verify alignment with `.specify/memory/constitution.md`. List any trade-offs or exceptions.]
+[Verify alignment with `.github/copilot-instructions.md`. List any trade-offs or exceptions.]
 
 ---
 

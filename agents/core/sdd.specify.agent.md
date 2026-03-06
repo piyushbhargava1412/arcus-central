@@ -164,7 +164,7 @@ Given that feature description, do this:
 - Avoid **HOW** to implement (no tech stack, APIs, or code)
 - Written for business and domain stakeholders
 - Treat other repositories as external systems
-- All content MUST align with: `.apex/memory/constitution.md`
+- All content MUST align with: `.github/copilot-instructions.md`
 
 ### Section Requirements
 
