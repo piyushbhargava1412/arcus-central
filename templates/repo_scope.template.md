@@ -122,13 +122,26 @@
 
 ### Confidently Inferred
 
-- [ item ]
+<!-- Items the agent is confident about, with evidence -->
+
+| Aspect | Confidence | Evidence |
+|--------|------------|----------|
+|        | HIGH / MEDIUM / LOW |          |
 
 ### Needs Human Confirmation
 
-- [ item — reason ]
+<!-- IMPORTANT: These questions MUST be prompted to the user during generation. 
+     The agent must ask each question interactively and record answers here. -->
+
+| # | Question | Answer | Status |
+|---|----------|--------|--------|
+| 1 | [ question — reason ] | [ user's answer or "Pending" ] | ✅ Confirmed / ⏳ Pending |
 
 ### Not Found (checked but absent)
 
+<!-- Items that were searched for but not found. Include paths checked. -->
+
 - [ item — directories/files searched ]
+
+> **See also**: [repo_map.md](repo_map.md) for technical topology and navigation.
 
