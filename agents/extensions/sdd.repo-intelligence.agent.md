@@ -23,16 +23,16 @@ Generate two repo-level intelligence artefacts that help SDD agents and engineer
 
 ## Execution Flow
 
-### 1. Confirm Output Paths
+### 1. Output Paths
 
-Ask the user to confirm where to write outputs. Default paths:
+Write outputs to the `docs/` directory by default:
 
 ```
-<repo-root>/repo_map.md
-<repo-root>/repo_scope.md
+<repo-root>/docs/repo_map.md
+<repo-root>/docs/repo_scope.md
 ```
 
-If user specifies different paths, use those. Proceed once confirmed.
+Create the `docs/` directory if it doesn't exist. Do NOT ask the user for path confirmation — proceed immediately.
 
 ### 2. Load Templates
 
@@ -82,7 +82,7 @@ Do NOT read every file. Use a targeted scan strategy:
 **Phase 3g — Existing docs:**
 - `README.md`, `ARCHITECTURE.md`, `docs/`, `ADR/`, `CHANGELOG.md`
 
-### 4. Generate `repo_map.md`
+### 4. Generate `docs/repo_map.md`
 
 Fill the `repo_map.template.md` structure with findings from the scan:
 
@@ -90,30 +90,82 @@ Fill the `repo_map.template.md` structure with findings from the scan:
 - **Directory Structure**: actual tree (depth 2-3)
 - **Tech Stack**: with version + file path evidence
 - **Entry Points**: main class, handler, CLI entry
-- **Key Components**: controllers, services, handlers, repos — with file paths
+- **Key Components**: class names, types, file paths, purpose
 - **Contracts & Schemas**: with format + file paths
 - **Configuration**: key config files
 - **Build & Run Commands**: discovered from build files
 - **Observability**: logging, metrics, tracing evidence
 - **Module / Package Map**: logical grouping
-- **Confidence & Unknowns**: what was found, what wasn't, what needs human confirmation
+- **Scan Coverage**: brief status table of what was detected vs not found
 
-Write to confirmed output path.
+**Deduplication rules for `repo_map.md`** — this file owns **technical structure only**:
+- Do NOT include business capabilities, event ownership, API ownership tables, or dependency direction — those belong exclusively in `repo_scope.md`
+- Do NOT include a "Confidence & Unknowns" section — that lives only in `repo_scope.md`
+- Do NOT list service method signatures or internal API tables — `repo_scope.md` owns interface details
+- Do NOT repeat library versions as "upstream dependencies" — tech stack table is sufficient here
+- Do NOT add a "Test Structure" section — test files are visible in the directory tree and module map already
 
-### 5. Generate `repo_scope.md`
+Write to `docs/repo_map.md`.
+
+### 5. Generate `docs/repo_scope.md`
 
 Using the `repo_map.md` output + deeper analysis, fill the `repo_scope.template.md` structure:
 
-- **Overview**: business domain context
+- **Overview**: business domain context (NOT a repeat of repo_map overview — focus on domain, users, business role)
 - **Business Capabilities**: owned vs out-of-scope
 - **Events**: produced/consumed with topic names, schema paths, handler paths
 - **APIs**: exposed/consumed with methods, paths, spec references
 - **Data Ownership**: entities, stores, data flow
 - **Dependencies**: upstream (this repo depends on) / downstream (depends on this repo)
 - **Non-Functional Constraints**: if documented or inferable
-- **Confidence & Unknowns**: what was found, what wasn't, what needs human confirmation
+- **Confidence & Unknowns**: the **single source of truth** for confidence analysis across both files
 
-Write to confirmed output path.
+**Deduplication rules for `repo_scope.md`** — this file owns **business responsibility and interfaces only**:
+- Do NOT repeat the tech stack table — reference `repo_map.md` instead
+- Do NOT repeat the directory tree or module package map
+- Do NOT repeat build commands or observability details
+- Do NOT list "External Libraries" as upstream dependencies — those are build dependencies in `repo_map.md`'s tech stack. Upstream dependencies here means **runtime service dependencies** (APIs, databases, message brokers this repo calls)
+- Do NOT add a "Sample Data / Test Entities" section — that's test implementation detail belonging to code, not business scope
+
+Write to `docs/repo_scope.md`.
+
+### 5.5. Prompt Confirmation Questions to User
+
+After generating both files, you will have identified items under "Needs Human Confirmation" in `docs/repo_scope.md`.
+
+**You MUST prompt these questions to the user interactively in the chat.** Do not just list them in the file and move on.
+
+Procedure:
+
+1. Present ALL confirmation questions to the user in a numbered list in the chat
+2. Ask the user to answer each one (they can answer all at once or say "skip" for any)
+3. For each answer received, update the **Needs Human Confirmation** table in `docs/repo_scope.md`:
+   - Set the **Answer** column to the user's response
+   - Set the **Status** column to `✅ Confirmed`
+4. For any unanswered/skipped items, keep status as `⏳ Pending`
+5. Save the updated `docs/repo_scope.md`
+
+Example interaction:
+
+```
+I've identified the following items that need your confirmation:
+
+1. **Business scope expansion** — Is this repo intended to remain console-only or evolve to REST API?
+2. **Persistence requirements** — Should data persist across restarts?
+3. **Multi-user support** — Is concurrent access planned?
+
+Please provide answers for each (you can skip any with "skip"):
+```
+
+After receiving answers, update the table in `docs/repo_scope.md`:
+
+```markdown
+| # | Question | Answer | Status |
+|---|----------|--------|--------|
+| 1 | Business scope expansion — console-only or REST API? | "Will evolve to REST API in Q2" | ✅ Confirmed |
+| 2 | Persistence requirements — should data persist? | "Yes, PostgreSQL planned" | ✅ Confirmed |
+| 3 | Multi-user support — concurrent access planned? | skip | ⏳ Pending |
+```
 
 ### 6. Report Completion
 
@@ -122,8 +174,8 @@ Output a concise summary to chat:
 ```
 ## Repo Intelligence Generated
 
-✓ repo_map.md  → [path]
-✓ repo_scope.md → [path]
+✓ docs/repo_map.md  → [path] (technical topology)
+✓ docs/repo_scope.md → [path] (business ownership + confirmed answers)
 
 ### Confidence Summary
 - Tech Stack: HIGH (found pom.xml with versions)
@@ -132,9 +184,9 @@ Output a concise summary to chat:
 - APIs: HIGH (found OpenAPI spec at ...)
 - Business Scope: LOW (no architecture docs found)
 
-### Items Needing Human Confirmation
-1. [item] — [reason]
-2. [item] — [reason]
+### Human Confirmation
+- X of Y questions confirmed ✅
+- Z questions still pending ⏳
 ```
 
 ## Guardrails
@@ -149,9 +201,15 @@ Output a concise summary to chat:
 
 ## Behavioral Rules
 
-- **ALWAYS** confirm output paths before writing
+- **ALWAYS** write outputs to `docs/` directory (create it if needed) — do NOT ask for path confirmation
 - **ALWAYS** generate `repo_map.md` first, then `repo_scope.md`
-- **ALWAYS** include the Confidence & Unknowns section in both outputs
+- **ALWAYS** prompt the user with confirmation questions after generating both files — do NOT silently list them
+- **ALWAYS** record user's answers back into `docs/repo_scope.md` before reporting completion
+- **ALWAYS** keep `repo_map.md` technical-only and `repo_scope.md` business-only — zero content overlap
+- **NEVER** put Confidence & Unknowns in `repo_map.md` — that section lives only in `repo_scope.md`
+- **NEVER** repeat tech stack, directory tree, build commands, or test structure in `repo_scope.md`
+- **NEVER** list build dependencies (JUnit, AssertJ, etc.) as "upstream dependencies" in `repo_scope.md`
+- **NEVER** add sections not in the template (e.g., "Sample Data", "Test Structure", "CI/CD" as separate sections)
 - **NEVER** create files beyond `repo_map.md` and `repo_scope.md`
 - **NEVER** modify existing code or configuration files
 - **NEVER** run build commands or install dependencies

@@ -100,17 +100,13 @@
 
 ---
 
-## Confidence & Unknowns
+## Scan Coverage
 
-### Confidently Inferred
+<!-- Brief status of what was detected vs not. Full confidence analysis + human confirmation lives ONLY in repo_scope.md -->
 
-- [ item ]
+| Aspect | Status | Notes |
+|--------|--------|-------|
+|        | ✅ Detected / ❌ Not found |       |
 
-### Needs Human Confirmation
-
-- [ item — reason ]
-
-### Not Found (checked but absent)
-
-- [ item — directories/files searched ]
+> **See also**: [repo_scope.md](repo_scope.md) for business ownership, interface boundaries, and full confidence analysis.
 
