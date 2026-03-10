@@ -1,4 +1,6 @@
-## description: Convert requirements into structured implementation-ready user stories for a single repository context.
+--- 
+description: Convert requirements into structured implementation-ready user stories for a single repository context.
+---
 
 ## User Input
 
@@ -82,7 +84,7 @@ Guidelines:
 Avoid:
 
 * creating trivial stories for small validations or edge cases
-* splitting stories if it breaks logical feature flow
+* splitting stories if it breaks the logical feature flow
 
 Typical decomposition:
 

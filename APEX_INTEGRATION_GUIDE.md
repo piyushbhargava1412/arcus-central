@@ -133,7 +133,7 @@ zsh: permission denied
 │   │   ├── sdd.implement.agent.md
 │   │   ├── sdd.instructions.agent.md
 │   │   ├── sdd.plan.agent.md
-│   │   ├── sdd.review.agent.md
+│   │   ├── sdd.repo-intelligence.agent.md
 │   │   ├── sdd.specify.agent.md
 │   │   └── sdd.tasks.agent.md
 │   └── prompts/                                 ← Read-only copies (chmod 444)
@@ -145,7 +145,6 @@ zsh: permission denied
 │       ├── sdd.instructions.prompt.md
 │       ├── sdd.plan.prompt.md
 │       ├── sdd.repo-intelligence.prompt.md
-│       ├── sdd.review.prompt.md
 │       ├── sdd.specify.prompt.md
 │       └── sdd.tasks.prompt.md
 │

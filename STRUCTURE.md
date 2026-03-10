@@ -29,10 +29,10 @@ otto_apex-central/
 │   │   ├── sdd.implement.agent.md                 # Implementation guidance
 │   │   └── sdd.groom.agent.md                     # Story grooming (core)
 │   │
-│   └── extensions/                                # Extension agents (3 files)
-│       ├── sdd.groom-story.agent.md               # Story grooming (extended)
-│       ├── sdd.instructions.agent.md              # Instruction architecture
-│       └── sdd.review.agent.md                    # Code & spec review
+   └── extensions/                                # Extension agents (3 files)
+       ├── sdd.groom-story.agent.md               # Story grooming (extended)
+       ├── sdd.instructions.agent.md              # Instruction architecture
+       └── sdd.repo-intelligence.agent.md         # Repository intelligence
 │
 ├── prompts/                                       # Agent prompts
 │   ├── core/                                      # Core prompts (6 files)
@@ -43,11 +43,10 @@ otto_apex-central/
 │   │   ├── sdd.analyze.prompt.md
 │   │   └── sdd.implement.prompt.md
 │   │
-│   └── extensions/                                # Extension prompts (4 files)
-│       ├── sdd.groom-story.prompt.md
+│   └── extensions/                                # Extension prompts (3 files)
 │       ├── sdd.groom.prompt.md
 │       ├── sdd.instructions.prompt.md
-│       └── sdd.review.prompt.md
+│       └── sdd.repo-intelligence.prompt.md
 │
 ├── templates/                                     # Reusable templates (9 files)
 │   ├── spec-template.md                           # Specification template
@@ -114,7 +113,7 @@ otto_apex-central/
 | [sdd.groom](agents/core/sdd.groom.agent.md) | Story grooming |
 | [sdd.groom-story](agents/extensions/sdd.groom-story.agent.md) | Story grooming (extended) |
 | [sdd.instructions](agents/extensions/sdd.instructions.agent.md) | Instruction architecture |
-| [sdd.review](agents/extensions/sdd.review.agent.md) | Code & spec review |
+| [sdd.repo-intelligence](agents/extensions/sdd.repo-intelligence.agent.md) | Repository intelligence |
 
 ### Templates
 

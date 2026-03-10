@@ -2,7 +2,7 @@
 
 This file maintains a registry of all available agents, their capabilities, and usage information.
 
-## Core Agents (7)
+## Core Agents (6)
 
 ### sdd.specify
 - **File**: `agents/core/sdd.specify.agent.md`
@@ -70,8 +70,12 @@ This file maintains a registry of all available agents, their capabilities, and 
   - Ignore file creation per detected tech stack
   - Phase-by-phase execution with dependency respect
 
+---
+
+## Extension Agents (3)
+
 ### sdd.groom
-- **File**: `agents/core/sdd.groom.agent.md`
+- **File**: `agents/extensions/sdd.groom.agent.md`
 - **Prompt**: `prompts/extensions/sdd.groom.prompt.md`
 - **Command**: `/sdd.groom <requirement>`
 - **Purpose**: Transform broad business or technical requirements into structured, implementation-ready user stories
@@ -80,21 +84,6 @@ This file maintains a registry of all available agents, their capabilities, and 
   - User story generation (8-section template)
   - Acceptance criteria definition
   - Repository-context-aware story scoping
-
----
-
-## Extension Agents (4)
-
-### sdd.groom-story
-- **File**: `agents/extensions/sdd.groom-story.agent.md`
-- **Prompt**: `prompts/extensions/sdd.groom-story.prompt.md`
-- **Command**: `/sdd.groom-story`
-- **Purpose**: Refine and groom user stories for development
-- **Key Capabilities**:
-  - Story refinement
-  - Acceptance criteria definition
-  - Story estimation
-  - Story validation
 
 ### sdd.instructions
 - **File**: `agents/extensions/sdd.instructions.agent.md`
@@ -123,16 +112,6 @@ This file maintains a registry of all available agents, their capabilities, and 
   - Evidence-based output with file path citations
   - Confidence & Unknowns reporting
 
-### sdd.review
-- **File**: `agents/extensions/sdd.review.agent.md`
-- **Prompt**: `prompts/extensions/sdd.review.prompt.md`
-- **Command**: `/sdd.review`
-- **Purpose**: Review specifications, code, and deliverables for quality and compliance
-- **Key Capabilities**:
-  - Code review
-  - Specification review
-  - Quality review
-  - Compliance review
 
 ---
 
@@ -156,16 +135,7 @@ The typical SDD workflow follows this sequence:
 /sdd.analyze             →  analysis report (consistency check)
         ↓
 /sdd.implement           →  code (execute tasks)
-        ↓
-/sdd.review              →  review feedback
 ```
-
-### Supporting Agents
-
-| Agent | When to Use |
-|-------|-------------|
-| `/sdd.instructions` | After onboarding — generates `.github/copilot-instructions.md` |
-| `/sdd.groom-story` | When refining individual stories before `/sdd.specify` |
 
 ---
 
@@ -173,9 +143,9 @@ The typical SDD workflow follows this sequence:
 
 | Category | Count |
 |----------|-------|
-| Core agents | 7 |
-| Extension agents | 4 |
+| Core agents | 6 |
+| Extension agents | 3 |
 | Core prompts | 6 |
-| Extension prompts | 5 |
-| Templates | 11 |
-| **Total agent files** | **11** |
+| Extension prompts | 3 |
+| Templates | 10 |
+| **Total agent files** | **9** |
