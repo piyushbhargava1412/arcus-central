@@ -82,7 +82,6 @@ This file maintains a registry of all available agents, their capabilities, and 
 
 ### sdd.groom
 - **File**: `agents/extensions/sdd.groom.agent.md`
-- **Prompt**: `prompts/extensions/sdd.groom.prompt.md`
 - **Command**: `/sdd.groom <requirement>`
 - **Purpose**: Transform broad business or technical requirements into structured, implementation-ready user stories
 - **Key Capabilities**:
@@ -91,49 +90,17 @@ This file maintains a registry of all available agents, their capabilities, and 
   - Acceptance criteria definition
   - Repository-context-aware story scoping
 
-### sdd.review
-
-- **File**: `agents/extensions/sdd.review.agent.md`
-- **Purpose**: Review specifications, code, and deliverables
-- **Key Capabilities**:
-  - Code review
-  - Specification review
-  - Quality review
-  - Compliance review
-  - Feedback generation
-
 ### sdd.instructions
 
 - **File**: `agents/extensions/sdd.instructions.agent.md`
-- **Reusable Skills**: Uses 3 reusable skills:
-  - `repository-analysis/SKILL.md` - Repository analysis and ignore pattern processing (reusable by any agent)
-  - `markdown-validation/SKILL.md` - Validate file paths, links, and markdown quality (reusable by any agent)
-  - `markdown-generation/SKILL.md` - Format and structure markdown documents (reusable by any agent)
-- **Deployment**: Skills deployed to `.github/skills/{skill-name}/SKILL.md` in target repos
-- **Purpose**: Create or update the copilot instruction architecture and ensure all dependent components stay in sync with governance standards
-- **Architecture**: Uses reusable skills for generic capabilities; instruction-specific procedures are inline in agent file
+- **Purpose**: Create or update the copilot instruction architecture and ensure governance sync
 - **Key Capabilities**:
   - Repository structure analysis (via repository-analysis skill)
-  - Ignore pattern processing (via repository-analysis skill)
-  - Instruction file loading and parsing
-  - Content classification and version management
+  - Instruction file loading, parsing, and content classification
   - Cross-reference validation (via markdown-validation skill)
   - Markdown formatting and generation (via markdown-generation skill)
-  - Amendment log management
-  - Semantic versioning (MAJOR/MINOR/PATCH)
-  - Sync validation report generation
-  - Dependent file updates
-  - Cross-reference validation (via Validation Skills)
-  - Sync validation reporting (via Output Generation Skills)
-  - Amendment tracking with MAJOR/MINOR/PATCH versioning (via Version Management Skills)
-  - Dependent file synchronization (via Documentation Skills)
-- **Skills Categories**:
-  1. Repository Analysis Skills
-  2. Instruction Management Skills
-  3. Validation Skills
-  4. Documentation Skills
-  5. Version Management Skills
-  6. Output Generation Skills
+  - Amendment log management with semantic versioning (MAJOR/MINOR/PATCH)
+  - Dependent file synchronization
   
 ### sdd.repo-intelligence
 - **File**: `agents/extensions/sdd.repo-intelligence.agent.md`
@@ -151,6 +118,74 @@ This file maintains a registry of all available agents, their capabilities, and 
   - Evidence-based output with file path citations
   - Confidence & Unknowns reporting
 
+---
+
+## Reusable Skills (5)
+
+Skills are modular capabilities that agents can leverage to reduce complexity and improve maintainability. Each skill encapsulates specific functionality that can be reused across multiple agents.
+
+### repository-analysis
+
+- **File**: `skills/repository-analysis/SKILL.md`
+- **Purpose**: Repository analysis capabilities including ignore pattern processing, structure analysis, and codebase classification
+- **Capabilities**:
+  - Ignore pattern processing (.apex-ignore file handling)
+  - Repository structure analysis (directory traversal, module identification)
+  - Codebase classification (project stage, architecture pattern, feature mapping)
+  - Technology stack extraction from actual code
+- **Used By**: `sdd.instructions`, `sdd.repo-intelligence`
+
+### file-path-resolution
+
+- **File**: `skills/file-path-resolution/SKILL.md`
+- **Purpose**: Standardize path handling, resolution, and validation across all agents
+- **Capabilities**:
+  - Path normalization (absolute/relative conversion, OS-agnostic separators)
+  - Path validation (existence checks, permission validation, safety checks)
+  - Story ID extraction (from paths, branch names, user input)
+  - Feature directory path generation (canonical .apex/specs/<STORY-ID>/ structure)
+  - Template path resolution (locate templates in .apex/templates/ or templates/)
+  - Output path generation (docs/, .apex/ artifact paths)
+  - Relative path conversion (for markdown links)
+  - Repository root detection
+- **Used By**: `sdd.specify`, `sdd.clarify`, `sdd.plan`, `sdd.tasks`, `sdd.analyze`, `sdd.implement`, `sdd.groom`, `sdd.instructions`, `sdd.repo-intelligence`
+
+### template-hydration
+
+- **File**: `skills/template-hydration/SKILL.md`
+- **Purpose**: Load templates and replace placeholders with structured data, separating content generation from formatting
+- **Capabilities**:
+  - Template loading (from .apex/templates/ or templates/)
+  - Placeholder pattern parsing ([PLACEHOLDER], $VARIABLE, HTML comments)
+  - Placeholder mapping (accept structured JSON/dict data)
+  - Content replacement (simple values, multi-line content, tables, lists)
+  - Structure preservation (maintain section order, headers, formatting)
+  - Auto-generated values ([DATE], [TIMESTAMP], [REPO_NAME])
+  - Output validation (check all required placeholders filled)
+- **Used By**: `sdd.specify`, `sdd.plan`, `sdd.tasks`, `sdd.groom`, `sdd.instructions`, `sdd.repo-intelligence`
+
+### markdown-generation
+
+- **File**: `skills/markdown-generation/SKILL.md`
+- **Purpose**: Generate well-formatted markdown documents with proper structure, syntax, and readability
+- **Capabilities**:
+  - Document structure (heading hierarchy, table of contents, metadata)
+  - Markdown formatting (tables, lists, code blocks, emphasis, blockquotes)
+  - Link and reference management (internal, external, reference-style links)
+  - Content organization (consistent style, visual hierarchy, examples)
+  - Quality standards (clear language, logical flow, proper grammar)
+- **Used By**: `sdd.groom`, `sdd.instructions`, `sdd.repo-intelligence`
+
+### markdown-validation
+
+- **File**: `skills/markdown-validation/SKILL.md`
+- **Purpose**: Validate markdown documents including file paths, links, cross-references, placeholders, and content quality
+- **Capabilities**:
+  - File path validation (check existence, relative paths, broken links)
+  - Cross-reference validation (internal links, anchor links, circular references)
+  - Content quality checks (no placeholders, consistent headings, valid syntax)
+  - Structural validation (required sections, formatting, code blocks, tables)
+- **Used By**: `sdd.specify`, `sdd.clarify`, `sdd.plan`, `sdd.tasks`, `sdd.analyze`, `sdd.instructions`, `sdd.repo-intelligence`
 
 ---
 
@@ -184,7 +219,8 @@ The typical SDD workflow follows this sequence:
 |----------|-------|
 | Core agents | 6 |
 | Extension agents | 3 |
-| Core prompts | 6 |
-| Extension prompts | 3 |
+| Reusable skills | 5 |
+| Prompts (non-stub) | 1 |
 | Templates | 10 |
-| **Total agent files** | **9** |
+| **Total agents** | **9** |
+| **Total skills** | **5** |

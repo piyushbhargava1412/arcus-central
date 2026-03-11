@@ -27,8 +27,16 @@ apex-integrate
 | `apex-integrate --sync` | Re-sync all symlinks |
 | `apex-integrate --yes`  | Non-interactive (CI/CD) |
 
-## Documentation
+## Project Structure
 
-- [Integration Guide](APEX_INTEGRATION_GUIDE.md) — Full setup and usage details
+**Agents** → Business logic for SDD workflow  
+**Skills** → Reusable infrastructure (paths, templates, validation)  
+**Templates** → Document templates for specs, plans, tasks  
+**Prompts** → Integration with repo-intelligence (minimal - redirects to agents)  
+**Instructions** → Engineering and architecture guidelines  
+
+## Key Files
+
+- [Integration Guide](APEX_INTEGRATION_GUIDE.md) — Full setup and usage
 - [Repository Structure](STRUCTURE.md) — Central repo layout
-- [Docs Index](docs/INDEX.md) — All documentation 
+- [Agent Registry](registry/AGENT_REGISTRY.md) — All agents and skills 

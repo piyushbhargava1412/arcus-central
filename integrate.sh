@@ -2,24 +2,8 @@
 
 # integrate.sh — APEX SDD Framework Integration Script v5.0
 #
-# Distributes the SDD (Spec Driven Development) framework to target repos.
-# Centralized pull-model integration.
-#
-# Strategy:
-#   .apex/          → SYMLINKS (templates, scripts, instructions)
-#                     Zero duplication, instant central updates.
-#   .github/agents/ → READ-ONLY COPIES of agent files
-#   .github/prompts/→ READ-ONLY COPIES of prompt files
-#                     Copies required because IntelliJ agent tab
-#                     does not follow symlinks for IDE discovery.
-#   .apex-ignore    → COPIED (only if not already present)
-#                     Tells sdd.instructions agent which paths to skip.
-#
-# Usage:
-#   cd my-project && ../otto_apex-central/integrate.sh
-#   apex-integrate              # if CLI installed
-#   apex-integrate --sync       # re-sync everything
-#   apex-integrate --yes        # non-interactive (CI/CD)
+# Distributes the SDD framework to target repos via symlinks + read-only copies.
+# Run with --help for usage details.
 
 set -e
 
@@ -199,6 +183,41 @@ copy_file_readonly() {
     return 0
 }
 
+# ─── Remove helpers (for cleanup/remove modes) ──────────────────
+remove_md_files() {
+    local dir="$1"
+    local pattern="$2"
+    local label="$3"
+    local count=0
+    if [[ -d "$dir" ]]; then
+        while IFS= read -r -d '' file; do
+            chmod u+w "$file" 2>/dev/null || true
+            rm -f "$file"
+            ((count++))
+        done < <(find "$dir" \( -type f -o -type l \) -name "$pattern" -print0 2>/dev/null)
+        if [[ "$count" -gt 0 ]]; then
+            success "Removed: $count $label files from $(basename "$dir")/"
+        fi
+    fi
+    echo "$count"
+}
+
+validate_readonly_copies() {
+    local dir="$1"
+    local pattern="$2"
+    local label="$3"
+    log "$label:"
+    for f in "$dir"/$pattern; do
+        [[ -f "$f" ]] || continue
+        if [[ -w "$f" ]]; then
+            warning "  ⚠ $(basename "$f") (writable!)"
+        else
+            success "  ✓ $(basename "$f") (read-only)"
+        fi
+    done
+    echo ""
+}
+
 # ─── Validation ───────────────────────────────────────────────────
 validate_central_structure() {
     local central_path="$1"
@@ -239,7 +258,6 @@ main() {
     echo "╚══════════════════════════════════════════════════════════╝"
     echo ""
 
-
     log "Target:  $(basename "$TARGET_REPO") ($TARGET_REPO)"
     log "Central: $(basename "$CENTRAL_REPO") ($CENTRAL_REPO)"
     log "Mode:    $(if [[ "$SYNC_MODE" == true ]]; then echo "SYNC"; else echo "INTEGRATE"; fi)"
@@ -269,31 +287,20 @@ main() {
         done
 
         # Remove .github/agents/ files
-        if [[ -d "$TARGET_REPO/.github/agents" ]]; then
-            local agent_removals=0
-            while IFS= read -r -d '' file; do
-                chmod u+w "$file" 2>/dev/null || true
-                rm -f "$file"
-                ((agent_removals++))
-            done < <(find "$TARGET_REPO/.github/agents" -name "*.agent.md" -type f -print0 2>/dev/null)
-            if [[ "$agent_removals" -gt 0 ]]; then
-                ((removal_count += agent_removals))
-                success "Removed: $agent_removals agent files from .github/agents/"
-            fi
-        fi
+        local agent_removals
+        agent_removals=$(remove_md_files "$TARGET_REPO/.github/agents" "*.agent.md" "agent")
+        ((removal_count += agent_removals))
 
         # Remove .github/prompts/ files
-        if [[ -d "$TARGET_REPO/.github/prompts" ]]; then
-            local prompt_removals=0
-            while IFS= read -r -d '' file; do
-                chmod u+w "$file" 2>/dev/null || true
-                rm -f "$file"
-                ((prompt_removals++))
-            done < <(find "$TARGET_REPO/.github/prompts" -name "*.prompt.md" -type f -print0 2>/dev/null)
-            if [[ "$prompt_removals" -gt 0 ]]; then
-                ((removal_count += prompt_removals))
-                success "Removed: $prompt_removals prompt files from .github/prompts/"
-            fi
+        local prompt_removals
+        prompt_removals=$(remove_md_files "$TARGET_REPO/.github/prompts" "*.prompt.md" "prompt")
+        ((removal_count += prompt_removals))
+
+        # Remove .github/skills/ symlink
+        if [[ -L "$TARGET_REPO/.github/skills" ]]; then
+            rm -f "$TARGET_REPO/.github/skills"
+            ((removal_count++))
+            success "Removed: .github/skills (symlink)"
         fi
 
         # Remove .apex-ignore
@@ -353,27 +360,20 @@ main() {
         done
 
         # Remove .github/agents/ files (could be old symlinks or copies)
-        if [[ -d "$TARGET_REPO/.github/agents" ]]; then
-            while IFS= read -r -d '' file; do
-                chmod u+w "$file" 2>/dev/null || true
-                rm -f "$file"
-                ((cleanup_count++))
-            done < <(find "$TARGET_REPO/.github/agents" \( -type f -o -type l \) -name "*.agent.md" -print0 2>/dev/null)
-            if [[ "$cleanup_count" -gt 0 ]]; then
-                info "Removed agent files from .github/agents/"
-            fi
-        fi
+        local agent_cleanup
+        agent_cleanup=$(remove_md_files "$TARGET_REPO/.github/agents" "*.agent.md" "agent")
+        ((cleanup_count += agent_cleanup))
 
         # Remove .github/prompts/ files (could be old symlinks or copies)
-        if [[ -d "$TARGET_REPO/.github/prompts" ]]; then
-            while IFS= read -r -d '' file; do
-                chmod u+w "$file" 2>/dev/null || true
-                rm -f "$file"
-                ((cleanup_count++))
-            done < <(find "$TARGET_REPO/.github/prompts" \( -type f -o -type l \) -name "*.prompt.md" -print0 2>/dev/null)
-            if [[ "$cleanup_count" -gt 0 ]]; then
-                info "Removed prompt files from .github/prompts/"
-            fi
+        local prompt_cleanup
+        prompt_cleanup=$(remove_md_files "$TARGET_REPO/.github/prompts" "*.prompt.md" "prompt")
+        ((cleanup_count += prompt_cleanup))
+
+        # Remove .github/skills/ symlink
+        if [[ -L "$TARGET_REPO/.github/skills" ]]; then
+            rm -f "$TARGET_REPO/.github/skills"
+            ((cleanup_count++))
+            info "Removed: .github/skills (symlink)"
         fi
 
         # Remove metadata file
@@ -472,6 +472,7 @@ main() {
         ".apex*"
         ".github/agents"
         ".github/prompts"
+        ".github/skills"
     )
 
     # Create .gitignore if it doesn't exist
@@ -508,27 +509,8 @@ main() {
     done
     echo ""
 
-    log ".github/agents/ (read-only copies):"
-    for f in "$TARGET_REPO/.github/agents"/*.agent.md; do
-        [[ -f "$f" ]] || continue
-        if [[ -w "$f" ]]; then
-            warning "  ⚠ $(basename "$f") (writable!)"
-        else
-            success "  ✓ $(basename "$f") (read-only)"
-        fi
-    done
-    echo ""
-
-    log ".github/prompts/ (read-only copies):"
-    for f in "$TARGET_REPO/.github/prompts"/*.prompt.md; do
-        [[ -f "$f" ]] || continue
-        if [[ -w "$f" ]]; then
-            warning "  ⚠ $(basename "$f") (writable!)"
-        else
-            success "  ✓ $(basename "$f") (read-only)"
-        fi
-    done
-    echo ""
+    validate_readonly_copies "$TARGET_REPO/.github/agents" "*.agent.md" ".github/agents/ (read-only copies)"
+    validate_readonly_copies "$TARGET_REPO/.github/prompts" "*.prompt.md" ".github/prompts/ (read-only copies)"
 
     log ".github/skills/:"
     [[ -L "$TARGET_REPO/.github/skills" ]] && \

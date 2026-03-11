@@ -34,12 +34,16 @@ otto_apex-central/
        ├── sdd.instructions.agent.md              # Instruction architecture
        └── sdd.repo-intelligence.agent.md         # Repository intelligence
 │
-├── skills/                                        # Reusable agent skills
-│   ├── repository-analysis/                  # Repository analysis skill (reusable)
+├── skills/                                        # Reusable agent skills (5 skills)
+│   ├── repository-analysis/                       # Repository analysis & ignore patterns
 │   │   └── SKILL.md
-│   ├── markdown-validation/                  # Markdown validation skill (reusable)
+│   ├── file-path-resolution/                      # Path normalization & validation
 │   │   └── SKILL.md
-│   └── markdown-generation/                  # Markdown generation skill (reusable)
+│   ├── template-hydration/                        # Template loading & placeholder replacement
+│   │   └── SKILL.md
+│   ├── markdown-validation/                       # Markdown validation & quality checks
+│   │   └── SKILL.md
+│   └── markdown-generation/                       # Markdown formatting & structure
 │       └── SKILL.md
 │
 ├── prompts/                                       # Agent prompts
@@ -123,6 +127,16 @@ otto_apex-central/
 | [sdd.instructions](agents/extensions/sdd.instructions.agent.md) | Instruction architecture |
 | [sdd.repo-intelligence](agents/extensions/sdd.repo-intelligence.agent.md) | Repository intelligence |
 
+### Skills
+
+| Skill | Purpose |
+|-------|---------|
+| [repository-analysis](skills/repository-analysis/SKILL.md) | Repository analysis & ignore patterns |
+| [file-path-resolution](skills/file-path-resolution/SKILL.md) | Path normalization & validation |
+| [template-hydration](skills/template-hydration/SKILL.md) | Template loading & placeholder replacement |
+| [markdown-validation](skills/markdown-validation/SKILL.md) | Markdown validation & quality checks |
+| [markdown-generation](skills/markdown-generation/SKILL.md) | Markdown formatting & structure |
+
 ### Templates
 
 - [Specification](templates/spec-template.md) · [Plan](templates/plan-template.md) · [Tasks](templates/tasks-template.md) · [Checklist](templates/checklist-template.md)
@@ -144,9 +158,9 @@ otto_apex-central/
 | Directory              | Contents                                                      | Files |
 |------------------------|---------------------------------------------------------------|-------|
 | `/agents/core`         | Core SDD agents                                               | 7     |
-| `/agents/extensions`   | Extension agents                                              | 4     |
-| `/prompts/core`        | Core agent prompts                                            | 6     |
-| `/prompts/extensions`  | Extension agent prompts                                       | 5     |
+| `/agents/extensions`   | Extension agents                                              | 3     |
+| `/skills`              | Reusable agent skills (5 skills + README)                     | 6     |
+| `/prompts`             | Agent prompts (core + extensions)                             | 9     |
 | `/templates`           | Document templates (+ stories/ subfolder)                     | 11    |
 | `/instructions`        | Engineering, architecture, language, infra, testing guidelines | 5     |
 | `/scripts/bash`        | Automation scripts                                            | 5     |

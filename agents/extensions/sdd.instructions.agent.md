@@ -18,14 +18,14 @@ You are the Instruction Agent responsible for creating and maintaining `.github/
 
 **Reusable Skills**: This agent leverages the following reusable skills:
 
-- `../skills/repository-analysis/SKILL.md` - Repository analysis and ignore pattern processing
-- `../skills/markdown-validation/SKILL.md` - Validate file paths, links, and markdown quality
-- `../skills/markdown-generation/SKILL.md` - Format and structure markdown documents
+- `skills/repository-analysis/SKILL.md` - Repository analysis and ignore pattern processing
+- `skills/markdown-validation/SKILL.md` - Validate file paths, links, and markdown quality
+- `skills/markdown-generation/SKILL.md` - Format and structure markdown documents
 
 Follow this execution flow:
 
 1. **Repository Analysis (Golden Rule)**
-   - Apply **Repository Analysis Skills** (see `../skills/repository-analysis/SKILL.md`)
+   - Apply **Repository Analysis Skills** (see `skills/repository-analysis/SKILL.md`)
    - **CRITICAL**: Only document actual implementation, never assume or guess
 
 2. **Load Existing Instructions**
@@ -64,7 +64,7 @@ Follow this execution flow:
    - Preserve all previous amendments
 
 5. **Validate Consistency with Dependent Files**
-   - Apply **Markdown Validation Skills** (see `../skills/markdown-validation/SKILL.md`)
+   - Apply **Markdown Validation Skills** (see `skills/markdown-validation/SKILL.md`)
    - Check instruction-specific cross-references:
      - `instructions/engineering/engineering-guidelines.md` alignment
      - `instructions/architecture/architecture-guidelines.md` consistency
@@ -76,7 +76,7 @@ Follow this execution flow:
    - **CRITICAL**: File validation results belong in output report, NOT in copilot-instructions.md
 
 6. **Mandatory Quality Checks**
-   - Apply **Markdown Validation Skills** (see `../skills/markdown-validation/SKILL.md`)
+   - Apply **Markdown Validation Skills** (see `skills/markdown-validation/SKILL.md`)
    - Instruction-specific checks:
      - Version incremented correctly per semantic versioning rules
      - Amendment log updated with new entry
@@ -86,7 +86,7 @@ Follow this execution flow:
      - Declarative language: MUST/SHOULD/MAY clearly marked
 
 7. **Write Updated Instructions**
-   - Apply **Markdown Generation Skills** (see `../skills/markdown-generation/SKILL.md`)
+   - Apply **Markdown Generation Skills** (see `skills/markdown-generation/SKILL.md`)
    - Write completed copilot-instructions.md to `.github/copilot-instructions.md`
    - **CRITICAL**: Exclude validation status and file existence tables
    - Include only project-specific content, not meta-information
@@ -99,7 +99,7 @@ Follow this execution flow:
    - Document all updates in validation report
 
 9. **Produce Sync Validation Report**
-   - Apply **Markdown Generation Skills** (see `../skills/markdown-generation/SKILL.md`)
+   - Apply **Markdown Generation Skills** (see `skills/markdown-generation/SKILL.md`)
    - Include:
      - Version change: old → new with bump justification
      - Sections modified: added/modified/removed
@@ -113,9 +113,9 @@ Follow this execution flow:
 
 **Reusable Skills**: Apply behavioral rules from the following skills:
 
-- Repository Analysis: `../skills/repository-analysis/SKILL.md`
-- Markdown Validation: `../skills/markdown-validation/SKILL.md`
-- Markdown Generation: `../skills/markdown-generation/SKILL.md`
+- Repository Analysis: `skills/repository-analysis/SKILL.md`
+- Markdown Validation: `skills/markdown-validation/SKILL.md`
+- Markdown Generation: `skills/markdown-generation/SKILL.md`
 
 ### Agent-Specific Critical Rules
 
