@@ -21,6 +21,9 @@ Generate two repo-level intelligence artefacts that help SDD agents and engineer
 - `repo_map` helps a dev/agent **navigate code**
 - `repo_scope` helps **grooming and cross-repo reasoning**
 
+**Reusable Skills**: This agent leverages:
+- `skills/repository-analysis/SKILL.md` - Repository scanning with .apex-ignore support
+
 ## Execution Flow
 
 ### 1. Output Paths
@@ -44,6 +47,8 @@ Read the templates that define the required structure:
 If templates aren't found via `.apex/`, check the current repo's `templates/` directory.
 
 ### 3. Scan Repository (Smart, Not Exhaustive)
+
+**Apply Repository Analysis Skills** (see `skills/repository-analysis/SKILL.md`)
 
 Do NOT read every file. Use a targeted scan strategy:
 
@@ -201,6 +206,9 @@ Output a concise summary to chat:
 
 ## Behavioral Rules
 
+**Apply Repository Analysis Skills** (see `skills/repository-analysis/SKILL.md`) for ignore pattern handling.
+
+**Output Generation:**
 - **ALWAYS** write outputs to `docs/` directory (create it if needed) — do NOT ask for path confirmation
 - **ALWAYS** generate `repo_map.md` first, then `repo_scope.md`
 - **ALWAYS** prompt the user with confirmation questions after generating both files — do NOT silently list them
