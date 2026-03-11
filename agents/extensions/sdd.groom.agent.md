@@ -12,6 +12,10 @@ You **MUST** consider the user input before proceeding (if not empty).
 
 ---
 
+**Reusable Skills**: This agent leverages:
+- `skills/markdown-generation/SKILL.md` - Format and structure markdown documents
+- `skills/markdown-validation/SKILL.md` - Validate markdown quality and structure
+
 # Groom Agent Workflow
 
 ## 1. Setup
@@ -95,6 +99,8 @@ Typical decomposition:
 
 ## 5. Output
 
+**Apply Markdown Generation Skills** (see `skills/markdown-generation/SKILL.md`)
+
 Produce the final story document.
 
 Requirements:
@@ -111,6 +117,8 @@ Output rules:
 * Do not include explanations
 * Do not include commentary
 * Do not generate code
+
+**Apply Markdown Validation Skills** (see `skills/markdown-validation/SKILL.md`) to ensure the story document has proper structure, no broken links, and consistent formatting.
 
 Return the story document content directly in the response.
 

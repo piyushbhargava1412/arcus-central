@@ -23,6 +23,8 @@ Generate two repo-level intelligence artefacts that help SDD agents and engineer
 
 **Reusable Skills**: This agent leverages:
 - `skills/repository-analysis/SKILL.md` - Repository scanning with .apex-ignore support
+- `skills/markdown-generation/SKILL.md` - Format and structure markdown documents
+- `skills/markdown-validation/SKILL.md` - Validate file paths, links, and markdown quality
 
 ## Execution Flow
 
@@ -89,6 +91,8 @@ Do NOT read every file. Use a targeted scan strategy:
 
 ### 4. Generate `docs/repo_map.md`
 
+**Apply Markdown Generation Skills** (see `skills/markdown-generation/SKILL.md`)
+
 Fill the `repo_map.template.md` structure with findings from the scan:
 
 - **Overview**: 2-3 sentences about what this repo is
@@ -110,9 +114,13 @@ Fill the `repo_map.template.md` structure with findings from the scan:
 - Do NOT repeat library versions as "upstream dependencies" — tech stack table is sufficient here
 - Do NOT add a "Test Structure" section — test files are visible in the directory tree and module map already
 
+**Apply Markdown Validation Skills** (see `skills/markdown-validation/SKILL.md`) to validate the generated document.
+
 Write to `docs/repo_map.md`.
 
 ### 5. Generate `docs/repo_scope.md`
+
+**Apply Markdown Generation Skills** (see `skills/markdown-generation/SKILL.md`)
 
 Using the `repo_map.md` output + deeper analysis, fill the `repo_scope.template.md` structure:
 
@@ -131,6 +139,8 @@ Using the `repo_map.md` output + deeper analysis, fill the `repo_scope.template.
 - Do NOT repeat build commands or observability details
 - Do NOT list "External Libraries" as upstream dependencies — those are build dependencies in `repo_map.md`'s tech stack. Upstream dependencies here means **runtime service dependencies** (APIs, databases, message brokers this repo calls)
 - Do NOT add a "Sample Data / Test Entities" section — that's test implementation detail belonging to code, not business scope
+
+**Apply Markdown Validation Skills** (see `skills/markdown-validation/SKILL.md`) to validate the generated document.
 
 Write to `docs/repo_scope.md`.
 

@@ -14,6 +14,9 @@ You **MUST** consider the user input before proceeding (if not empty).
 
 Goal: Detect and reduce ambiguity or missing decision points in the active feature specification and record the clarifications directly in the spec file.
 
+**Reusable Skills**: This agent leverages:
+- `skills/markdown-validation/SKILL.md` - Validate markdown structure and consistency
+
 Note: This clarification workflow is expected to run (and be completed) BEFORE invoking `/sdd.plan`. If the user explicitly states they are skipping clarification (e.g., exploratory spike), you may proceed, but must warn that downstream rework risk increases.
 
 Execution steps:
@@ -147,7 +150,7 @@ Execution steps:
     - Keep clarifications minimal and testable.
     - **ONLY CREATE `clarifications.md` if and only if at least one clarification question is asked and answered.** This file should contain the session notes and internal analysis (optional—may be omitted if desired for maximum simplicity).
 
-6. Validation (performed after EACH write plus final pass):
+6. **Validation**: Apply **Markdown Validation Skills** (see `skills/markdown-validation/SKILL.md`) performed after EACH write plus final pass:
    - Clarifications section in spec.md contains exactly one bullet per accepted answer (no duplicates).
    - Total asked (accepted) questions ≤ 5.
    - No lingering vague placeholders remain in spec.md.
