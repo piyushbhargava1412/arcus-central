@@ -43,34 +43,48 @@ Follow this execution flow:
      - **MINOR**: New principle added, new mandatory check introduced, expanded guidance
      - **PATCH**: Clarifications, wording fixes, typo corrections, non-semantic refinements
 
+3.5. **Discover and Check Instruction Files**
+
+- **CRITICAL**: Dynamically discover ALL instruction files under `instructions/` folder
+- Search for all `.md` files recursively in `instructions/` directory
+- For EACH discovered instruction file:
+  - Check if file exists and has meaningful content
+  - Note the file path for reference (file names are self-explanatory)
+  - Organize by subfolder (e.g., engineering/, architecture/, languages/, infra/, testing/)
+  - Mark as available for referencing in copilot-instructions.md
+- For files that are empty or have no meaningful content:
+  - Mark as "N/A (not yet created)" ONLY if file has no meaningful content
+- **BENEFIT**: No agent updates needed when new instruction files are added
+
 4. **Update Instructions Content**
    - Keep copilot-instructions.md MINIMAL (lightweight project-specific index)
    - REFERENCE instruction files instead of duplicating content
    - Document only actual implementation in non-ignored paths
-   - Use "N/A" for sections with no real data
+   - Use "N/A (not yet created)" ONLY for files that don't exist or are empty (verified in step 3.5)
    - **Content Classification:**
      - **DO Document** (project-specific only):
        - Project Context: Repository name, purpose, actual tech stack
        - System Functionalities: ONLY application features from actual code
        - Key Modules: ONLY application modules (NOT framework paths)
      - **DON'T Document** (reference instead):
-       - Engineering Principles → reference `engineering-guidelines.md`
-       - Architecture Guidelines → reference `architecture-guidelines.md`
-       - Language Standards → reference `language-guidelines.md`
-       - Infrastructure → reference `infrastructure-guidelines.md`
-       - Testing → reference `testing-guidelines.md`
+       - Engineering Principles → reference `engineering-guidelines.md` (file name is self-explanatory)
+       - Architecture Guidelines → reference `architecture-guidelines.md` (file name is self-explanatory)
+       - Language Standards → reference `language-guidelines.md` (file name is self-explanatory)
+       - Infrastructure → reference `infrastructure-guidelines.md` (file name is self-explanatory)
+       - Testing → reference `testing-guidelines.md` (file name is self-explanatory)
        - Agents/Templates/Scripts → NEVER document (in .apex-ignore)
+   - **Referencing Format** (when file exists and has content):
+     - Include file path reference only (file names are self-explanatory, no summary needed)
+     - Do NOT duplicate file content in copilot-instructions.md
+   - **N/A Format** (only when file doesn't exist or is empty):
+     - `Reference: path/to/file.md — N/A (not yet created)`
    - Generate new amendment entry: version, date (ISO: YYYY-MM-DD), summary, type
    - Preserve all previous amendments
 
 5. **Validate Consistency with Dependent Files**
    - Apply **Markdown Validation Skills** (see `skills/markdown-validation/SKILL.md`)
    - Check instruction-specific cross-references:
-     - `instructions/engineering/engineering-guidelines.md` alignment
-     - `instructions/architecture/architecture-guidelines.md` consistency
-     - `instructions/languages/language-guidelines.md` standards
-     - `instructions/infra/infrastructure-guidelines.md` rules
-     - `instructions/testing/testing-guidelines.md` expectations
+     - ALL instruction files discovered in step 3.5 (dynamic validation)
      - Template files alignment (spec, plan, tasks)
      - `registry/AGENT_REGISTRY.md` agent references
    - **CRITICAL**: File validation results belong in output report, NOT in copilot-instructions.md
@@ -93,7 +107,7 @@ Follow this execution flow:
    - Update Amendment Log with new entry
 
 8. **Update Dependent Files (If Required)**
-   - Update `instructions/engineering/engineering-guidelines.md` if principles changed
+   - Update relevant instruction files if their principles changed (any file discovered in step 3.5)
    - Update core agent files if governance changed
    - Update prompt files if enforcement changed
    - Document all updates in validation report
@@ -125,6 +139,8 @@ Follow this execution flow:
 - **CRITICAL: Keep copilot-instructions.md MINIMAL** - lightweight index only
 - **CRITICAL: NEVER add status tables to copilot-instructions.md**
 - **CRITICAL: File validation results belong in report, NOT in copilot-instructions.md**
+- **CRITICAL: ALWAYS check if instruction files exist before marking as "N/A (not yet created)"**
+- **CRITICAL: If instruction file exists, provide reference link ONLY (no summary needed - file names are self-explanatory)**
 - **ONLY document what exists in non-ignored paths**
 
 ### Agent-Specific Process Rules
@@ -160,9 +176,9 @@ Follow this execution flow:
 - [Principle Count]: [P1 count] non-negotiable, [P2 count] mandatory, [P3 count] recommended
 
 **Cross-Reference Validation**:
-- instructions/engineering/engineering-guidelines.md ✅ consistent
-- instructions/architecture/architecture-guidelines.md ✅ consistent
+- [List ALL instruction files discovered in step 3.5 with validation status]
 - templates/spec-template.md ✅ aligned
+- templates/plan-template.md ✅ aligned
 - ...
 
 **Files Updated**:

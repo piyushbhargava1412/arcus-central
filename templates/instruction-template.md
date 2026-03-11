@@ -122,26 +122,45 @@ OR
 
   DO NOT add status tables showing whether instruction files exist.
   Just reference the files - users will see if they exist when they follow the links.
+
+  CRITICAL: Dynamically discover all instruction files:
+  - Search for ALL .md files recursively under `instructions/` folder
+  - Group by subfolder (engineering/, architecture/, languages/, infra/, testing/, etc.)
+  - For EACH discovered file that has content:
+    * Use markdown link format: - **[Title]**: See [path/to/file.md](path/to/file.md)
+    * File names are self-explanatory, no summary needed
+  - For files that are empty or don't exist:
+    * Use format: "Reference: `path/to/file.md` — N/A (not yet created)"
+    * Do NOT create markdown links for non-existent files
+  
+  BENEFIT: When new instruction files are added to instructions/ folder, 
+  they will automatically appear here without manual updates.
 -->
 
 All engineering principles, architecture guidelines, language standards, testing requirements, and infrastructure patterns are defined in the following instruction files:
 
 ### Core Guidelines
 
+<!--
+  The examples below are SAMPLES ONLY.
+  Dynamically discover and list ALL instruction files found in instructions/ folder.
+  Organize by subfolder and use the file name to derive the display label.
+-->
+
 - **Engineering Principles**: See [../.apex/instructions/engineering/engineering-guidelines.md](../.apex/instructions/engineering/engineering-guidelines.md)
-  - Code quality standards, testing requirements, code review checklist, documentation expectations, Git workflow
 
 - **Architecture Guidelines**: See [../.apex/instructions/architecture/architecture-guidelines.md](../.apex/instructions/architecture/architecture-guidelines.md)
-  - Architecture principles, patterns, technology decisions, security architecture, disaster recovery
 
 - **Language & Coding Standards**: See [../.apex/instructions/languages/language-guidelines.md](../.apex/instructions/languages/language-guidelines.md)
-  - Language-specific conventions for Python, JavaScript/TypeScript, Java, Go, SQL
 
 - **Infrastructure Standards**: See [../.apex/instructions/infra/infrastructure-guidelines.md](../.apex/instructions/infra/infrastructure-guidelines.md)
-  - Environment management, deployment strategies, monitoring, logging, network security
 
 - **Testing Guidelines**: See [../.apex/instructions/testing/testing-guidelines.md](../.apex/instructions/testing/testing-guidelines.md)
-  - Testing strategy, unit/integration/E2E testing, performance testing, coverage goals
+
+<!--
+  If additional instruction files are found in instructions/ subfolders,
+  list them here following the same pattern.
+-->
 
 ### Project-Specific Overrides
 
