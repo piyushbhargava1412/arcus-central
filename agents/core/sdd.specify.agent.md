@@ -148,12 +148,7 @@ Given that feature description, do this:
 
    d. **Update Checklist**: After each validation iteration, update the checklist file with current pass/fail status
 
-   e. **Validate Markdown Structure**: Apply **Markdown Validation Skills** (see `skills/markdown-validation/SKILL.md`) to ensure:
-   - All file paths and links are valid
-   - No broken cross-references
-   - Proper markdown syntax (tables, lists, code blocks)
-   - Consistent heading hierarchy
-   - No unresolved placeholders (except intentional [NEEDS CLARIFICATION] markers)
+   e. **Validate Markdown Structure**: Apply **Markdown Validation Skills** (see `skills/markdown-validation/SKILL.md`) to validate the spec. Ensure no unresolved placeholders remain (except intentional [NEEDS CLARIFICATION] markers).
 
 6. Report completion with:
    - Path to `spec.md`

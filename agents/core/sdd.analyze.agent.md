@@ -10,6 +10,9 @@ $ARGUMENTS
 
 You **MUST** consider the user input before proceeding (if not empty).
 
+**Reusable Skills**: This agent leverages:
+- `skills/markdown-validation/SKILL.md` - Validate markdown structure, links, and cross-references across artifacts
+
 ## Goal
 
 Identify inconsistencies, duplications, ambiguities, and underspecified items across the three core artifacts (`spec.md`, `plan.md`, `tasks.md`) before implementation. This command MUST run only after `/sdd.tasks` has successfully produced a complete `tasks.md`.

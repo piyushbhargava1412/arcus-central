@@ -68,7 +68,6 @@ Rules:
 * Fill **all template sections**
 * Do **not modify section names or structure**
 
-Story generation guidelines are provided by the **story-generation skill**.
 
 ---
 
@@ -133,6 +132,5 @@ Return the story document content directly in the response.
 * Do **not ask clarification questions**
 * Do **not output content outside structured stories**
 * Follow the **story template exactly**
-* Story generation logic is handled by the **story-generation skill**
 
 ---

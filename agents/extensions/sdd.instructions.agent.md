@@ -123,13 +123,7 @@ Follow this execution flow:
      - Suggested commit message: `docs(instructions): update copilot architecture vA.B.C - [summary]`
      - Next steps and follow-up actions
 
-## Behavioral Rules (Derived from copilot-instructions.md)
-
-**Reusable Skills**: Apply behavioral rules from the following skills:
-
-- Repository Analysis: `skills/repository-analysis/SKILL.md`
-- Markdown Validation: `skills/markdown-validation/SKILL.md`
-- Markdown Generation: `skills/markdown-generation/SKILL.md`
+## Behavioral Rules
 
 ### Agent-Specific Critical Rules
 

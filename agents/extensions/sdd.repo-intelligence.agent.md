@@ -107,13 +107,6 @@ Fill the `repo_map.template.md` structure with findings from the scan:
 - **Module / Package Map**: logical grouping
 - **Scan Coverage**: brief status table of what was detected vs not found
 
-**Deduplication rules for `repo_map.md`** — this file owns **technical structure only**:
-- Do NOT include business capabilities, event ownership, API ownership tables, or dependency direction — those belong exclusively in `repo_scope.md`
-- Do NOT include a "Confidence & Unknowns" section — that lives only in `repo_scope.md`
-- Do NOT list service method signatures or internal API tables — `repo_scope.md` owns interface details
-- Do NOT repeat library versions as "upstream dependencies" — tech stack table is sufficient here
-- Do NOT add a "Test Structure" section — test files are visible in the directory tree and module map already
-
 **Apply Markdown Validation Skills** (see `skills/markdown-validation/SKILL.md`) to validate the generated document.
 
 Write to `docs/repo_map.md`.
@@ -132,13 +125,6 @@ Using the `repo_map.md` output + deeper analysis, fill the `repo_scope.template.
 - **Dependencies**: upstream (this repo depends on) / downstream (depends on this repo)
 - **Non-Functional Constraints**: if documented or inferable
 - **Confidence & Unknowns**: the **single source of truth** for confidence analysis across both files
-
-**Deduplication rules for `repo_scope.md`** — this file owns **business responsibility and interfaces only**:
-- Do NOT repeat the tech stack table — reference `repo_map.md` instead
-- Do NOT repeat the directory tree or module package map
-- Do NOT repeat build commands or observability details
-- Do NOT list "External Libraries" as upstream dependencies — those are build dependencies in `repo_map.md`'s tech stack. Upstream dependencies here means **runtime service dependencies** (APIs, databases, message brokers this repo calls)
-- Do NOT add a "Sample Data / Test Entities" section — that's test implementation detail belonging to code, not business scope
 
 **Apply Markdown Validation Skills** (see `skills/markdown-validation/SKILL.md`) to validate the generated document.
 
@@ -204,15 +190,6 @@ Output a concise summary to chat:
 - Z questions still pending ⏳
 ```
 
-## Guardrails
-
-- **No hallucination**: If event schemas or APIs aren't found, write `"Not detected. Checked: [list of directories/files searched]"` — NEVER invent them
-- **File path evidence**: Always cite the file path where something was found (e.g., "OpenAPI spec found at `src/main/resources/openapi.yaml`")
-- **Concise**: No essay-style documentation. Tables over paragraphs. Bullet points over prose.
-- **Deterministic**: Running twice on the same repo should produce the same structure (content may vary if repo changed)
-- **Template compliance**: Output MUST follow template headings/sections exactly — do not add or remove sections
-- **Smart scanning**: Don't read every file. Target build files, config, directory listings, and key code directories.
-- **Unknowns are OK**: It's better to say "unknown" with what was checked than to guess
 
 ## Behavioral Rules
 
