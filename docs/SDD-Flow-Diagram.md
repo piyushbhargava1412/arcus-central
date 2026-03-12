@@ -40,17 +40,22 @@
   │          docs/repo_scope.md       │
   └──────────────┬────────────────────┘
                  │
+                 │ repo_map.md + repo_scope.md
+                 │
                  ▼
   ┌───────────────────────────────────┐
   │  Step 2: /sdd.instructions        │
   │  ─────────────────────────────── │
   │  Create project constitution      │
   │                                   │
-  │  Skills: repo-analysis            │
+  │  Skills: repo-analysis (ignore    │
+  │            patterns only)         │
   │          md-generation            │
   │          md-validation            │
   │                                   │
-  │  Input:  repo analysis + guides   │
+  │  Input:  repo_map.md (tech stack) │
+  │          repo_scope.md (business) │
+  │          instruction guidelines   │
   │  Output: .github/                 │
   │          copilot-instructions.md  │
   └──────────────┬────────────────────┘
@@ -188,9 +193,9 @@
                    ──→ repo_scope.md ─────────────┤
                                                    ▼
   instructions ────→ copilot-instructions.md ──→ [CONSTITUTION]
-                                                   │
-                                                   │ all agents
-                                                   │ must align
+       ▲                                           │
+       │ reads repo_map.md + repo_scope.md         │ all agents
+       │ (skips full repo scan if available)        │ must align
                                                    ▼
   groom ───────────→ user stories ─────┐
                                        ▼
