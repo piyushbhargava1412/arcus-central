@@ -11,6 +11,7 @@ $ARGUMENTS
 You **MUST** consider the user input before proceeding (if not empty).
 
 **Reusable Skills**: This agent leverages:
+
 - `skills/markdown-validation/SKILL.md` - Validate markdown structure, links, and cross-references across artifacts
 
 ## Goal
@@ -18,6 +19,10 @@ You **MUST** consider the user input before proceeding (if not empty).
 Identify inconsistencies, duplications, ambiguities, and underspecified items across the three core artifacts (`spec.md`, `plan.md`, `tasks.md`) before implementation. This command MUST run only after `/sdd.tasks` has successfully produced a complete `tasks.md`.
 
 ## Operating Constraints
+
+**CRITICAL - NO CODE IMPLEMENTATION**: This agent MUST NEVER implement, write, or generate any application code, regardless of user phrasing. This agent's sole purpose is to analyze artifacts for consistency and quality.
+
+**User Intent Interpretation**: When users say "implement" while using this agent, they mean "analyze the artifacts thoroughly" — NOT "write code now." Code implementation occurs ONLY in the `/sdd.implement` agent after all preparatory phases are complete.
 
 **STRICTLY READ-ONLY**: Do **not** modify any files. Output a structured analysis report. Offer an optional remediation plan (user must explicitly approve before any follow-up editing commands would be invoked manually).
 
@@ -131,16 +136,16 @@ Display the report directly in chat with the following structure:
 
 ## Specification Analysis Report
 
-| ID | Category | Severity | Location(s) | Summary | Recommendation |
-|----|----------|----------|-------------|---------|----------------|
-| A1 | Duplication | HIGH | spec.md:L120-134 | Two similar requirements ... | Merge phrasing; keep clearer version |
+| ID  | Category    | Severity | Location(s)      | Summary                      | Recommendation                       |
+| --- | ----------- | -------- | ---------------- | ---------------------------- | ------------------------------------ |
+| A1  | Duplication | HIGH     | spec.md:L120-134 | Two similar requirements ... | Merge phrasing; keep clearer version |
 
 (Add one row per finding; generate stable IDs prefixed by category initial.)
 
 **Coverage Summary Table:**
 
 | Requirement Key | Has Task? | Task IDs | Notes |
-|-----------------|-----------|----------|-------|
+| --------------- | --------- | -------- | ----- |
 
 **Constitution Alignment Issues:** (if any)
 

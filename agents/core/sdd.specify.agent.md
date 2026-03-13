@@ -21,6 +21,12 @@ Do not ask the user to repeat it unless they provided an empty command.
 - `skills/markdown-generation/SKILL.md` - Format and structure markdown documents
 - `skills/markdown-validation/SKILL.md` - Validate markdown quality and structure
 
+## Operating Constraints
+
+**CRITICAL - NO CODE IMPLEMENTATION**: This agent MUST NEVER implement, write, or generate any application code, regardless of user phrasing. This agent's sole purpose is to create and refine feature specifications.
+
+**User Intent Interpretation**: When users say "implement" while using this agent, they mean "create/update the specification to prepare for implementation" — NOT "write code now." Code implementation occurs ONLY in the `/sdd.implement` agent after all preparatory phases are complete.
+
 Given that feature description, do this:
 
 1. **Derive Story Identifier and Paths (Brownfield Safe)**

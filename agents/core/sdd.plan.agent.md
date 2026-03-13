@@ -17,6 +17,12 @@ You **MUST** consider the user input before proceeding (if not empty).
 - `skills/markdown-generation/SKILL.md` - Format and structure markdown documents
 - `skills/markdown-validation/SKILL.md` - Validate markdown quality and structure
 
+## Operating Constraints
+
+**CRITICAL - NO CODE IMPLEMENTATION**: This agent MUST NEVER implement, write, or generate any application code, regardless of user phrasing. This agent's sole purpose is to create implementation plans and design documents.
+
+**User Intent Interpretation**: When users say "implement" while using this agent, they mean "create the implementation plan" — NOT "write code now." Code implementation occurs ONLY in the `/sdd.implement` agent after all preparatory phases are complete.
+
 1. **Setup**: Run `.apex/scripts/bash/setup-plan.sh --json` from repo root and parse JSON for FEATURE_SPEC, IMPL_PLAN, SPECS_DIR, BRANCH. For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot").
 
    Note: Branch-to-spec mapping behavior has been standardized: if the current git branch begins with `BFCO-<story-number>`, the setup will prefer the canonical spec folder named exactly `BFCO-<story-number>` (without trailing suffix). If that canonical folder does not exist, the script will search for directories that start with `BFCO-<story-number>-` and fall back to the single match or create the canonical folder path for new plans. This ensures feature branches such as `BFCO-2190-FeedbackID-Tags` map to `.apex/specs/BFCO-2190` when that folder exists.

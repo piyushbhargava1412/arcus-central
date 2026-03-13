@@ -18,13 +18,21 @@ Generate two repo-level intelligence artefacts that help SDD agents and engineer
 - **`repo_scope.md`** — business + interface ownership summary (repo responsibility: what it owns, how it interacts)
 
 **Rule of thumb:**
+
 - `repo_map` helps a dev/agent **navigate code**
 - `repo_scope` helps **grooming and cross-repo reasoning**
 
 **Reusable Skills**: This agent leverages:
+
 - `skills/repository-analysis/SKILL.md` - Repository scanning with .apex-ignore support
 - `skills/markdown-generation/SKILL.md` - Format and structure markdown documents
 - `skills/markdown-validation/SKILL.md` - Validate file paths, links, and markdown quality
+
+## Operating Constraints
+
+**CRITICAL - NO CODE IMPLEMENTATION**: This agent MUST NEVER implement, write, or generate any application code, regardless of user phrasing. This agent's sole purpose is to analyze repository structure and generate documentation.
+
+**User Intent Interpretation**: When users say "implement" while using this agent, they mean "analyze and document the repository" — NOT "write code now." Code implementation occurs ONLY in the `/sdd.implement` agent after all preparatory phases are complete.
 
 ## Execution Flow
 
@@ -55,20 +63,24 @@ If templates aren't found via `.apex/`, check the current repo's `templates/` di
 Do NOT read every file. Use a targeted scan strategy:
 
 **Phase 3a — Directory structure:**
+
 - List top-level directories (depth 2-3)
 - Identify language/framework from file patterns
 
 **Phase 3b — Build & config files (read these):**
+
 - `pom.xml`, `build.gradle`, `package.json`, `Cargo.toml`, `go.mod`, `requirements.txt`, `Gemfile`, `*.csproj`
 - `application.yml`, `application.properties`, `.env`, `docker-compose.yml`, `Dockerfile`
 - `Makefile`, `Taskfile.yml`, `justfile`
 - `terraform/`, `helm/`, `k8s/`
 
 **Phase 3c — Entry points:**
+
 - Search for `main` class/function, `@SpringBootApplication`, Lambda handler, CLI entry
 - Check `src/main/`, `cmd/`, `app/`, `lib/`, `index.*`
 
 **Phase 3d — Key components (scan directories, read selectively):**
+
 - Controllers/routes: `**/controller/**`, `**/routes/**`, `**/handler/**`, `**/api/**`
 - Services: `**/service/**`, `**/services/**`, `**/usecase/**`
 - Repositories/DAOs: `**/repository/**`, `**/dao/**`, `**/store/**`
@@ -76,6 +88,7 @@ Do NOT read every file. Use a targeted scan strategy:
 - Models/entities: `**/model/**`, `**/entity/**`, `**/domain/**`
 
 **Phase 3e — Contracts & schemas:**
+
 - OpenAPI: `**/openapi*`, `**/swagger*`, `**/*.yaml` (with openapi field), `**/api-docs/**`
 - Avro: `**/*.avsc`
 - Protobuf: `**/*.proto`
@@ -83,10 +96,12 @@ Do NOT read every file. Use a targeted scan strategy:
 - GraphQL: `**/*.graphql`, `**/*.gql`
 
 **Phase 3f — Observability:**
+
 - Search for logging config, metrics endpoints, tracing setup
 - Check for `/actuator`, health check endpoints, Prometheus config
 
 **Phase 3g — Existing docs:**
+
 - `README.md`, `ARCHITECTURE.md`, `docs/`, `ADR/`, `CHANGELOG.md`
 
 ### 4. Generate `docs/repo_map.md`
@@ -161,11 +176,11 @@ Please provide answers for each (you can skip any with "skip"):
 After receiving answers, update the table in `docs/repo_scope.md`:
 
 ```markdown
-| # | Question | Answer | Status |
-|---|----------|--------|--------|
-| 1 | Business scope expansion — console-only or REST API? | "Will evolve to REST API in Q2" | ✅ Confirmed |
-| 2 | Persistence requirements — should data persist? | "Yes, PostgreSQL planned" | ✅ Confirmed |
-| 3 | Multi-user support — concurrent access planned? | skip | ⏳ Pending |
+| #   | Question                                             | Answer                          | Status       |
+| --- | ---------------------------------------------------- | ------------------------------- | ------------ |
+| 1   | Business scope expansion — console-only or REST API? | "Will evolve to REST API in Q2" | ✅ Confirmed |
+| 2   | Persistence requirements — should data persist?      | "Yes, PostgreSQL planned"       | ✅ Confirmed |
+| 3   | Multi-user support — concurrent access planned?      | skip                            | ⏳ Pending   |
 ```
 
 ### 6. Report Completion
@@ -190,12 +205,12 @@ Output a concise summary to chat:
 - Z questions still pending ⏳
 ```
 
-
 ## Behavioral Rules
 
 **Apply Repository Analysis Skills** (see `skills/repository-analysis/SKILL.md`) for ignore pattern handling.
 
 **Output Generation:**
+
 - **ALWAYS** write outputs to `docs/` directory (create it if needed) — do NOT ask for path confirmation
 - **ALWAYS** generate `repo_map.md` first, then `repo_scope.md`
 - **ALWAYS** prompt the user with confirmation questions after generating both files — do NOT silently list them
