@@ -68,16 +68,27 @@ Follow this execution flow:
    - Document only actual implementation in non-ignored paths
    - Use "N/A (not yet created)" ONLY for files that don't exist or are empty (verified in step 3.5)
    - **Content Classification:**
+   - **Repo-Intelligence References** (if `docs/repo_map.md` and `docs/repo_scope.md` exist):
+     - **DO NOT duplicate** their content into copilot-instructions.md
+     - Tech Stack → reference `docs/repo_map.md#tech-stack` (add 1-line summary only)
+     - System Functionalities → reference `docs/repo_scope.md#business-capabilities`
+     - Key Modules → reference `docs/repo_map.md#module--package-map`
+     - Configuration/Constraints → reference `docs/repo_map.md#configuration`
+     - Dependencies → reference `docs/repo_scope.md#dependencies`
+   - **Content Classification:**
      - **DO Document** (project-specific only):
-       - Project Context: Repository name, purpose, actual tech stack
-       - System Functionalities: ONLY application features from actual code
-       - Key Modules: ONLY application modules (NOT framework paths)
+       - Project Context: Repository name, purpose, 1-line tech stack summary
+       - Architecture Style: 1-line classification
+       - Project-Specific Overrides: Rules unique to this repo not covered by instruction files
      - **DON'T Document** (reference instead):
-       - Engineering Principles → reference `engineering-guidelines.md` (file name is self-explanatory)
-       - Architecture Guidelines → reference `architecture-guidelines.md` (file name is self-explanatory)
-       - Language Standards → reference `language-guidelines.md` (file name is self-explanatory)
-       - Infrastructure → reference `infrastructure-guidelines.md` (file name is self-explanatory)
-       - Testing → reference `testing-guidelines.md` (file name is self-explanatory)
+       - Full tech stack tables → reference `docs/repo_map.md`
+       - Feature/capability lists → reference `docs/repo_scope.md`
+       - Module tables → reference `docs/repo_map.md`
+       - Engineering Principles → reference `engineering-guidelines.md`
+       - Architecture Guidelines → reference `architecture-guidelines.md`
+       - Language Standards → reference `language-guidelines.md`
+       - Infrastructure → reference `infrastructure-guidelines.md`
+       - Testing → reference `testing-guidelines.md`
        - Agents/Templates/Scripts → NEVER document (in .apex-ignore)
    - **Referencing Format** (when file exists and has content):
      - Include file path reference only (file names are self-explanatory, no summary needed)

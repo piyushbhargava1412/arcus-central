@@ -22,13 +22,23 @@
      - REFERENCE these files instead - users will read them directly
      - This avoids violating DRY (Don't Repeat Yourself)
 
-  3. DOCUMENT ONLY PROJECT-SPECIFIC CONTENT:
+  3. REFERENCE REPO-INTELLIGENCE OUTPUTS:
+     - If `docs/repo_map.md` and `docs/repo_scope.md` exist (from /sdd.repo-intelligence):
+       * DO NOT duplicate their content — REFERENCE specific sections instead
+       * Tech Stack → reference `docs/repo_map.md#tech-stack`
+       * System Functionalities → reference `docs/repo_scope.md#business-capabilities`
+       * Key Modules → reference `docs/repo_map.md#module--package-map`
+       * Configuration → reference `docs/repo_map.md#configuration`
+     - Only add a 1-2 line project summary in Project Context — NOT full tables
+     - This avoids content drift when repo_map/repo_scope are regenerated
+
+  4. DOCUMENT ONLY PROJECT-SPECIFIC CONTENT:
      - Project context (name, purpose, actual tech stack)
      - Application features found in actual code (NOT framework features)
      - Application modules found in actual code (NOT .apex/ or .github/)
      - If no application code exists, state "No application code found"
 
-  4. NEVER DOCUMENT FRAMEWORK/TOOLING:
+  5. NEVER DOCUMENT FRAMEWORK/TOOLING:
      - DO NOT document agents (they're in .apex-ignore)
      - DO NOT document templates (they're in .apex-ignore)
      - DO NOT document scripts (they're in .apex-ignore)
@@ -41,75 +51,54 @@
 
 ### Repository Summary
 
-**[PROJECT_NAME]** is [PROJECT_DESCRIPTION or "a new project with no application code yet"].
-
-**Current State**: [e.g., "Initial setup" or "Active development" or "No application code found"]
+| Field | Value |
+|---|---|
+| **Repository** | `[PROJECT_NAME]` |
+| **Purpose** | [1-2 sentence project description] |
+| **Stage** | [e.g., "Initial setup", "Active development", "Prototype"] |
+| **Architecture Style** | [e.g., "Monolith", "Microservices", "Client-server"] |
+| **Primary Languages** | [e.g., "Java 21", "Python 3.11 / TypeScript"] |
+| **Authoritative Tech Docs** | [`docs/repo_map.md`](../docs/repo_map.md) · [`docs/repo_scope.md`](../docs/repo_scope.md) |
 
 ### Technology Stack
 
 <!--
-  List ONLY technologies found in actual application code (non-ignored paths).
-  If no application code exists, state "No application code to infer from" for each category.
+  DO NOT duplicate the full tech stack table here.
+  If docs/repo_map.md exists, reference it with a 1-line summary.
 -->
 
-- **Languages**: [e.g., Python 3.11, TypeScript, Java 17 or "Not yet determined"]
-- **Frameworks**: [e.g., FastAPI, React, Spring Boot or "Not yet determined"]
-- **Data Storage**: [e.g., PostgreSQL, MongoDB, DynamoDB or "Not applicable"]
-- **Infrastructure**: [e.g., Docker, Kubernetes, AWS, GCP or "Not applicable"]
-
-### Architecture Style
-
-**[ARCHITECTURE_CLASSIFICATION or "No architecture defined yet"]**
-
-<!--
-  Only describe architecture if application code exists.
-  Don't assume architecture patterns that aren't implemented.
--->
+> **Full tech stack details**: See [`docs/repo_map.md` → Tech Stack](../docs/repo_map.md#tech-stack)
 
 ### Key Application Modules
 
 <!--
-  CRITICAL: Only list APPLICATION modules that actually exist in non-ignored paths.
-  DO NOT list .apex/, .github/, node_modules/, or any ignored directories.
-  If no application modules found, state "No application modules defined yet".
+  DO NOT duplicate the modules table here.
+  If docs/repo_map.md exists, reference it.
 -->
 
-[No application modules defined yet]
+> **Full module map**: See [`docs/repo_map.md` → Module / Package Map](../docs/repo_map.md#module--package-map)
 
-OR
+### Known Configuration Constraints
 
-| Module          | Purpose   | Location      |
-| --------------- | --------- | ------------- |
-| [MODULE_NAME_1] | [PURPOSE] | [FOLDER_PATH] |
-| [MODULE_NAME_2] | [PURPOSE] | [FOLDER_PATH] |
+<!--
+  DO NOT duplicate configuration tables here.
+  If docs/repo_map.md exists, reference it.
+  Only list project-specific constraints that agents MUST be aware of (e.g., hardcoded values, tech debt).
+-->
+
+> **Full configuration**: See [`docs/repo_map.md` → Configuration](../docs/repo_map.md#configuration)
 
 ---
 
-## Application Features
+## System Functionalities
 
 <!--
-  CRITICAL RULES:
-  - ONLY document APPLICATION features that actually exist in code
-  - DO NOT document framework features (agents, templates, scripts)
-  - DO NOT document hypothetical or example features
-  - If NO features found, state "No features implemented yet"
+  DO NOT duplicate features/capabilities here.
+  If docs/repo_scope.md exists, reference it.
+  Only add project-specific behavioral notes that agents MUST follow.
 -->
 
-[No features implemented yet]
-
-OR
-
-### [FEATURE_NAME_1]
-
-- **Location**: [FILE_OR_FOLDER_PATH]
-- **Description**: [WHAT_IT_DOES]
-- **Layer**: [API_SERVICE_DOMAIN_INFRA]
-
-### [FEATURE_NAME_2]
-
-- **Location**: [FILE_OR_FOLDER_PATH]
-- **Description**: [WHAT_IT_DOES]
-- **Layer**: [API_SERVICE_DOMAIN_INFRA]
+> **Full feature list & capabilities**: See [`docs/repo_scope.md` → Business Capabilities](../docs/repo_scope.md#business-capabilities)
 
 ---
 

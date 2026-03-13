@@ -196,7 +196,7 @@ remove_md_files() {
             ((count++))
         done < <(find "$dir" \( -type f -o -type l \) -name "$pattern" -print0 2>/dev/null)
         if [[ "$count" -gt 0 ]]; then
-            success "Removed: $count $label files from $(basename "$dir")/"
+            success "Removed: $count $label files from $(basename "$dir")/" >&2
         fi
     fi
     echo "$count"
@@ -423,14 +423,20 @@ main() {
     info "$agent_count agent files copied to .github/agents/"
 
     local prompt_count=0
+    # Only copy prompts that add value to IDE discovery.
+    # Prompts for specify, plan, implement, groom are frontmatter-only stubs
+    # (3-4 lines, just "agent: sdd.<name>") and add no value beyond the agent file.
+    local PROMPT_ALLOWLIST="sdd.repo-intelligence.prompt.md sdd.instructions.prompt.md sdd.analyze.prompt.md sdd.clarify.prompt.md sdd.tasks.prompt.md"
     while IFS= read -r -d '' prompt_file; do
         local filename
         filename=$(basename "$prompt_file")
-        if copy_file_readonly "$prompt_file" "$TARGET_REPO/.github/prompts/$filename"; then
-            ((prompt_count++))
+        if echo "$PROMPT_ALLOWLIST" | grep -qw "$filename"; then
+            if copy_file_readonly "$prompt_file" "$TARGET_REPO/.github/prompts/$filename"; then
+                ((prompt_count++))
+            fi
         fi
     done < <(find "$CENTRAL_REPO/prompts" -name "*.prompt.md" -type f -print0 2>/dev/null)
-    info "$prompt_count prompt files copied to .github/prompts/"
+    info "$prompt_count prompt files copied to .github/prompts/ (filtered: repo-intelligence, instructions, analyze, clarify, tasks)"
 
     # Skills directory symlink (for Copilot Skills interface)
     local skills_linked=false

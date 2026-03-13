@@ -8,7 +8,9 @@
 
 ## Overview
 
-<!-- 2-3 sentences: what business domain this repo serves, its role in the ecosystem -->
+<!-- 2-3 sentences: what business domain this repo serves, its role in the ecosystem.
+     BUSINESS ONLY — do NOT repeat tech stack, language, or framework here.
+     Technical overview belongs in repo_map.md → Overview. -->
 
 ## Business Capabilities
 
@@ -47,7 +49,9 @@
 <!-- If none found: "No event consumers detected. Checked: [directories/files searched]" -->
 
 ## APIs
-
+<!-- Logical API operations this repo exposes or consumes (business interface boundaries).
+     List methods, paths, and what they do — do NOT list schema file paths here.
+     Schema files (OpenAPI, Avro, Proto) belong in repo_map.md → Contracts & Schemas. -->
 ### Exposed
 
 <!-- REST/gRPC/GraphQL endpoints this repo serves -->
