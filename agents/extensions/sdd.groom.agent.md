@@ -96,19 +96,40 @@ Typical decomposition:
 
 ---
 
-## 5. Output
+## 5. File Naming Strategy
+
+Determine appropriate filenames based on story content.
+
+Rules:
+
+* For a **single story**: generate a descriptive filename from the requirement
+  * Example: `user-authentication.md`, `payment-processing.md`
+* For **multiple stories**: generate unique descriptive filenames for each story
+  * Derive from the story's narrative or main capability
+  * Use kebab-case format
+  * Examples: `user-registration.md`, `password-reset.md`, `session-management.md`
+
+Naming conventions:
+
+* Use lowercase
+* Use hyphens to separate words
+* Keep names concise but descriptive (2-4 words)
+* Avoid generic names like `story-1.md` or `feature.md`
+
+---
+
+## 6. Output
 
 **Apply Markdown Generation Skills** (see `skills/markdown-generation/SKILL.md`)
 
-Produce the final story document.
+Produce the final story document(s).
 
 Requirements:
 
-* Generate a **single Markdown document**
-* If multiple stories are created:
-
-  * place them in the **same file**
-  * separate stories using `---`
+* **If single story**: Create one Markdown file with the story content
+* **If multiple stories**: Create **separate Markdown files** for each story
+  * Each file should contain only one complete story
+  * Use the naming strategy from step 5
 
 Output rules:
 
@@ -116,10 +137,11 @@ Output rules:
 * Do not include explanations
 * Do not include commentary
 * Do not generate code
+* Each file must follow the story template exactly
 
-**Apply Markdown Validation Skills** (see `skills/markdown-validation/SKILL.md`) to ensure the story document has proper structure, no broken links, and consistent formatting.
+**Apply Markdown Validation Skills** (see `skills/markdown-validation/SKILL.md`) to ensure each story document has proper structure, no broken links, and consistent formatting.
 
-Return the story document content directly in the response.
+Create the file(s) in `.apex/groom/` directory and confirm the creation with a brief summary listing the created files.
 
 ---
 
@@ -132,5 +154,7 @@ Return the story document content directly in the response.
 * Do **not ask clarification questions**
 * Do **not output content outside structured stories**
 * Follow the **story template exactly**
+* Create **separate files for each story** when multiple stories are generated
+* Use **descriptive, kebab-case filenames** derived from story content
 
 ---
