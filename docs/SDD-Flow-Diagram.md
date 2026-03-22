@@ -4,22 +4,19 @@
 ┌─────────────────────────────────────────────────────────────────────┐
 │                    APEX SDD WORKFLOW                                │
 │                                                                     │
-│  Skills (shared infrastructure — loaded on demand):                 │
-│  ┌──────────────────┐ ┌──────────────────┐ ┌────────────────────┐  │
-│  │ markdown-        │ │ markdown-        │ │ repository-        │  │
-│  │ generation       │ │ validation       │ │ analysis           │  │
-│  │ (169 lines)      │ │ (72 lines)       │ │ (56 lines)         │  │
-│  │                  │ │                  │ │                    │  │
-│  │ • Headings       │ │ • Path checks    │ │ • .apex-ignore     │  │
-│  │ • Tables         │ │ • Link checks    │ │ • Dir scanning     │  │
-│  │ • Code blocks    │ │ • Placeholders   │ │ • Tech detection   │  │
-│  │ • Formatting     │ │ • Structure      │ │ • Classification   │  │
-│  └────────┬─────────┘ └────────┬─────────┘ └─────────┬──────────┘  │
-│           │                    │                      │             │
-│           └────────────┬───────┴──────────────────────┘             │
-│                        │ referenced by agents via                   │
-│                        │ "Apply Skills (see skills/...)"           │
-│                        ▼                                            │
+│  Skills (shared capability-based inventory — loaded on demand):    │
+│  ┌─────────────┐ ┌──────────────┐ ┌──────────────┐ ┌───────────────┐ │
+│  │ artifact/   │ │ reasoning/   │ │ interaction/ │ │ formatting/   │ │
+│  │ (modeling,  │ │ (design,     │ │ (question-   │ │ (format-      │ │
+│  │ patching,    │ │ decomposition,│ │ orchestration)│ │ enforcer)     │ │
+│  │ markdown)    │ │ dependency,  │ │              │ │               │ │
+│  │              │ │ coverage)    │ │              │ │               │ │
+│  └─────┬────────┘ └────┬─────────┘ └─────┬────────┘ └────┬──────────┘ │
+│        │                 │                  │                 │      │
+│        └─────────────────┴──────────────────┴─────────────────┘      │
+│                        Referenced by agents via                      │
+│                         "Apply skill: skills/<domain>/<skill>"        │
+│                        (copied into target as read-only)             │
 └─────────────────────────────────────────────────────────────────────┘
 
 ══════════════════════════════════════════════════════════════════════
@@ -31,12 +28,11 @@
   │  ─────────────────────────────── │
   │  Scan codebase → understand it    │
   │                                   │
-  │  Skills: repo-analysis            │
-  │          md-generation            │
-  │          md-validation            │
+  │  Skills: specialized/repository-analysis, artifact/markdown-generation,
+  │          artifact/markdown-validation
   │                                   │
   │  Input:  codebase                 │
-  │  Output: docs/repo_map.md        │
+  │  Output: docs/repo_map.md         │
   │          docs/repo_scope.md       │
   └──────────────┬────────────────────┘
                  │
@@ -46,18 +42,14 @@
   ┌───────────────────────────────────┐
   │  Step 2: /sdd.instructions        │
   │  ─────────────────────────────── │
-  │  Create project constitution      │
+  │  Create project copilot instructions and governance
   │                                   │
-  │  Skills: repo-analysis (ignore    │
-  │            patterns only)         │
-  │          md-generation            │
-  │          md-validation            │
+  │  Skills: specialized/repository-analysis, artifact/markdown-generation,
+  │          artifact/markdown-validation
   │                                   │
   │  Input:  repo_map.md (tech stack) │
   │          repo_scope.md (business) │
-  │          instruction guidelines   │
-  │  Output: .github/                 │
-  │          copilot-instructions.md  │
+  │  Output: .github/copilot-instructions.md
   └──────────────┬────────────────────┘
                  │
                  ▼
@@ -72,8 +64,8 @@
   │  Break vague requirements into    │
   │  structured user stories          │
   │                                   │
-  │  Skills: md-generation            │
-  │          md-validation            │
+  │  Skills: artifact/markdown-generation,
+  │          artifact/markdown-validation
   │                                   │
   │  Input:  requirement text         │
   │  Output: .apex/groom/<story>.md   │
@@ -86,8 +78,8 @@
   │  Create feature spec (WHAT/WHY)   │
   │  No implementation details        │
   │                                   │
-  │  Skills: md-generation            │
-  │          md-validation            │
+  │  Skills: artifact/markdown-generation,
+  │          artifact/markdown-validation
   │                                   │
   │  Input:  feature description      │
   │  Output: .apex/specs/<ID>/        │
@@ -103,7 +95,9 @@
   │  Interactive — one Q at a time    │
   │  Answers encoded back into spec   │
   │                                   │
-  │  Skills: md-validation            │
+  │  Skills: interaction/question-orchestration,
+  │          artifact/artifact-patcher,
+  │          artifact/markdown-validation
   │                                   │
   │  Input:  spec.md                  │
   │  Output: spec.md (updated)        │
@@ -117,8 +111,9 @@
   │  Create implementation plan (HOW) │
   │  Architecture + design decisions  │
   │                                   │
-  │  Skills: md-generation            │
-  │          md-validation            │
+  │  Skills: artifact/artifact-modeling,
+  │          reasoning/design-synthesis,
+  │          artifact/markdown-validation
   │                                   │
   │  Input:  spec.md + constitution   │
   │  Output: .apex/specs/<ID>/        │
@@ -132,11 +127,13 @@
   │  Generate task breakdown          │
   │  Organized by user story          │
   │                                   │
-  │  Skills: md-generation            │
-  │          md-validation            │
+  │  Skills: artifact/artifact-modeling,
+  │          reasoning/work-decomposition,
+  │          reasoning/dependency-analysis,
+  │          formatting/format-enforcer
   │                                   │
   │  Format:                          │
-  │  - [ ] T001 [P] [US1] desc path  │
+  │  - [ ] T001 [P] [US1] desc path   │
   │                                   │
   │  Input:  plan.md + spec.md        │
   │  Output: .apex/specs/<ID>/        │
@@ -148,9 +145,11 @@
   │  Step 8: /sdd.analyze             │
   │  ─────────────────────────────── │
   │  Cross-artifact quality check     │
-  │  *** READ-ONLY — no files ***     │
+  │  *** READ-ONLY — no files modified***     │
   │                                   │
-  │  Skills: md-validation            │
+  │  Skills: artifact/artifact-modeling,
+  │          reasoning/coverage-analysis,
+  │          formatting/format-enforcer
   │                                   │
   │  Checks:                          │
   │  • Duplication across artifacts   │
@@ -170,12 +169,16 @@
   │  ─────────────────────────────── │
   │  Execute tasks phase-by-phase     │
   │                                   │
-  │  Skills: none (generates code)    │
+  │  Skills: reasoning/coverage-analysis,
+  │          reasoning/work-decomposition,
+  │          reasoning/dependency-analysis,
+  │          specialized/execution/task-execution-controller,
+  │          specialized/execution/progress-tracker
   │                                   │
   │  • Validates checklists first     │
   │  • Phase 1: Setup                 │
   │  • Phase 2: Foundational          │
-  │  • Phase 3+: User stories (P1→Pn)│
+  │  • Phase 3+: User stories (P1→Pn) │
   │  • Final: Polish                  │
   │  • Marks tasks [X] on completion  │
   │                                   │
@@ -191,46 +194,48 @@
 
   repo-intelligence ──→ repo_map.md ──────────────┐
                    ──→ repo_scope.md ─────────────┤
-                                                   ▼
+                                                    ▼
   instructions ────→ copilot-instructions.md ──→ [CONSTITUTION]
        ▲                                           │
-       │ reads repo_map.md + repo_scope.md         │ all agents
-       │ (skips full repo scan if available)        │ must align
-                                                   ▼
+       │ reads repo_map.md + repo_scope.md         │
+       │ (skips full repo scan if available)        │
+                                                    ▼
   groom ───────────→ user stories ─────┐
                                        ▼
   specify ─────────→ spec.md ──────→ clarify ──→ spec.md (refined)
-                     requirements.md               │
-                                                   ▼
-                                        plan ──→ plan.md
-                                                   │
-                                                   ▼
-                                        tasks ──→ tasks.md
-                                                   │
-                                                   ▼
-                                        analyze ─→ chat report
-                                                   │
-                                                   ▼
-                                        implement → source code
+                      requirements.md               │
+                                                    ▼
+                                         plan ──→ plan.md
+                                                    │
+                                                    ▼
+                                         tasks ──→ tasks.md
+                                                    │
+                                                    ▼
+                                         analyze ─→ chat report
+                                                    │
+                                                    ▼
+                                         implement → source code
 
 
 ══════════════════════════════════════════════════════════════════════
  SKILL DELEGATION MAP
 ══════════════════════════════════════════════════════════════════════
 
-                   markdown-    markdown-    repository-
-  Agent            generation   validation   analysis
-  ─────────────    ──────────   ──────────   ───────────
-  repo-intelligence   ✅ (3)       ✅ (3)       ✅ (3)
-  instructions        ✅ (3)       ✅ (3)       ✅ (2)
-  groom               ✅ (2)       ✅ (2)         —
-  specify             ✅ (3)       ✅ (2)         —
-  clarify               —          ✅ (2)         —
-  plan                ✅ (2)       ✅ (2)         —
-  tasks               ✅ (2)       ✅ (2)         —
-  analyze               —          ✅ (1)         —
-  implement             —            —            —
+This matrix shows which capability-based skills are commonly used by each agent. A checkmark indicates primary/regular usage; agents may reference additional skills as needed.
 
-  (number) = delegation points in agent file
-```
+| Agent              | artifact/* | reasoning/* | interaction/* | formatting/* | specialized/* |
+|-------------------:|:----------:|:-----------:|:-------------:|:------------:|:-------------:|
+| repo-intelligence  |     ✅     |      ✅     |       ✅      |      ✅      |       ✅      |
+| instructions       |     ✅     |      ✅     |       ✅      |      ✅      |       ✅      |
+| groom              |     ✅     |             |       ✅      |      ✅      |               |
+| specify            |     ✅     |             |               |      ✅      |               |
+| clarify            |     ✅     |             |       ✅      |      ✅      |               |
+| plan               |     ✅     |      ✅     |               |      ✅      |               |
+| tasks              |     ✅     |      ✅     |               |      ✅      |               |
+| analyze            |     ✅     |      ✅     |               |      ✅      |               |
+| implement          |           |      ✅     |               |             |       ✅      |
+
+(Legend: ✅ primary usage)
+
+``` 
 
