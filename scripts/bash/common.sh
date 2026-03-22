@@ -7,7 +7,8 @@ get_repo_root() {
         git rev-parse --show-toplevel
     else
         # Fall back to script location for non-git repos
-        local script_dir="$(CDPATH="" cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+        local script_dir
+        script_dir="$(CDPATH="" cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
         (cd "$script_dir/../../.." && pwd)
     fi
 }
@@ -27,7 +28,8 @@ get_current_branch() {
     fi
 
     # For non-git repos, try to find the latest feature directory
-    local repo_root=$(get_repo_root)
+    local repo_root
+    repo_root=$(get_repo_root)
     local specs_dir="$repo_root/.apex/specs"
 
     if [[ -d "$specs_dir" ]]; then
@@ -36,7 +38,8 @@ get_current_branch() {
 
         for dir in "$specs_dir"/*; do
             if [[ -d "$dir" ]]; then
-                local dirname=$(basename "$dir")
+                local dirname
+                dirname=$(basename "$dir")
                 # Support BFCO-<story>-name and numeric prefixes like 001-
                 if [[ "$dirname" =~ ^BFCO-([0-9]+)- ]]; then
                     local number=${BASH_REMATCH[1]}
@@ -74,19 +77,27 @@ check_feature_branch() {
     local branch="$1"
     local has_git_repo="$2"
 
-    # For non-git repos, we can't enforce branch naming but still provide output
+    # Require a git repository for branch validation
     if [[ "$has_git_repo" != "true" ]]; then
-        echo "[specify] Warning: Git repository not detected; skipped branch validation" >&2
-        return 0
-    fi
-
-    # Accept BFCO-<story>-feature-name or legacy 001-feature-name
-    if [[ ! "$branch" =~ ^BFCO-[0-9]+- ]]; then
-        echo "ERROR: Not on a feature branch. Current branch: $branch" >&2
-        echo "Feature branches should be named like: BFCO-2156-feature-name" >&2
+        echo "[specify] ERROR: Git repository not detected; branch validation requires a git repo" >&2
         return 1
     fi
 
+    # Detect detached HEAD or missing branch
+    if [[ -z "$branch" || "$branch" == "HEAD" ]]; then
+        echo "ERROR: Detached HEAD or no branch detected. Please checkout a branch." >&2
+        return 1
+    fi
+
+    # Preferred branch name pattern: 3-4 letters, a hyphen, then digits (e.g., abc-123 or abcd-123)
+    if [[ "$branch" =~ ^[A-Za-z]{3,4}-[0-9]+$ ]]; then
+        echo "[specify] Branch name '$branch' matches preferred pattern ^[A-Za-z]{3,4}-[0-9]+$." >&2
+        return 0
+    fi
+
+    # Branch name does not match preferred pattern — warn but continue
+    echo "[specify] WARNING: Branch name '$branch' does not follow the recommended pattern '[abcd]-123'." >&2
+    echo "[specify] Recommended: three or four letters, a hyphen, then an issue number (e.g., abc-123 or abcd-456). Proceeding anyway." >&2
     return 0
 }
 
@@ -161,8 +172,10 @@ find_feature_dir_by_prefix() {
 }
 
 get_feature_paths() {
-    local repo_root=$(get_repo_root)
-    local current_branch=$(get_current_branch)
+    local repo_root
+    repo_root=$(get_repo_root)
+    local current_branch
+    current_branch=$(get_current_branch)
     local has_git_repo="false"
 
     if has_git; then
@@ -173,7 +186,8 @@ get_feature_paths() {
     check_feature_branch "$current_branch" "$has_git_repo" || exit 1
 
     # Use prefix-based lookup to support multiple branches per spec
-    local feature_dir=$(find_feature_dir_by_prefix "$repo_root" "$current_branch")
+    local feature_dir
+    feature_dir=$(find_feature_dir_by_prefix "$repo_root" "$current_branch")
 
     cat <<EOF
 REPO_ROOT='$repo_root'
