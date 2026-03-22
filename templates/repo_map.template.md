@@ -8,7 +8,9 @@
 
 ## Overview
 
-<!-- 2-3 sentences: what this repo is, primary language/framework, deployment target -->
+<!-- 2-3 sentences: what this repo is, primary language/framework, deployment target.
+     TECHNICAL ONLY — do NOT describe business domain or user roles here.
+     Business context belongs in repo_scope.md → Overview. -->
 
 ## Directory Structure
 
@@ -48,7 +50,9 @@
 
 ## Contracts & Schemas
 
-<!-- OpenAPI specs, Avro/Protobuf schemas, GraphQL schemas, JSON schemas -->
+<!-- Schema FILES only: OpenAPI specs, Avro/Protobuf schemas, GraphQL schemas, JSON schemas.
+     List the file path and format — do NOT list individual API endpoints here.
+     Logical API operations (methods, paths) belong in repo_scope.md → APIs. -->
 
 | Contract             | Format              | File Path                       |
 |----------------------|---------------------|---------------------------------|
@@ -102,7 +106,9 @@
 
 ## Scan Coverage
 
-<!-- Brief status of what was detected vs not. Full confidence analysis + human confirmation lives ONLY in repo_scope.md -->
+<!-- Simple checklist of what was detected vs not found during scanning.
+     Do NOT include confidence ratings or analysis here.
+     Full confidence analysis + human confirmation lives ONLY in repo_scope.md → Confidence & Unknowns. -->
 
 | Aspect | Status | Notes |
 |--------|--------|-------|

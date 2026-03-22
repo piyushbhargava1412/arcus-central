@@ -2,24 +2,8 @@
 
 # integrate.sh — APEX SDD Framework Integration Script v5.0
 #
-# Distributes the SDD (Spec Driven Development) framework to target repos.
-# Centralized pull-model integration.
-#
-# Strategy:
-#   .apex/          → SYMLINKS (templates, scripts, instructions)
-#                     Zero duplication, instant central updates.
-#   .github/agents/ → READ-ONLY COPIES of agent files
-#   .github/prompts/→ READ-ONLY COPIES of prompt files
-#                     Copies required because IntelliJ agent tab
-#                     does not follow symlinks for IDE discovery.
-#   .apex-ignore    → COPIED (only if not already present)
-#                     Tells sdd.instructions agent which paths to skip.
-#
-# Usage:
-#   cd my-project && ../otto_apex-central/integrate.sh
-#   apex-integrate              # if CLI installed
-#   apex-integrate --sync       # re-sync everything
-#   apex-integrate --yes        # non-interactive (CI/CD)
+# Distributes the SDD framework to target repos via symlinks + read-only copies.
+# Run with --help for usage details.
 
 set -e
 
@@ -199,15 +183,63 @@ copy_file_readonly() {
     return 0
 }
 
+# ─── Remove helpers (for cleanup/remove modes) ──────────────────
+remove_md_files() {
+    local dir="$1"
+    local pattern="$2"
+    local label="$3"
+    local count=0
+    if [[ -d "$dir" ]]; then
+        while IFS= read -r -d '' file; do
+            chmod u+w "$file" 2>/dev/null || true
+            rm -f "$file"
+            ((count++))
+        done < <(find "$dir" \( -type f -o -type l \) -name "$pattern" -print0 2>/dev/null)
+        if [[ "$count" -gt 0 ]]; then
+            success "Removed: $count $label files from $(basename "$dir")/" >&2
+        fi
+    fi
+    echo "$count"
+}
+
+validate_readonly_copies() {
+    local dir="$1"
+    local pattern="$2"
+    local label="$3"
+    log "$label:"
+    for f in "$dir"/$pattern; do
+        [[ -f "$f" ]] || continue
+        if [[ -w "$f" ]]; then
+            warning "  ⚠ $(basename "$f") (writable!)"
+        else
+            success "  ✓ $(basename "$f") (read-only)"
+        fi
+    done
+    echo ""
+}
+
 # ─── Validation ───────────────────────────────────────────────────
 validate_central_structure() {
     local central_path="$1"
-    local required_dirs=("agents" "prompts" "templates" "scripts" "instructions")
+    local required_dirs=("agents" "prompts" "skills" "templates" "scripts" "instructions")
     for dir in "${required_dirs[@]}"; do
         if [[ ! -d "$central_path/$dir" ]]; then
             error "Missing required directory in central repo: $dir"
         fi
     done
+
+    # Validate at least one skill directory with SKILL.md exists
+    local skill_count=0
+    # Find any SKILL.md under skills/ (allow nested capability-based folders)
+    while IFS= read -r -d '' skill_file; do
+        ((skill_count++))
+    done < <(find "$central_path/skills" -type f -name "SKILL.md" -print0 2>/dev/null)
+
+    if [[ $skill_count -eq 0 ]]; then
+        error "No valid skills found (expected skills/{skill-name}/SKILL.md structure)"
+    fi
+    info "Found $skill_count skill(s)"
+
     success "Central repo structure valid"
 }
 
@@ -226,7 +258,6 @@ main() {
     fi
     echo "╚══════════════════════════════════════════════════════════╝"
     echo ""
-
 
     log "Target:  $(basename "$TARGET_REPO") ($TARGET_REPO)"
     log "Central: $(basename "$CENTRAL_REPO") ($CENTRAL_REPO)"
@@ -257,32 +288,19 @@ main() {
         done
 
         # Remove .github/agents/ files
-        if [[ -d "$TARGET_REPO/.github/agents" ]]; then
-            local agent_removals=0
-            while IFS= read -r -d '' file; do
-                chmod u+w "$file" 2>/dev/null || true
-                rm -f "$file"
-                ((agent_removals++))
-            done < <(find "$TARGET_REPO/.github/agents" -name "*.agent.md" -type f -print0 2>/dev/null)
-            if [[ "$agent_removals" -gt 0 ]]; then
-                ((removal_count += agent_removals))
-                success "Removed: $agent_removals agent files from .github/agents/"
-            fi
-        fi
+        local agent_removals
+        agent_removals=$(remove_md_files "$TARGET_REPO/.github/agents" "*.agent.md" "agent")
+        ((removal_count += agent_removals))
 
         # Remove .github/prompts/ files
-        if [[ -d "$TARGET_REPO/.github/prompts" ]]; then
-            local prompt_removals=0
-            while IFS= read -r -d '' file; do
-                chmod u+w "$file" 2>/dev/null || true
-                rm -f "$file"
-                ((prompt_removals++))
-            done < <(find "$TARGET_REPO/.github/prompts" -name "*.prompt.md" -type f -print0 2>/dev/null)
-            if [[ "$prompt_removals" -gt 0 ]]; then
-                ((removal_count += prompt_removals))
-                success "Removed: $prompt_removals prompt files from .github/prompts/"
-            fi
-        fi
+        local prompt_removals
+        prompt_removals=$(remove_md_files "$TARGET_REPO/.github/prompts" "*.prompt.md" "prompt")
+        ((removal_count += prompt_removals))
+
+        # Remove .github/skills/ SKILL.md files
+        local skill_removals
+        skill_removals=$(remove_md_files "$TARGET_REPO/.github/skills" "SKILL.md" "skill")
+        ((removal_count += skill_removals))
 
         # Remove .apex-ignore
         if [[ -f "$TARGET_REPO/.apex-ignore" ]]; then
@@ -315,7 +333,7 @@ main() {
     fi
     log "Phase 0: Setting central source files read-only..."
     local readonly_count=0
-    for dir in agents prompts templates scripts instructions; do
+    for dir in agents prompts skills templates scripts instructions; do
         find "$CENTRAL_REPO/$dir" -type f -exec chmod a-w {} \;
         local cnt
         cnt=$(find "$CENTRAL_REPO/$dir" -type f | wc -l | tr -d ' ')
@@ -341,28 +359,19 @@ main() {
         done
 
         # Remove .github/agents/ files (could be old symlinks or copies)
-        if [[ -d "$TARGET_REPO/.github/agents" ]]; then
-            while IFS= read -r -d '' file; do
-                chmod u+w "$file" 2>/dev/null || true
-                rm -f "$file"
-                ((cleanup_count++))
-            done < <(find "$TARGET_REPO/.github/agents" \( -type f -o -type l \) -name "*.agent.md" -print0 2>/dev/null)
-            if [[ "$cleanup_count" -gt 0 ]]; then
-                info "Removed agent files from .github/agents/"
-            fi
-        fi
+        local agent_cleanup
+        agent_cleanup=$(remove_md_files "$TARGET_REPO/.github/agents" "*.agent.md" "agent")
+        ((cleanup_count += agent_cleanup))
 
         # Remove .github/prompts/ files (could be old symlinks or copies)
-        if [[ -d "$TARGET_REPO/.github/prompts" ]]; then
-            while IFS= read -r -d '' file; do
-                chmod u+w "$file" 2>/dev/null || true
-                rm -f "$file"
-                ((cleanup_count++))
-            done < <(find "$TARGET_REPO/.github/prompts" \( -type f -o -type l \) -name "*.prompt.md" -print0 2>/dev/null)
-            if [[ "$cleanup_count" -gt 0 ]]; then
-                info "Removed prompt files from .github/prompts/"
-            fi
-        fi
+        local prompt_cleanup
+        prompt_cleanup=$(remove_md_files "$TARGET_REPO/.github/prompts" "*.prompt.md" "prompt")
+        ((cleanup_count += prompt_cleanup))
+
+        # Remove .github/skills/ SKILL.md files
+        local skill_cleanup
+        skill_cleanup=$(remove_md_files "$TARGET_REPO/.github/skills" "SKILL.md" "skill")
+        ((cleanup_count += skill_cleanup))
 
         # Remove metadata file
         if [[ -f "$TARGET_REPO/.apex-metadata.json" ]]; then
@@ -411,16 +420,37 @@ main() {
     info "$agent_count agent files copied to .github/agents/"
 
     local prompt_count=0
+    # Only copy prompts that add value to IDE discovery.
+    # Prompts for specify, plan, implement, groom are frontmatter-only stubs
+    # (3-4 lines, just "agent: sdd.<name>") and add no value beyond the agent file.
+    local PROMPT_ALLOWLIST="sdd.repo-intelligence.prompt.md sdd.instructions.prompt.md sdd.analyze.prompt.md sdd.clarify.prompt.md sdd.tasks.prompt.md"
     while IFS= read -r -d '' prompt_file; do
         local filename
         filename=$(basename "$prompt_file")
-        if copy_file_readonly "$prompt_file" "$TARGET_REPO/.github/prompts/$filename"; then
-            ((prompt_count++))
+        if echo "$PROMPT_ALLOWLIST" | grep -qw "$filename"; then
+            if copy_file_readonly "$prompt_file" "$TARGET_REPO/.github/prompts/$filename"; then
+                ((prompt_count++))
+            fi
         fi
     done < <(find "$CENTRAL_REPO/prompts" -name "*.prompt.md" -type f -print0 2>/dev/null)
-    info "$prompt_count prompt files copied to .github/prompts/"
+    info "$prompt_count prompt files copied to .github/prompts/ (filtered: repo-intelligence, instructions, analyze, clarify, tasks)"
 
-    success "Phase 2 done: $agent_count agents, $prompt_count prompts"
+    # Skills: copy SKILL.md files preserving capability folder structure
+    mkdir -p "$TARGET_REPO/.github/skills"
+    local skill_count=0
+    while IFS= read -r -d '' skill_file; do
+        # compute relative path under CENTRAL_REPO/skills
+        local rel_path
+        rel_path=$(get_relative_path "$CENTRAL_REPO/skills" "$skill_file")
+        local dst_file="$TARGET_REPO/.github/skills/$rel_path"
+        mkdir -p "$(dirname "$dst_file")"
+        if copy_file_readonly "$skill_file" "$dst_file"; then
+            ((skill_count++))
+        fi
+    done < <(find "$CENTRAL_REPO/skills" -type f -name "SKILL.md" -print0 2>/dev/null)
+    info "$skill_count skill files copied to .github/skills/ (preserving directory structure)"
+
+    success "Phase 2 done: $agent_count agents, $prompt_count prompts, $skill_count skills copied"
     echo ""
 
     # ══════════════════════════════════════════════════════════════
@@ -453,6 +483,7 @@ main() {
         ".apex*"
         ".github/agents"
         ".github/prompts"
+        ".github/skills"
     )
 
     # Create .gitignore if it doesn't exist
@@ -489,27 +520,13 @@ main() {
     done
     echo ""
 
-    log ".github/agents/ (read-only copies):"
-    for f in "$TARGET_REPO/.github/agents"/*.agent.md; do
-        [[ -f "$f" ]] || continue
-        if [[ -w "$f" ]]; then
-            warning "  ⚠ $(basename "$f") (writable!)"
-        else
-            success "  ✓ $(basename "$f") (read-only)"
-        fi
-    done
+    validate_readonly_copies "$TARGET_REPO/.github/agents" "*.agent.md" ".github/agents/ (read-only copies)"
+    validate_readonly_copies "$TARGET_REPO/.github/prompts" "*.prompt.md" ".github/prompts/ (read-only copies)"
+
+    log ".github/skills/:"
+    validate_readonly_copies "$TARGET_REPO/.github/skills" "SKILL.md" ".github/skills/ (read-only copies)"
     echo ""
 
-    log ".github/prompts/ (read-only copies):"
-    for f in "$TARGET_REPO/.github/prompts"/*.prompt.md; do
-        [[ -f "$f" ]] || continue
-        if [[ -w "$f" ]]; then
-            warning "  ⚠ $(basename "$f") (writable!)"
-        else
-            success "  ✓ $(basename "$f") (read-only)"
-        fi
-    done
-    echo ""
 
     # ══════════════════════════════════════════════════════════════
     # PHASE 4: Metadata
@@ -533,8 +550,10 @@ main() {
   "ide_discovery": {
     "agents_dir": ".github/agents/ (read-only copies)",
     "prompts_dir": ".github/prompts/ (read-only copies)",
+    "skills_dir": ".github/skills/ (read-only copies)",
     "agent_count": $agent_count,
     "prompt_count": $prompt_count,
+    "skill_count": $skill_count,
     "reason": "IntelliJ agent tab does not follow symlinks"
   },
   "apex_ignore": {
@@ -568,6 +587,7 @@ EOF
     echo "  ── .github/ (read-only copies for IDE) ──"
     printf "    ${GREEN}✓${NC} agents/   (%d files, chmod 444)\n" "$agent_count"
     printf "    ${GREEN}✓${NC} prompts/  (%d files, chmod 444)\n" "$prompt_count"
+    printf "    ${GREEN}✓${NC} skills/   (%d files, chmod 444)\n" "$skill_count"
     echo ""
     if [[ "$apex_ignore_copied" == true ]]; then
         echo "  ── Configuration ──"

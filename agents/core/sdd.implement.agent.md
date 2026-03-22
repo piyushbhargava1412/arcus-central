@@ -1,5 +1,5 @@
 ---
-description: Execute the implementation plan by processing and executing all tasks defined in tasks.md
+description: Execute tasks in order while respecting dependencies and maintaining progress tracking.
 ---
 
 ## User Input
@@ -8,128 +8,60 @@ description: Execute the implementation plan by processing and executing all tas
 $ARGUMENTS
 ```
 
-You **MUST** consider the user input before proceeding (if not empty).
+## Role
+
+You are a Task Execution Conductor.
+
+## Scope
+
+- Input artifacts: `tasks.md`, `.apex/specs/<STORY-ID>/` (read/write), `.github/copilot-instructions.md` (optional)
+- Output: code artifacts, updated `tasks.md` with completed tasks marked, execution logs, progress reports
+- In-scope: orchestrating task execution, enforcing dependencies, tracking progress and status
+- Out-of-scope: producing new design docs, changing architecture decisions
+
+## Skill Chain (ordered)
+
+1. `core/session-bootstrap` — Resolve story ID, feature paths, and environment context.
+2. `reasoning/coverage-analysis` — Gate pre-implementation readiness by comparing requirements ↔ tasks.
+3. `reasoning/work-decomposition` — Re-validate work items and ensure tasks accurately map to requirements.
+4. `reasoning/dependency-analysis` — Compute safe execution order, identify parallel batches and critical path.
+5. `specialized/execution/task-execution-controller` — Execute tasks in phase/dependency order (stage-specific).
+6. `specialized/execution/progress-tracker` — Update and render progress metrics after each batch.
+7. `core/report-renderer` — Render final completion report and recommended next actions.
 
 ## Outline
 
-1. Run `.apex/scripts/bash/check-prerequisites.sh --json --require-tasks --include-tasks` from repo root and parse FEATURE_DIR and AVAILABLE_DOCS list. All paths must be absolute. For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot").
+1. Validate preconditions: confirm `tasks.md` exists and appears syntactically correct. Fail fast with a clear instruction if missing.
+2. Bootstrap session via `core/session-bootstrap` to determine canonical locations and environment variables.
+3. Load `tasks.md` and build semantic models via `reasoning/work-decomposition` and `reasoning/dependency-analysis`. Use these to compute execution phases and parallelizable batches.
+4. Run `reasoning/coverage-analysis` as a preflight gate to ensure tasks sufficiently cover the approved requirements; if gaps exist, surface them and halt unless the user explicitly overrides.
+5. If gate passes (or user overrides), orchestrate execution using `specialized/execution/task-execution-controller`:
+  - Execute phase-by-phase (Setup → Foundational → Stories → Polish).
+  - Within a phase, run sequential tasks in order and run `[P]`-marked tasks in parallel batches when safe.
+  - For each completed task, mark it `[X]` in `tasks.md`. Persist progress atomically to avoid race conditions.
+6. After each task or parallel batch completion, update progress via `specialized/execution/progress-tracker` and emit a compact status summary.
+7. On completion (or if execution is stopped), render a concise final report via `core/report-renderer` summarizing completed tasks, failures, next actionable tasks, and any unresolved gaps.
 
-2. **Check checklists status** (if FEATURE_DIR/checklists/ exists):
-   - Scan all checklist files in the checklists/ directory
-   - For each checklist, count:
-     - Total items: All lines matching `- [ ]` or `- [X]` or `- [x]`
-     - Completed items: Lines matching `- [X]` or `- [x]`
-     - Incomplete items: Lines matching `- [ ]`
-   - Create a status table:
+## Error Handling
 
-     ```text
-     | Checklist | Total | Completed | Incomplete | Status |
-     |-----------|-------|-----------|------------|--------|
-     | ux.md     | 12    | 12        | 0          | ✓ PASS |
-     | test.md   | 8     | 5         | 3          | ✗ FAIL |
-     | security.md | 6   | 6         | 0          | ✓ PASS |
-     ```
+- Missing or malformed `tasks.md`: Abort and instruct the user to run `/sdd.tasks` first.
+- Coverage gate failure: Report critical gaps and block execution; allow explicit user override with a clear warning that this increases risk.
+- Task execution failure:
+  - Non-parallel task fails → stop the current phase and report error, with hints for next steps.
+  - Parallel batch failure → continue other parallel items, collect failures, and report aggregated results.
+- Corrupted `tasks.md` (unparseable): Stop and request regeneration via `/sdd.tasks`.
+- Unhandled exceptions: capture stack/context and present a compact debugging payload (task id, file paths, last log lines).
 
-   - Calculate overall status:
-     - **PASS**: All checklists have 0 incomplete items
-     - **FAIL**: One or more checklists have incomplete items
+## Stage Rules
 
-   - **If any checklist is incomplete**:
-     - Display the table with incomplete item counts
-     - **STOP** and ask: "Some checklists are incomplete. Do you want to proceed with implementation anyway? (yes/no)"
-     - Wait for user response before continuing
-     - If user says "no" or "wait" or "stop", halt execution
-     - If user says "yes" or "proceed" or "continue", proceed to step 3
+- Never run tasks that write to the same file in parallel. Respect file ownership and minimize contention.
+- Mark completed tasks in `tasks.md` with `[X]` immediately after successful completion. Persist updates atomically.
+- Respect guardrails supplied by `.github/copilot-instructions.md` if present; do not violate required rules (e.g., no local modifications to read-only framework artifacts).
+- Do not change architecture decisions; escalate architecture modifications to `/sdd.plan` (or stop and surface the required plan changes).
 
-   - **If all checklists are complete**:
-     - Display the table showing all checklists passed
-     - Automatically proceed to step 3
+## Completion
 
-3. Load and analyze the implementation context:
-   - **REQUIRED**: Read tasks.md for the complete task list and execution plan
-   - **REQUIRED**: Read plan.md for tech stack, architecture, and file structure
-   - **IF EXISTS**: Read data-model.md for entities and relationships
-   - **IF EXISTS**: Read contracts/ for API specifications and test requirements
-   - **IF EXISTS**: Read research.md for technical decisions and constraints
-   - **IF EXISTS**: Read quickstart.md for integration scenarios
+- Verify all required tasks are marked `[X]`.
+- Run a final `reasoning/coverage-analysis` check to ensure no CRITICAL coverage gaps remain.
+- Emit a final report showing: total tasks, completed, failed, next recommended actions, and a short confidence score.
 
-4. **Project Setup Verification**:
-   - **REQUIRED**: Create/verify ignore files based on actual project setup:
-
-   **Detection & Creation Logic**:
-   - Check if the following command succeeds to determine if the repository is a git repo (create/verify .gitignore if so):
-
-     ```sh
-     git rev-parse --git-dir 2>/dev/null
-     ```
-
-   - Check if Dockerfile* exists or Docker in plan.md → create/verify .dockerignore
-   - Check if .eslintrc* exists → create/verify .eslintignore
-   - Check if eslint.config.* exists → ensure the config's `ignores` entries cover required patterns
-   - Check if .prettierrc* exists → create/verify .prettierignore
-   - Check if .npmrc or package.json exists → create/verify .npmignore (if publishing)
-   - Check if terraform files (*.tf) exist → create/verify .terraformignore
-   - Check if .helmignore needed (helm charts present) → create/verify .helmignore
-
-   **If ignore file already exists**: Verify it contains essential patterns, append missing critical patterns only
-   **If ignore file missing**: Create with full pattern set for detected technology
-
-   **Common Patterns by Technology** (from plan.md tech stack):
-   - **Node.js/JavaScript/TypeScript**: `node_modules/`, `dist/`, `build/`, `*.log`, `.env*`
-   - **Python**: `__pycache__/`, `*.pyc`, `.venv/`, `venv/`, `dist/`, `*.egg-info/`
-   - **Java**: `target/`, `*.class`, `*.jar`, `.gradle/`, `build/`
-   - **C#/.NET**: `bin/`, `obj/`, `*.user`, `*.suo`, `packages/`
-   - **Go**: `*.exe`, `*.test`, `vendor/`, `*.out`
-   - **Ruby**: `.bundle/`, `log/`, `tmp/`, `*.gem`, `vendor/bundle/`
-   - **PHP**: `vendor/`, `*.log`, `*.cache`, `*.env`
-   - **Rust**: `target/`, `debug/`, `release/`, `*.rs.bk`, `*.rlib`, `*.prof*`, `.idea/`, `*.log`, `.env*`
-   - **Kotlin**: `build/`, `out/`, `.gradle/`, `.idea/`, `*.class`, `*.jar`, `*.iml`, `*.log`, `.env*`
-   - **C++**: `build/`, `bin/`, `obj/`, `out/`, `*.o`, `*.so`, `*.a`, `*.exe`, `*.dll`, `.idea/`, `*.log`, `.env*`
-   - **C**: `build/`, `bin/`, `obj/`, `out/`, `*.o`, `*.a`, `*.so`, `*.exe`, `Makefile`, `config.log`, `.idea/`, `*.log`, `.env*`
-   - **Swift**: `.build/`, `DerivedData/`, `*.swiftpm/`, `Packages/`
-   - **R**: `.Rproj.user/`, `.Rhistory`, `.RData`, `.Ruserdata`, `*.Rproj`, `packrat/`, `renv/`
-   - **Universal**: `.DS_Store`, `Thumbs.db`, `*.tmp`, `*.swp`, `.vscode/`, `.idea/`
-
-   **Tool-Specific Patterns**:
-   - **Docker**: `node_modules/`, `.git/`, `Dockerfile*`, `.dockerignore`, `*.log*`, `.env*`, `coverage/`
-   - **ESLint**: `node_modules/`, `dist/`, `build/`, `coverage/`, `*.min.js`
-   - **Prettier**: `node_modules/`, `dist/`, `build/`, `coverage/`, `package-lock.json`, `yarn.lock`, `pnpm-lock.yaml`
-   - **Terraform**: `.terraform/`, `*.tfstate*`, `*.tfvars`, `.terraform.lock.hcl`
-   - **Kubernetes/k8s**: `*.secret.yaml`, `secrets/`, `.kube/`, `kubeconfig*`, `*.key`, `*.crt`
-
-5. Parse tasks.md structure and extract:
-   - **Task phases**: Setup, Tests, Core, Integration, Polish
-   - **Task dependencies**: Sequential vs parallel execution rules
-   - **Task details**: ID, description, file paths, parallel markers [P]
-   - **Execution flow**: Order and dependency requirements
-
-6. Execute implementation following the task plan:
-   - **Phase-by-phase execution**: Complete each phase before moving to the next
-   - **Respect dependencies**: Run sequential tasks in order, parallel tasks [P] can run together  
-   - **Follow TDD approach**: Execute test tasks before their corresponding implementation tasks
-   - **File-based coordination**: Tasks affecting the same files must run sequentially
-   - **Validation checkpoints**: Verify each phase completion before proceeding
-
-7. Implementation execution rules:
-   - **Setup first**: Initialize project structure, dependencies, configuration
-   - **Tests before code**: If you need to write tests for contracts, entities, and integration scenarios
-   - **Core development**: Implement models, services, CLI commands, endpoints
-   - **Integration work**: Database connections, middleware, logging, external services
-   - **Polish and validation**: Unit tests, performance optimization, documentation
-
-8. Progress tracking and error handling:
-   - Report progress after each completed task
-   - Halt execution if any non-parallel task fails
-   - For parallel tasks [P], continue with successful tasks, report failed ones
-   - Provide clear error messages with context for debugging
-   - Suggest next steps if implementation cannot proceed
-   - **IMPORTANT** For completed tasks, make sure to mark the task off as [X] in the tasks file.
-
-9. Completion validation:
-   - Verify all required tasks are completed
-   - Check that implemented features match the original specification
-   - Validate that tests pass and coverage meets requirements
-   - Confirm the implementation follows the technical plan
-   - Report final status with summary of completed work
-
-Note: This command assumes a complete task breakdown exists in tasks.md. If tasks are incomplete or missing, suggest running `/sdd.tasks` first to regenerate the task list.
