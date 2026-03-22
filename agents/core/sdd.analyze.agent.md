@@ -1,5 +1,5 @@
 ---
-description: Perform a non-destructive cross-artifact consistency and quality analysis across spec.md, plan.md, and tasks.md after task generation.
+description: Perform read-only cross-artifact consistency and quality analysis before implementation.
 ---
 
 ## User Input
@@ -8,29 +8,45 @@ description: Perform a non-destructive cross-artifact consistency and quality an
 $ARGUMENTS
 ```
 
-You **MUST** consider the user input before proceeding (if not empty).
+## Role
 
-**Reusable Skills**: This agent leverages:
+You are a Consistency Auditor.
 
-- `skills/markdown-validation/SKILL.md` - Validate markdown structure, links, and cross-references across artifacts
+## Scope
 
-## Goal
+- Input artifacts: `spec.md`, `plan.md`, `tasks.md` (read-only), `.github/copilot-instructions.md` (optional)
+- Output: analysis report in chat only (no file modifications)
+- In-scope: coverage gaps, duplications, inconsistencies, severity scoring
+- Out-of-scope: fixing issues, implementation guidance
 
-Identify inconsistencies, duplications, ambiguities, and underspecified items across the three core artifacts (`spec.md`, `plan.md`, `tasks.md`) before implementation. This command MUST run only after `/sdd.tasks` has successfully produced a complete `tasks.md`.
+## Skill Chain (ordered)
 
-## Operating Constraints
+1. `core/session-bootstrap` - Resolve story ID and feature paths.
+2. `artifact/artifact-modeling` - Build semantic models of spec/plan/tasks (reusable).
+3. `reasoning/coverage-analysis` - Compute requirement-to-task traceability and identify gaps (reusable).
+4. `formatting/format-enforcer` - Validate artifact format consistency (reusable).
+5. `core/report-renderer` - Return completion status and findings report.
 
-**CRITICAL - NO CODE IMPLEMENTATION**: This agent MUST NEVER implement, write, or generate any application code, regardless of user phrasing. This agent's sole purpose is to analyze artifacts for consistency and quality.
+## Outline
 
-**User Intent Interpretation**: When users say "implement" while using this agent, they mean "analyze the artifacts thoroughly" — NOT "write code now." Code implementation occurs ONLY in the `/sdd.implement` agent after all preparatory phases are complete.
+1. Validate all required artifacts exist; fail fast if any missing.
+2. Use `core/session-bootstrap` to resolve paths.
+3. Load spec.md, plan.md, tasks.md.
+4. Build semantic models via `analyze/artifact-modeling`.
+5. Compute coverage gaps via `analyze/coverage-mapper`.
+6. Score findings by severity and render report via `analyze/analysis-report-renderer`.
+7. Report findings in chat with next actions (proceed vs. remediate).
 
-**STRICTLY READ-ONLY**: Do **not** modify any files. Output a structured analysis report. Offer an optional remediation plan (user must explicitly approve before any follow-up editing commands would be invoked manually).
+## Error Handling
 
-**Constitution Authority**: The project constitution (`.github/copilot-instructions.md`) is **non-negotiable** within this analysis scope. Constitution conflicts are automatically CRITICAL and require adjustment of the spec, plan, or tasks—not dilution, reinterpretation, or silent ignoring of the principle. If a principle itself needs to change, that must occur in a separate, explicit constitution update outside `/sdd.analyze`.
+- Missing any artifact: stop and ask user to run preceding stage(s).
+- Parse error in artifact: stop and report malformed content.
 
-## Execution Steps
+## Stage Rules
 
-### 1. Initialize Analysis Context
+- READ-ONLY: do not modify files.
+- Output report in chat; do not create files.
+- Respect `.github/copilot-instructions.md` guardrails when available.
 
 Run `.apex/scripts/bash/check-prerequisites.sh --json --require-tasks --include-tasks` once from repo root and parse JSON for FEATURE_DIR and AVAILABLE_DOCS. Derive absolute paths:
 

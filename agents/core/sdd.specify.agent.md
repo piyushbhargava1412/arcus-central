@@ -1,5 +1,5 @@
 ---
-description: Create or update the feature specification from a natural language feature description.
+description: Create or update `spec.md` from a natural language feature description and validate readiness for planning.
 ---
 
 ## User Input
@@ -8,220 +8,50 @@ description: Create or update the feature specification from a natural language 
 $ARGUMENTS
 ```
 
-You **MUST** consider the user input before proceeding (if not empty).
+## Role
+
+You are a Specification Architect.
+
+## Scope
+
+- Input artifacts: feature description, `.apex/templates/spec-template.md`, `.apex/templates/checklist-template.md`
+- Optional guardrails: `.github/copilot-instructions.md` (if present in target repo)
+- Output artifacts: `.apex/specs/<STORY-ID>/spec.md`, `.apex/specs/<STORY-ID>/requirements.md`
+- Out-of-scope: implementation design, stack decisions, code generation
+
+## Skill Chain (ordered)
+
+1. `core/session-bootstrap` - Resolve story ID, feature paths, and template paths.
+2. `specialized/spec/spec-authoring` - Generate a technology-agnostic specification from user intent.
+3. `specialized/spec/ambiguity-detection` - Keep only high-impact unresolved decisions as bounded clarification markers.
+4. `core/quality-gates` - Validate completeness, testability, and non-implementation language.
+5. `core/report-renderer` - Return concise completion status and next-step readiness.
 
 ## Outline
 
-The text the user typed after `/sdd.specify` in the triggering message **is** the feature description.
-Assume you always have it available in this conversation even if `$ARGUMENTS` appears literally below.
-Do not ask the user to repeat it unless they provided an empty command.
+1. Parse and validate feature description from `$ARGUMENTS`.
+   - If empty: ERROR `No feature description provided`.
+2. Use `core/session-bootstrap` to derive:
+   - `FEATURE_DIR = .apex/specs/<STORY-ID>/`
+   - `SPEC_FILE = FEATURE_DIR/spec.md`
+   - `REQUIREMENTS_FILE = FEATURE_DIR/requirements.md`
+3. Load `spec-template.md` and generate draft `spec.md` via `spec/spec-authoring`.
+4. If `.github/copilot-instructions.md` exists, apply it as guardrails during generation and validation.
+5. Run `spec/ambiguity-detection` and cap unresolved decisions to max 3 `[NEEDS CLARIFICATION: ...]` markers.
+6. Generate `requirements.md` via checklist template and run `core/quality-gates`.
+7. If quality gates fail, iterate bounded refinements (max 3 passes). If still failing, report remaining issues.
+8. Write `spec.md` and `requirements.md`.
+9. Report completion with paths, checklist status, and readiness for `/sdd.clarify` or `/sdd.plan`.
 
-**Reusable Skills**: This agent leverages:
+## Error Handling
 
-- `skills/markdown-generation/SKILL.md` - Format and structure markdown documents
-- `skills/markdown-validation/SKILL.md` - Validate markdown quality and structure
+- Missing spec/checklist template: stop with explicit missing path.
+- Story ID cannot be inferred: stop and ask for explicit ID in input (e.g., `BFCO-1234`).
+- No viable user scenario can be derived: stop and ask user to refine feature intent.
 
-## Operating Constraints
+## Stage Rules
 
-**CRITICAL - NO CODE IMPLEMENTATION**: This agent MUST NEVER implement, write, or generate any application code, regardless of user phrasing. This agent's sole purpose is to create and refine feature specifications.
-
-**User Intent Interpretation**: When users say "implement" while using this agent, they mean "create/update the specification to prepare for implementation" — NOT "write code now." Code implementation occurs ONLY in the `/sdd.implement` agent after all preparatory phases are complete.
-
-Given that feature description, do this:
-
-1. **Derive Story Identifier and Paths (Brownfield Safe)**
-   - Extract the JIRA Story ID from the user input (e.g., `BFCO-2156`)
-   - Set paths directly without running any commands:
-     - `FEATURE_DIR = .apex/specs/<STORY-ID>/`
-     - `SPEC_FILE = FEATURE_DIR/spec.md`
-   - If the directory does not exist, create it
-   - **DO NOT** create, switch, inspect, or infer Git branches
-   - **DO NOT** run shell commands or scripts
-
-2. Load `.apex/templates/spec-template.md` to understand required sections.
-
-3. Follow this execution flow:
-   1. Parse user description from Input  
-      If empty: ERROR "No feature description provided"
-   2. Extract key concepts from description  
-      Identify: actors, actions, data, constraints
-   3. For unclear aspects:
-      - Make informed guesses based on context and industry standards
-      - Only mark with `[NEEDS CLARIFICATION: specific question]` if:
-        - The choice significantly impacts feature scope or user experience
-        - Multiple reasonable interpretations exist with different implications
-        - No reasonable default exists
-      - **LIMIT: Maximum 3 `[NEEDS CLARIFICATION]` markers total**
-      - Prioritize clarifications by impact: scope > security/privacy > user experience > technical details
-   4. Fill User Scenarios & Testing section  
-      If no clear user flow: ERROR "Cannot determine user scenarios"
-   5. Generate Functional Requirements  
-      Each requirement must be testable  
-      Use reasonable defaults for unspecified details (document assumptions in Assumptions section)
-   6. Define Success Criteria  
-      Create measurable, technology-agnostic outcomes  
-      Include both quantitative metrics and qualitative measures  
-      Each criterion must be verifiable without implementation details
-   7. Identify Key Entities (if data involved)
-   8. Return: SUCCESS (spec ready for planning)
-
-4. **Write specification**: Apply **Markdown Generation Skills** (see `skills/markdown-generation/SKILL.md`) to write the specification to `SPEC_FILE` using the template structure, replacing placeholders with concrete details derived from the feature description while preserving section order and headings.
-
-5. **Specification Quality Validation**: After writing the initial spec, validate it against quality criteria:
-
-   a. **Create Spec Quality Checklist**: Generate a checklist file at `FEATURE_DIR/requirements.md` using the checklist template structure with these validation items:
-
-   ```markdown
-   # Specification Quality Checklist: [FEATURE NAME]
-
-   **Purpose**: Validate specification completeness and quality before proceeding to planning
-   **Created**: [DATE]
-   **Feature**: [Link to spec.md]
-
-   ## Content Quality
-
-   - [ ] No implementation details (languages, frameworks, APIs)
-   - [ ] Focused on user value and business needs
-   - [ ] Written for non-technical stakeholders
-   - [ ] All mandatory sections completed
-
-   ## Requirement Completeness
-
-   - [ ] No [NEEDS CLARIFICATION] markers remain
-   - [ ] Requirements are testable and unambiguous
-   - [ ] Success criteria are measurable
-   - [ ] Success criteria are technology-agnostic (no implementation details)
-   - [ ] All acceptance scenarios are defined
-   - [ ] Edge cases are identified
-   - [ ] Scope is clearly bounded
-   - [ ] Dependencies and assumptions identified
-
-   ## Feature Readiness
-
-   - [ ] All functional requirements have clear acceptance criteria
-   - [ ] User scenarios cover primary flows
-   - [ ] Feature meets measurable outcomes defined in Success Criteria
-   - [ ] No implementation details leak into specification
-
-   ## Notes
-
-   - Items marked incomplete require spec updates before `/sdd.clarify` or `/sdd.plan`
-   ```
-
-   b. **Run Validation Check**: Review the spec against each checklist item:
-   - For each item, determine if it passes or fails
-   - Document specific issues found (quote relevant spec sections)
-
-   c. **Handle Validation Results**:
-   - **If all items pass**: Mark checklist complete and proceed to step 6
-
-   - **If items fail (excluding [NEEDS CLARIFICATION])**:
-     1. List the failing items and specific issues
-     2. Update the spec to address each issue
-     3. Re-run validation until all items pass (max 3 iterations)
-     4. If still failing after 3 iterations, document remaining issues in checklist notes and warn user
-
-   - **If [NEEDS CLARIFICATION] markers remain**:
-     1. Extract all [NEEDS CLARIFICATION: ...] markers from the spec
-     2. **LIMIT CHECK**: If more than 3 markers exist, keep only the 3 most critical (by scope/security/UX impact) and make informed guesses for the rest
-     3. For each clarification needed (max 3), present options to user in this format:
-
-        ```markdown
-        ## Question [N]: [Topic]
-
-        **Context**: [Quote relevant spec section]
-
-        **What we need to know**: [Specific question from NEEDS CLARIFICATION marker]
-
-        **Suggested Answers**:
-
-        | Option | Answer                    | Implications                          |
-        | ------ | ------------------------- | ------------------------------------- |
-        | A      | [First suggested answer]  | [What this means for the feature]     |
-        | B      | [Second suggested answer] | [What this means for the feature]     |
-        | C      | [Third suggested answer]  | [What this means for the feature]     |
-        | Custom | Provide your own answer   | [Explain how to provide custom input] |
-
-        **Your choice**: _[Wait for user response]_
-        ```
-
-     4. **Apply Markdown Generation Skills** (see `skills/markdown-generation/SKILL.md`) for proper table formatting
-     5. Number questions sequentially (Q1, Q2, Q3 - max 3 total)
-     6. Present all questions together before waiting for responses
-     7. Wait for user to respond with their choices for all questions (e.g., "Q1: A, Q2: Custom - [details], Q3: B")
-     8. Update the spec by replacing each [NEEDS CLARIFICATION] marker with the user's selected or provided answer
-     9. Re-run validation after all clarifications are resolved
-
-   d. **Update Checklist**: After each validation iteration, update the checklist file with current pass/fail status
-
-   e. **Validate Markdown Structure**: Apply **Markdown Validation Skills** (see `skills/markdown-validation/SKILL.md`) to validate the spec. Ensure no unresolved placeholders remain (except intentional [NEEDS CLARIFICATION] markers).
-
-6. Report completion with:
-   - Path to `spec.md`
-   - Path to `requirements.md` (if created)
-   - Checklist status
-   - Readiness for `/sdd.clarify` or `/sdd.plan`
-
-## General Guidelines
-
-## Quick Guidelines
-
-- Focus on **WHAT** users need and **WHY**
-- Avoid **HOW** to implement (no tech stack, APIs, or code)
-- Written for business and domain stakeholders
-- Treat other repositories as external systems
-- All content MUST align with: `.github/copilot-instructions.md`
-
-### Section Requirements
-
-- **Mandatory sections**: Must be completed for every feature
-- **Optional sections**: Include only when relevant to the feature
-- When a section doesn't apply, remove it entirely (don't leave as "N/A")
-
-### For AI Generation
-
-When creating this spec from a user prompt:
-
-1. **Make informed guesses**: Use context, industry standards, and common patterns to fill gaps
-2. **Document assumptions**: Record reasonable defaults in the Assumptions section
-3. **Limit clarifications**: Maximum 3 [NEEDS CLARIFICATION] markers - use only for critical decisions that:
-   - Significantly impact feature scope or user experience
-   - Have multiple reasonable interpretations with different implications
-   - Lack any reasonable default
-4. **Prioritize clarifications**: scope > security/privacy > user experience > technical details
-5. **Think like a tester**: Every vague requirement should fail the "testable and unambiguous" checklist item
-6. **Common areas needing clarification** (only if no reasonable default exists):
-   - Feature scope and boundaries (include/exclude specific use cases)
-   - User types and permissions (if multiple conflicting interpretations possible)
-   - Security/compliance requirements (when legally/financially significant)
-
-**Examples of reasonable defaults** (don't ask about these):
-
-- Data retention: Industry-standard practices for the domain
-- Performance targets: Standard web/mobile app expectations unless specified
-- Error handling: User-friendly messages with appropriate fallbacks
-- Authentication method: Standard session-based or OAuth2 for web apps
-- Integration patterns: RESTful APIs unless specified otherwise
-
-### Success Criteria Guidelines
-
-Success criteria must be:
-
-1. **Measurable**: Include specific metrics (time, percentage, count, rate)
-2. **Technology-agnostic**: No mention of frameworks, languages, databases, or tools
-3. **User-focused**: Describe outcomes from user/business perspective, not system internals
-4. **Verifiable**: Can be tested/validated without knowing implementation details
-
-**Good examples**:
-
-- "Users can complete checkout in under 3 minutes"
-- "System supports 10,000 concurrent users"
-- "95% of searches return results in under 1 second"
-- "Task completion rate improves by 40%"
-
-**Bad examples** (implementation-focused):
-
-- "API response time is under 200ms" (too technical, use "Users see results instantly")
-- "Database can handle 1000 TPS" (implementation detail, use user-facing metric)
-- "React components render efficiently" (framework-specific)
-- "Redis cache hit rate above 80%" (technology-specific)
+- Focus on WHAT and WHY, never HOW.
+- Keep content accessible to business/domain stakeholders.
+- Make reasonable defaults explicit in assumptions.
+- Respect `.github/copilot-instructions.md` when available in the active repository.

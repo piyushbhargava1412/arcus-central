@@ -230,9 +230,10 @@ validate_central_structure() {
 
     # Validate at least one skill directory with SKILL.md exists
     local skill_count=0
+    # Find any SKILL.md under skills/ (allow nested capability-based folders)
     while IFS= read -r -d '' skill_file; do
         ((skill_count++))
-    done < <(find "$central_path/skills" -mindepth 2 -maxdepth 2 -name "SKILL.md" -print0 2>/dev/null)
+    done < <(find "$central_path/skills" -type f -name "SKILL.md" -print0 2>/dev/null)
 
     if [[ $skill_count -eq 0 ]]; then
         error "No valid skills found (expected skills/{skill-name}/SKILL.md structure)"
@@ -296,12 +297,10 @@ main() {
         prompt_removals=$(remove_md_files "$TARGET_REPO/.github/prompts" "*.prompt.md" "prompt")
         ((removal_count += prompt_removals))
 
-        # Remove .github/skills/ symlink
-        if [[ -L "$TARGET_REPO/.github/skills" ]]; then
-            rm -f "$TARGET_REPO/.github/skills"
-            ((removal_count++))
-            success "Removed: .github/skills (symlink)"
-        fi
+        # Remove .github/skills/ SKILL.md files
+        local skill_removals
+        skill_removals=$(remove_md_files "$TARGET_REPO/.github/skills" "SKILL.md" "skill")
+        ((removal_count += skill_removals))
 
         # Remove .apex-ignore
         if [[ -f "$TARGET_REPO/.apex-ignore" ]]; then
@@ -369,12 +368,10 @@ main() {
         prompt_cleanup=$(remove_md_files "$TARGET_REPO/.github/prompts" "*.prompt.md" "prompt")
         ((cleanup_count += prompt_cleanup))
 
-        # Remove .github/skills/ symlink
-        if [[ -L "$TARGET_REPO/.github/skills" ]]; then
-            rm -f "$TARGET_REPO/.github/skills"
-            ((cleanup_count++))
-            info "Removed: .github/skills (symlink)"
-        fi
+        # Remove .github/skills/ SKILL.md files
+        local skill_cleanup
+        skill_cleanup=$(remove_md_files "$TARGET_REPO/.github/skills" "SKILL.md" "skill")
+        ((cleanup_count += skill_cleanup))
 
         # Remove metadata file
         if [[ -f "$TARGET_REPO/.apex-metadata.json" ]]; then
@@ -438,14 +435,22 @@ main() {
     done < <(find "$CENTRAL_REPO/prompts" -name "*.prompt.md" -type f -print0 2>/dev/null)
     info "$prompt_count prompt files copied to .github/prompts/ (filtered: repo-intelligence, instructions, analyze, clarify, tasks)"
 
-    # Skills directory symlink (for Copilot Skills interface)
-    local skills_linked=false
-    if create_dir_symlink "$CENTRAL_REPO/skills" "$TARGET_REPO/.github/skills"; then
-        skills_linked=true
-        info "Skills directory symlinked to .github/skills/ (for Copilot Skills)"
-    fi
+    # Skills: copy SKILL.md files preserving capability folder structure
+    mkdir -p "$TARGET_REPO/.github/skills"
+    local skill_count=0
+    while IFS= read -r -d '' skill_file; do
+        # compute relative path under CENTRAL_REPO/skills
+        local rel_path
+        rel_path=$(get_relative_path "$CENTRAL_REPO/skills" "$skill_file")
+        local dst_file="$TARGET_REPO/.github/skills/$rel_path"
+        mkdir -p "$(dirname "$dst_file")"
+        if copy_file_readonly "$skill_file" "$dst_file"; then
+            ((skill_count++))
+        fi
+    done < <(find "$CENTRAL_REPO/skills" -type f -name "SKILL.md" -print0 2>/dev/null)
+    info "$skill_count skill files copied to .github/skills/ (preserving directory structure)"
 
-    success "Phase 2 done: $agent_count agents, $prompt_count prompts, skills linked"
+    success "Phase 2 done: $agent_count agents, $prompt_count prompts, $skill_count skills copied"
     echo ""
 
     # ══════════════════════════════════════════════════════════════
@@ -519,8 +524,7 @@ main() {
     validate_readonly_copies "$TARGET_REPO/.github/prompts" "*.prompt.md" ".github/prompts/ (read-only copies)"
 
     log ".github/skills/:"
-    [[ -L "$TARGET_REPO/.github/skills" ]] && \
-        validate_symlink "$TARGET_REPO/.github/skills" ".github/skills"
+    validate_readonly_copies "$TARGET_REPO/.github/skills" "SKILL.md" ".github/skills/ (read-only copies)"
     echo ""
 
 
@@ -546,8 +550,10 @@ main() {
   "ide_discovery": {
     "agents_dir": ".github/agents/ (read-only copies)",
     "prompts_dir": ".github/prompts/ (read-only copies)",
+    "skills_dir": ".github/skills/ (read-only copies)",
     "agent_count": $agent_count,
     "prompt_count": $prompt_count,
+    "skill_count": $skill_count,
     "reason": "IntelliJ agent tab does not follow symlinks"
   },
   "apex_ignore": {
@@ -581,6 +587,7 @@ EOF
     echo "  ── .github/ (read-only copies for IDE) ──"
     printf "    ${GREEN}✓${NC} agents/   (%d files, chmod 444)\n" "$agent_count"
     printf "    ${GREEN}✓${NC} prompts/  (%d files, chmod 444)\n" "$prompt_count"
+    printf "    ${GREEN}✓${NC} skills/   (%d files, chmod 444)\n" "$skill_count"
     echo ""
     if [[ "$apex_ignore_copied" == true ]]; then
         echo "  ── Configuration ──"

@@ -39,4 +39,5 @@ apex-integrate
 
 - [Integration Guide](APEX_INTEGRATION_GUIDE.md) — Full setup and usage
 - [Repository Structure](STRUCTURE.md) — Central repo layout
-- [Agent Registry](registry/AGENT_REGISTRY.md) — All agents and skills 
+- [Agent Registry](registry/AGENT_REGISTRY.md) — All agents 
+- [Skill Registry](registry/SKILLS_REGISTRY.md) — All skills 

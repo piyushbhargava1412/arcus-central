@@ -80,8 +80,9 @@ test-results/
 docs/_build/
 site/
 
-# GitHub Agents & Prompts
+# GitHub Agents, Skills & Prompts
 .github/agents/
+.github/skills/
 .github/prompts/
 
 # Apex
