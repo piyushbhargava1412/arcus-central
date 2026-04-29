@@ -2,19 +2,27 @@
 
 This file maintains a registry of all available reusable skills, organized by capability domain and cross-stage usage.
 
+**Quick Start**: See [Overview](#overview) for skill count and reusability metrics. Skills are documented by capability domain: [Core Skills](#core-skills-), [Artifact Operations](#artifact-operations-skills-), [Reasoning & Decomposition](#reasoning--decomposition-skills-), [Specialized Skills](#specialized-skills-), and others. Check [Skill Reusability Matrix](#skill-reusability-matrix) to understand which skills are core (used by multiple agents) vs specialized.
+
+**For Developers**: Use this registry to find reusable skills, understand skill inputs/outputs, and see which agents use each skill.
+
+**For Architects**: Check the reusability matrix to understand which skills are core (used by multiple agents) vs specialized (execution-specific).
+
+**For Tools/Scripts**: This registry is machine-readable. Extract skill file paths and agent usage information to validate framework completeness.
+
 **Related**: See [AGENT_REGISTRY.md](./AGENT_REGISTRY.md) for agent discovery and workflow information.
 
 ---
 
 ## Overview
 
-The SDD framework provides **19 reusable skills** organized by capability domain. Skills are stage-agnostic, meaning they can be used by multiple agents across the SDD lifecycle.
+The SDD framework provides **22 reusable skills** organized by capability domain. Skills are stage-agnostic, meaning they can be used by multiple agents across the SDD lifecycle.
 
 **Reusability Levels**:
 - 🟢 **Core** (3 skills): Used by all or most agents
 - 🟦 **Shared** (8 skills): Used by 2-4 agents
-- 🟨 **Multi-Use** (2 skills): Used by 2-3 agents
-- 🟪 **Specialized** (6 skills): Used by 1-2 agents (narrow context)
+- 🟨 **Multi-Use** (4 skills): Used by 2-3 agents
+- 🟪 **Specialized** (8 skills): Used by 1-2 agents (narrow context)
 
 ---
 
@@ -32,7 +40,7 @@ These skills are foundational and used by all or most agents across the SDD life
 - **Reusability**: ⭐⭐⭐⭐⭐ (6/6 agents)
 - **Key Responsibilities**:
   - Extract story ID from user input
-  - Build canonical feature directory path (`.apex/specs/<STORY-ID>/`)
+  - Build canonical feature directory path (`.arcus/specs/<STORY-ID>/`)
   - Resolve template paths
   - Ensure deterministic path generation
 
@@ -235,6 +243,77 @@ These skills handle output formatting and validation.
 
 ---
 
+## Foundation & Discovery Skills (🟦)
+
+These skills establish baseline repository context for all downstream operations.
+
+### `foundation/repository-context-builder`
+
+- **File**: `skills/foundation/repository-context-builder/SKILL.md`
+- **Purpose**: Build or refresh baseline repository context by analyzing repository structure
+- **Inputs**: `repository_root`
+- **Outputs**: `repo_scope`, `repo_map`
+- **Used By**: 1 agent (`context-builder`)
+- **Reusability**: ⭐⭐ (foundational to all operations)
+- **Key Responsibilities**:
+  - Generate `.context/repo_scope.md`
+  - Generate `.context/repo_map.md`
+  - Analyze repository structure and tech stack
+  - Extract implementation evidence
+  - Build navigation artifacts for downstream agents
+
+### `discovery/flow-and-scope-discovery`
+
+- **File**: `skills/discovery/flow-and-scope-discovery/SKILL.md`
+- **Purpose**: Identify business flows and map each flow to implementation scope
+- **Inputs**: `repo_scope`, `repo_map`
+- **Outputs**: `flows`
+- **Used By**: 1 agent (`context-builder`)
+- **Reusability**: ⭐⭐ (discovery-specific)
+- **Key Responsibilities**:
+  - Identify key business flows
+  - Map flows to implementation scope
+  - Persist each flow as separate file in `.context/flows/`
+  - Document flow-to-feature relationships
+
+---
+
+## Context & Maintenance Skills (🟨)
+
+These skills manage feature-specific context and detect/reconcile context drift.
+
+### `context/feature-context-pack-builder`
+
+- **File**: `skills/context/feature-context-pack-builder/SKILL.md`
+- **Purpose**: Build minimal story-specific context pack from shared artifacts
+- **Inputs**: `story_description`, `story_id`
+- **Outputs**: `context_pack`
+- **Used By**: Multiple agents (spec, plan, tasks phases)
+- **Reusability**: ⭐⭐⭐ (multi-stage usage)
+- **Key Responsibilities**:
+  - Reference `.context/repo_scope.md`
+  - Reference `.context/repo_map.md`
+  - Reference `.context/flows/*.md`
+  - Build story-specific context pack
+  - Write to `.arcus/specs/<STORY-ID>/context-pack.md`
+
+### `maintenance/context-drift-and-reconcile`
+
+- **File**: `skills/maintenance/context-drift-and-reconcile/SKILL.md`
+- **Purpose**: Detect and reconcile drift between code and shared context artifacts
+- **Inputs**: `repository_root`
+- **Outputs**: `updated_context`
+- **Used By**: 1+ agent (start of story work)
+- **Reusability**: ⭐⭐ (maintenance/lifecycle)
+- **Key Responsibilities**:
+  - Use verification commits and git diff
+  - Detect changes to repository structure
+  - Update impacted `.context/` files
+  - Preserve context integrity
+  - Minimize drift-introduced changes
+
+---
+
 ## Specialized Skills (🟪)
 
 These skills are context-specific or narrow in scope, used by 1-2 agents.
@@ -286,37 +365,6 @@ These skills are context-specific or narrow in scope, used by 1-2 agents.
   - Handle failures gracefully
   - Maintain execution log
 
-#### `specialized/execution/progress-tracker`
-
-- **File**: `skills/specialized/execution/progress-tracker/SKILL.md`
-- **Purpose**: Track and render implementation progress
-- **Inputs**: `tasks_file`, `execution_log`
-- **Outputs**: `progress_report`, `completion_metrics`
-- **Used By**: 1 agent (`implement`)
-- **Reusability**: ⭐ (1/5 agents - execution-specific)
-- **Key Responsibilities**:
-  - Count completed/failed/pending tasks
-  - Compute completion percentages
-  - Identify next actionable task
-  - Render status report
-
-### Repository Analysis Domain
-
-#### `specialized/repository-analysis`
-
-- **File**: `skills/specialized/repository-analysis/SKILL.md`
-- **Purpose**: Analyze repository structure and apply ignore patterns
-- **Inputs**: `repository_root`, `analysis_scope`
-- **Outputs**: `repository_model`, `analysis_results`
-- **Used By**: 2 extensions (`instructions`, `repo-intelligence`)
-- **Reusability**: ⭐⭐ (2 extensions)
-- **Key Responsibilities**:
-  - Process `.apex-ignore` patterns
-  - Traverse repository structure
-  - Identify modules and patterns
-  - Extract tech stack from code
-  - Build evidence-backed analysis
-
 ---
 
 ## Skill Reusability Matrix
@@ -325,53 +373,60 @@ These skills are context-specific or narrow in scope, used by 1-2 agents.
 
 | Domain | Skills | Total Use | Avg Reuse |
 |--------|--------|-----------|-----------|
-| Core | 3 | 16 agent-calls | ⭐⭐⭐⭐⭐ |
+| Core | 3 | 18 agent-calls | ⭐⭐⭐⭐⭐ |
 | Artifact | 4 | 9 agent-calls | ⭐⭐⭐ |
 | Reasoning | 4 | 8 agent-calls | ⭐⭐⭐⭐ |
+| Foundation | 1 | 2 agent-calls | ⭐⭐ |
+| Discovery | 1 | 2 agent-calls | ⭐⭐ |
+| Context | 1 | 3+ agent-calls | ⭐⭐⭐ |
+| Maintenance | 1 | 2+ agent-calls | ⭐⭐ |
 | Interaction | 1 | 2+ agent-calls | ⭐⭐⭐ |
 | Formatting | 1 | 2-3 agent-calls | ⭐⭐⭐ |
 | Specialized | 6 | 8 agent-calls | ⭐ |
 
 ### By Agent
 
-| Agent | Skills Used | Core | Artifact | Reasoning | Specialized |
-|-------|-------------|------|----------|-----------|-------------|
-| specify | 5 | 3 | - | - | 2 |
-| clarify | 6 | 3 | 2 | - | 1 |
-| plan | 6 | 3 | 1 | 1 | - |
-| tasks | 7 | 3 | 1 | 3 | - |
-| analyze | 5 | 3 | 1 | 1 | - |
-| implement | 7 | 3 | - | 3 | 2 |
+| Agent | Skills Used | Core | Artifact | Reasoning | Context | Specialized |
+|-------|-------------|------|----------|-----------|---------|-------------|
+| context-builder | 5 | 2 | 1 | - | 2 | - |
+| specify | 5 | 3 | - | - | - | 2 |
+| clarify | 6 | 3 | 2 | - | - | 1 |
+| plan | 6 | 3 | 1 | 1 | - | - |
+| tasks | 7 | 3 | 1 | 3 | - | - |
+| analyze | 5 | 3 | 1 | 1 | - | - |
+| implement | 7 | 3 | - | 3 | - | 2 |
 
 ---
 
 ## Skills by Usage Level
 
 ### 🟢 Used by All Agents (3)
-- `core/session-bootstrap` (6/6)
-- `core/report-renderer` (6/6)
-- `core/quality-gates` (4/6, universal validator)
+- `core/session-bootstrap` (all agents)
+- `core/report-renderer` (all agents)
+- `core/quality-gates` (universal validator)
 
 ### 🟦 Widely Reusable (8)
-- `artifact/artifact-modeling` (3/5)
-- `artifact/artifact-patcher` (2+/5)
-- `artifact/markdown-generation` (3+)
-- `artifact/markdown-validation` (2+/5)
-- `reasoning/design-synthesis` (2/5)
-- `reasoning/work-decomposition` (3/5)
-- `reasoning/dependency-analysis` (3/5)
-- `reasoning/coverage-analysis` (2/5)
+- `artifact/artifact-modeling` (3 agents)
+- `artifact/artifact-patcher` (2+ agents)
+- `artifact/markdown-generation` (3+ agents)
+- `artifact/markdown-validation` (2+ agents)
+- `reasoning/design-synthesis` (2 agents)
+- `reasoning/work-decomposition` (3 agents)
+- `reasoning/dependency-analysis` (3 agents)
+- `reasoning/coverage-analysis` (2 agents)
 
-### 🟨 Multi-Agent (2)
-- `interaction/question-orchestration` (2+/5)
-- `formatting/format-enforcer` (2-3/5)
+### 🟨 Multi-Agent Context & Formatting (4)
+- `context/feature-context-pack-builder` (multi-stage)
+- `interaction/question-orchestration` (2+ agents)
+- `formatting/format-enforcer` (2-3 agents)
+- `discovery/flow-and-scope-discovery` (1 agent, foundational)
 
-### 🟪 Specialized/Narrow (6)
-- `specialized/spec/spec-authoring` (1/5)
-- `specialized/spec/ambiguity-detection` (1/5)
-- `specialized/execution/task-execution-controller` (1/5)
-- `specialized/execution/progress-tracker` (1/5)
-- `specialized/repository-analysis` (2 extensions)
+### 🟪 Specialized/Narrow (8)
+- `foundation/repository-context-builder` (foundational)
+- `maintenance/context-drift-and-reconcile` (lifecycle)
+- `specialized/spec/spec-authoring` (1 agent)
+- `specialized/spec/ambiguity-detection` (1 agent)
+- `specialized/execution/task-execution-controller` (1 agent)
 
 ---
 
@@ -379,12 +434,12 @@ These skills are context-specific or narrow in scope, used by 1-2 agents.
 
 | Metric | Value |
 |--------|-------|
-| **Total Skills** | 19 |
-| **Reusable (used 2+ agents/stages)** | 13 (68%) |
-| **Stage-specific/Narrow** | 6 (32%) |
-| **Skills by domain** | 6 domains |
-| **Total skill uses** | 40+ agent-skill connections |
-| **Average skill reuse** | 2.1 agents per skill |
+| **Total Skills** | 22 |
+| **Reusable (used 2+ agents/stages)** | 14 (64%) |
+| **Specialized/Domain-Specific** | 8 (36%) |
+| **Skills by domain** | 10 domains |
+| **Total skill uses** | 50+ agent-skill connections |
+| **Average skill reuse** | 2.2 agents per skill |
 
 ---
 

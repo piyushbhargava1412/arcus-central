@@ -2,7 +2,13 @@
 
 This file maintains a registry of all available agents, their capabilities, and usage information.
 
-**Related**: See [SKILLS_REGISTRY.md](./SKILLS_REGISTRY.md) for available reusable skills.
+**Quick Start**: Scroll to [Agent Workflow](#agent-workflow) to see the recommended SDD process sequence. Then find your starting agent in the [Core Agents](#core-agents-6) or [Extension Agents](#extension-agents-3) sections.
+
+**For Developers**: Use this registry to discover agents, understand their roles, and see which skills each agent uses.
+
+**For Tools/Scripts**: This registry is machine-readable. Extract agent file paths from the "File" field and skill chains from the delegation models.
+
+**Related**: See [SKILLS_REGISTRY.md](./SKILLS_REGISTRY.md) for available reusable skills and reusability analysis.
 
 ---
 
@@ -138,58 +144,74 @@ This file maintains a registry of all available agents, their capabilities, and 
 
 ## Extension Agents (3)
 
+### sdd.context-builder
+
+- **File**: `agents/extensions/sdd.context-builder.agent.md`
+- **Command**: `/sdd.context-builder`
+- **Purpose**: Initialize or reset ARCUS shared repository context by generating `.context/repo_scope.md`, `.context/repo_map.md`, `.context/flows/`, and `.context/testing-patterns.md`
+- **Role**: Context Bootstrapper
+- **Key Capabilities**:
+  - Repository structure analysis and evidence extraction
+  - Repository scope and map generation (business + technical context)
+  - Business flow discovery and mapping
+  - Testing pattern identification
+  - First-time ARCUS integration context bootstrap
+  - Baseline reset after major structural changes
+- **Skill Chain**:
+  1. `core/session-bootstrap` - Initialize repository context
+  2. `foundation/repository-context-builder` - Analyze repository and generate repo_scope.md + repo_map.md
+  3. `discovery/flow-and-scope-discovery` - Discover business flows and generate flows/*.md files
+  4. `foundation/test-pattern-discovery` - Analyze testing patterns and generate testing-patterns.md
+  5. `core/quality-gates` - Validate context artifacts
+  6. `core/report-renderer` - Report completion
+- **Guardrails**: Respects `.github/copilot-instructions.md` if present. Applies `.arcus-ignore` patterns during analysis.
+
 ### sdd.groom
 
 - **File**: `agents/extensions/sdd.groom.agent.md`
 - **Prompt**: `prompts/extensions/sdd.groom.prompt.md`
 - **Command**: `/sdd.groom <requirement>`
-- **Purpose**: Transform broad requirements into implementation-ready user stories
+- **Purpose**: Transform broad requirements into implementation-ready user stories refined and prepared for intake
 - **Role**: Story Grooming Strategist
 - **Key Capabilities**:
-  - Unstructured requirement parsing
-  - User story generation with acceptance criteria
+  - Unstructured requirement parsing and intent extraction
+  - User story generation with acceptance criteria and test scenarios
   - Repository-context-aware story scoping
-  - Story file naming and organization
+  - Story file naming, organizing, and artifact generation
+  - Dependency identification between stories
+- **Guardrails**: Respects `.github/copilot-instructions.md` if present. Leverages `.context/repo_scope.md` and `.context/repo_map.md` for scoping.
 
 ### sdd.instructions
 
 - **File**: `agents/extensions/sdd.instructions.agent.md`
 - **Prompt**: `prompts/extensions/sdd.instructions.prompt.md`
-- **Purpose**: Create or update the copilot instruction architecture and ensure governance sync
+- **Command**: `/sdd.instructions`
+- **Purpose**: Create or update the copilot instruction architecture and ensure all dependent components stay in governance sync
 - **Role**: Governance Curator
 - **Key Capabilities**:
-  - Repository structure analysis (via `specialized/repository-analysis` skill)
+  - Repository structure analysis
   - Instruction discovery and classification
-  - Cross-reference validation
+  - Cross-reference validation between guidelines
   - Amendment tracking with semantic versioning
-  - Dependent file synchronization
-  
-### sdd.repo-intelligence
-
-- **File**: `agents/extensions/sdd.repo-intelligence.agent.md`
-- **Prompt**: `prompts/extensions/sdd.repo-intelligence.prompt.md`
-- **Command**: `/sdd.repo-intelligence [output-dir] [--map-only | --scope-only] [context hint]`
-- **Purpose**: Generate `repo_map.md` (technical topology) and `repo_scope.md` (business ownership)
-- **Role**: Repository Cartographer
-- **Key Capabilities**:
-  - Stack-agnostic language fingerprinting (13+ languages)
-  - Architecture pattern classification
-  - Contract discovery (OpenAPI, Protobuf, GraphQL, etc.)
-  - Data ownership detection
-  - Dependency mapping
-  - Infrastructure detection
+  - Dependent file synchronization (ensures updates propagate)
+  - Governance compliance checking
+- **Guardrails**: Respects `.github/copilot-instructions.md` as canonical. Validates against `.arcus/instructions/` baseline.
 
 ---
 
 ## Agent Workflow
 
+
+**Context Bootstrap** (one-time):
+```
+1. /sdd.context-builder    →  Initialize repository context (.context/)
+2. /sdd.instructions       →  Create copilot instructions (.github/copilot-instructions.md)
+```
+
+**Development**
 The typical SDD workflow follows this sequence:
 
 ```
-/sdd.repo-intelligence  →  repo_map.md + repo_scope.md (repo onboarding)
-        ↓
-/sdd.groom              →  user stories (from broad requirements)
-        ↓
 /sdd.specify             →  spec.md (feature specification)
         ↓
 /sdd.clarify             →  spec.md updated (ambiguities resolved)
@@ -198,10 +220,13 @@ The typical SDD workflow follows this sequence:
         ↓
 /sdd.tasks               →  tasks.md (task breakdown)
         ↓
-/sdd.analyze             →  analysis report (consistency check)
+/sdd.analyze             →  analysis report (pre-implementation consistency check)
         ↓
 /sdd.implement           →  code + progress (execute tasks)
+        ↓
+/sdd.analyze             →  analysis report (post-implementation verification)
 ```
+
 
 ---
 
@@ -212,14 +237,12 @@ The typical SDD workflow follows this sequence:
 | Core agents | 6 |
 | Extension agents | 3 |
 | **Total agents** | **9** |
-| Reusable skills | 19 (see [SKILLS_REGISTRY.md](./SKILLS_REGISTRY.md)) |
-| Templates | 10 |
-| Prompts | 9 |
+| Reusable skills | 22 (see [SKILLS_REGISTRY.md](./SKILLS_REGISTRY.md)) |
+| Templates | 11 |
+| Prompts | 8 |
 
 ---
 
 ## See Also
 
-- [SKILLS_REGISTRY.md](./SKILLS_REGISTRY.md) — Registry of all 19 reusable skills, organized by capability domain
-- [../SKILLS_FOLDER_MIGRATION.md](../SKILLS_FOLDER_MIGRATION.md) — Migration guide from stage-based to capability-based folder structure
-- [../SKILLS_REUSABILITY_MATRIX.md](../SKILLS_REUSABILITY_MATRIX.md) — Detailed cross-stage skill usage matrix
+- [SKILLS_REGISTRY.md](./SKILLS_REGISTRY.md) — Registry of all 23 reusable skills, organized by capability domain with reusability matrices

@@ -1,13 +1,11 @@
 #!/bin/bash
 
-# install-cli.sh — Install the `apex-integrate` CLI command globally
+# install-cli.sh — Install the `arcus-integrate` CLI command globally
+# This script installs a tiny shim to /usr/local/bin/arcus-integrate so you
+# can simply run: arcus-integrate
 #
-# Installs the SDD (Spec Driven Development) framework integration command.
-# Run this ONCE from the central repo. After that, any target repo
-# can simply run: apex-integrate
-#
-# Usage:
-#   cd otto_apex-central
+# Example:
+#   cd bigfin_arcus-central
 #   ./install-cli.sh
 
 set -e
@@ -19,7 +17,7 @@ BLUE='\033[0;34m'
 NC='\033[0m'
 
 INSTALL_DIR="/usr/local/bin"
-COMMAND_NAME="apex-integrate"
+COMMAND_NAME="arcus-integrate"
 CENTRAL_REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # ─── Validate ─────────────────────────────────────────────────────
@@ -32,8 +30,8 @@ fi
 TEMP_FILE=$(mktemp)
 
 echo '#!/bin/bash' > "$TEMP_FILE"
-echo "APEX_CENTRAL=\"$CENTRAL_REPO\"" >> "$TEMP_FILE"
-echo 'exec bash "$APEX_CENTRAL/integrate.sh" "$(pwd)" "$@"' >> "$TEMP_FILE"
+echo "ARCUS_CENTRAL=\"$CENTRAL_REPO\"" >> "$TEMP_FILE"
+echo 'exec bash "$ARCUS_CENTRAL/integrate.sh" "$(pwd)" "$@"' >> "$TEMP_FILE"
 
 chmod +x "$TEMP_FILE"
 
@@ -50,9 +48,10 @@ if command -v "$COMMAND_NAME" &>/dev/null; then
     echo -e "${GREEN}✅ Installed!${NC}  You can now run from any target repo:"
     echo ""
     echo -e "    cd <your-project>"
-    echo -e "    ${GREEN}apex-integrate${NC}          # integrate"
-    echo -e "    ${GREEN}apex-integrate --sync${NC}   # re-sync"
-    echo -e "    ${GREEN}apex-integrate --yes${NC}    # non-interactive"
+    echo -e "    ${GREEN}arcus-integrate${NC}             # integrate"
+    echo -e "    ${GREEN}arcus-integrate --sync${NC}      # re-sync"
+    echo -e "    ${GREEN}arcus-integrate --remove${NC}    # remove"
+    echo -e "    ${GREEN}arcus-integrate --yes${NC}       # non-interactive"
     echo ""
 else
     echo -e "${RED}❌ Install failed.${NC} Ensure $INSTALL_DIR is in your PATH."

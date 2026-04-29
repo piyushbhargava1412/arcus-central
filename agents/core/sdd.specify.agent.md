@@ -1,5 +1,5 @@
 ---
-description: Create or update `spec.md` from a natural language feature description and validate readiness for planning.
+description: Create or update `spec.md` from a natural language feature description using refreshed ARCUS repository context and validate readiness for planning.
 ---
 
 ## User Input
@@ -14,44 +14,102 @@ You are a Specification Architect.
 
 ## Scope
 
-- Input artifacts: feature description, `.apex/templates/spec-template.md`, `.apex/templates/checklist-template.md`
-- Optional guardrails: `.github/copilot-instructions.md` (if present in target repo)
-- Output artifacts: `.apex/specs/<STORY-ID>/spec.md`, `.apex/specs/<STORY-ID>/requirements.md`
-- Out-of-scope: implementation design, stack decisions, code generation
+- Input artifacts:
+    - feature description
+    - `.arcus/templates/spec-template.md`
+    - `.arcus/templates/checklist-template.md`
+    - `.context/repo_scope.md`
+    - `.context/repo_map.md`
+    - `.context/flows/*.md`
+- Optional guardrails:
+    - `.github/copilot-instructions.md`
+- Output artifacts:
+    - `.arcus/specs/<STORY-ID>/context-pack.md`
+    - `.arcus/specs/<STORY-ID>/spec.md`
+    - `.arcus/specs/<STORY-ID>/requirements.md`
+- Out-of-scope:
+    - implementation design
+    - stack decisions
+    - code generation
+    - repo-wide scanning when `.context` is available
 
-## Skill Chain (ordered)
+## Delegation Model
 
-1. `core/session-bootstrap` - Resolve story ID, feature paths, and template paths.
-2. `specialized/spec/spec-authoring` - Generate a technology-agnostic specification from user intent.
-3. `specialized/spec/ambiguity-detection` - Keep only high-impact unresolved decisions as bounded clarification markers.
-4. `core/quality-gates` - Validate completeness, testability, and non-implementation language.
-5. `core/report-renderer` - Return concise completion status and next-step readiness.
+1. `core/session-bootstrap`
+2. `context-drift-and-reconcile`
+3. `feature-context-pack-builder`
+4. `specialized/spec/spec-authoring`
+5. `specialized/spec/ambiguity-detection`
+6. `core/quality-gates`
+7. `core/report-renderer`
 
 ## Outline
 
-1. Parse and validate feature description from `$ARGUMENTS`.
-   - If empty: ERROR `No feature description provided`.
-2. Use `core/session-bootstrap` to derive:
-   - `FEATURE_DIR = .apex/specs/<STORY-ID>/`
-   - `SPEC_FILE = FEATURE_DIR/spec.md`
-   - `REQUIREMENTS_FILE = FEATURE_DIR/requirements.md`
-3. Load `spec-template.md` and generate draft `spec.md` via `spec/spec-authoring`.
-4. If `.github/copilot-instructions.md` exists, apply it as guardrails during generation and validation.
-5. Run `spec/ambiguity-detection` and cap unresolved decisions to max 3 `[NEEDS CLARIFICATION: ...]` markers.
-6. Generate `requirements.md` via checklist template and run `core/quality-gates`.
-7. If quality gates fail, iterate bounded refinements (max 3 passes). If still failing, report remaining issues.
-8. Write `spec.md` and `requirements.md`.
-9. Report completion with paths, checklist status, and readiness for `/sdd.clarify` or `/sdd.plan`.
+### 0. Sync latest code
 
-## Error Handling
+Ensure branch is reconciled with latest `main` using safe repo workflow.
 
-- Missing spec/checklist template: stop with explicit missing path.
-- Story ID cannot be inferred: stop and ask for explicit ID in input (e.g., `BFCO-1234`).
-- No viable user scenario can be derived: stop and ask user to refine feature intent.
+### 1. Parse input
+
+If `$ARGUMENTS` empty → ERROR.
+
+### 2. Resolve paths
+
+- FEATURE_DIR = `.arcus/specs/<STORY-ID>/`
+- CONTEXT_PACK_FILE = `context-pack.md`
+- SPEC_FILE = `spec.md`
+- REQUIREMENTS_FILE = `requirements.md`
+
+### 3. Verify context exists
+
+Check `.context/` artifacts. If missing → stop and ask to run context-builder.
+
+### 4. Drift reconcile
+
+Run `context-drift-and-reconcile`.
+
+### 5. Build context pack
+
+Run `feature-context-pack-builder`.
+
+### 6. Load templates
+
+Load spec + checklist templates.
+
+### 7. Generate spec
+
+Use spec-authoring with:
+- feature input
+- context-pack
+- guardrails
+
+### 8. Ambiguity detection
+
+Max 3 clarification markers.
+
+### 9. Generate requirements
+
+Use checklist template.
+
+### 10. Quality gates
+
+Max 3 refinement passes.
+
+### 11. Write outputs
+
+Write:
+- context-pack.md
+- spec.md
+- requirements.md
+
+### 12. Report
+
+Return concise status and readiness.
 
 ## Stage Rules
 
-- Focus on WHAT and WHY, never HOW.
-- Keep content accessible to business/domain stakeholders.
+- WHAT/WHY only
+- Use `.context` + context-pack
+- No repo-wide scan
 - Make reasonable defaults explicit in assumptions.
 - Respect `.github/copilot-instructions.md` when available in the active repository.

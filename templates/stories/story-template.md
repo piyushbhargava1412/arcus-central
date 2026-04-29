@@ -15,7 +15,7 @@
 [Summarize the purpose and value of this story in a clear, focused sentence. Highlight the problem or user need it addresses.]
 ---
 
-## Scope
+## In Scope
 
 [Define the main functionality and features included in this story. Focus on user-visible actions or system behaviors, keeping it brief.]
 ---
@@ -59,3 +59,27 @@
 
 **Then** [expected outcome/result]
 
+## Open Questions
+(answer those three, add others if applicable)
+
+[] Are there new tools or libraries introduced as part of this story?
+
+[] Does the story require a feature toggle?
+
+[] Does the story affect the Disaster Recovery flow?
+
+[] Are new AWS resources created that need MAP tagging?
+
+Add the tag **map-migrated** with the value **d-server-02gxr9yjavuhbz**
+
+For databases: _additionally_ add the tag **map-dba** with the (same) value **d-server-02gxr9yjavuhbz**
+
+Dependencies (optional, or link add issue links)
+
+## Amigo Checkmarks
+
+[ ] Story checked by Product (PO, BD, BA)
+
+[ ] Story checked by Development
+
+[ ] Story checked by QA

@@ -1,241 +1,329 @@
-# SDD Framework — Flow Diagram
+# ARCUS SDD Framework — Workflow Diagram
+
+**Framework**: 9 agents (6 core + 3 extensions), 22 reusable skills, 11 templates  
+**Goal**: Reduce hallucinations, optimize token utilization, improve selective context loading
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    APEX SDD WORKFLOW                                │
-│                                                                     │
-│  Skills (shared capability-based inventory — loaded on demand):    │
-│  ┌─────────────┐ ┌──────────────┐ ┌──────────────┐ ┌───────────────┐ │
-│  │ artifact/   │ │ reasoning/   │ │ interaction/ │ │ formatting/   │ │
-│  │ (modeling,  │ │ (design,     │ │ (question-   │ │ (format-      │ │
-│  │ patching,    │ │ decomposition,│ │ orchestration)│ │ enforcer)     │ │
-│  │ markdown)    │ │ dependency,  │ │              │ │               │ │
-│  │              │ │ coverage)    │ │              │ │               │ │
-│  └─────┬────────┘ └────┬─────────┘ └─────┬────────┘ └────┬──────────┘ │
-│        │                 │                  │                 │      │
-│        └─────────────────┴──────────────────┴─────────────────┘      │
-│                        Referenced by agents via                      │
-│                         "Apply skill: skills/<domain>/<skill>"        │
-│                        (copied into target as read-only)             │
-└─────────────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────────────┐
+│                      ARCUS SDD AGENTS (9 total)                         │
+│                                                                         │
+│  Core Agents (6):        Extensions (3):                               │
+│  ┌─────────────┐         ┌──────────────────┐                          │
+│  │ specify     │         │ context-builder  │ ← Bootstraps context     │
+│  │ clarify     │         │ groom            │ ← Story grooming         │
+│  │ plan        │         │ instructions     │ ← Governance             │
+│  │ tasks       │                                                       │
+│  │ analyze     │                                                       │
+│  │ implement   │                                                       │
+│  └─────────────┘         └──────────────────┘                          │
+│                                                                         │
+│  All agents delegate to reusable skills (22 total) across 10 domains   │
+└─────────────────────────────────────────────────────────────────────────┘
 
-══════════════════════════════════════════════════════════════════════
- PHASE 1: REPO ONBOARDING (one-time per repo)
-══════════════════════════════════════════════════════════════════════
+┌─────────────────────────────────────────────────────────────────────────┐
+│              SKILLS SYSTEM (22 reusable, capability-based)              │
+│                                                                         │
+│  🟢 Core (3):           🟦 Artifact (4):      🟨 Multi-Use (5):        │
+│  • session-bootstrap    • artifact-modeling   • feature-context-pack   │
+│  • quality-gates        • artifact-patcher    • question-orchestration │
+│  • report-renderer      • markdown-gen        • context-drift-reconcile│
+│                         • markdown-validation • format-enforcer        │
+│                                                                         │
+│  🟦 Reasoning (4):      🟦 Foundation (2):   🟪 Specialized (8):       │
+│  • design-synthesis     • repo-context-build  • spec-authoring         │
+│  • work-decomposition   • flow-discovery      • ambiguity-detection    │
+│  • dependency-analysis  • test-pattern-disc   • task-execution-control │
+│  • coverage-analysis                          • + interaction, maint   │
+│                                                                         │
+│  Loaded on-demand by agents, NOT shipped to target repos               │
+└─────────────────────────────────────────────────────────────────────────┘
 
-  ┌───────────────────────────────────┐
-  │  Step 1: /sdd.repo-intelligence   │
-  │  ─────────────────────────────── │
-  │  Scan codebase → understand it    │
-  │                                   │
-  │  Skills: specialized/repository-analysis, artifact/markdown-generation,
-  │          artifact/markdown-validation
-  │                                   │
-  │  Input:  codebase                 │
-  │  Output: docs/repo_map.md         │
-  │          docs/repo_scope.md       │
-  └──────────────┬────────────────────┘
-                 │
-                 │ repo_map.md + repo_scope.md
-                 │
-                 ▼
-  ┌───────────────────────────────────┐
-  │  Step 2: /sdd.instructions        │
-  │  ─────────────────────────────── │
-  │  Create project copilot instructions and governance
-  │                                   │
-  │  Skills: specialized/repository-analysis, artifact/markdown-generation,
-  │          artifact/markdown-validation
-  │                                   │
-  │  Input:  repo_map.md (tech stack) │
-  │          repo_scope.md (business) │
-  │  Output: .github/copilot-instructions.md
-  └──────────────┬────────────────────┘
-                 │
-                 ▼
+═════════════════════════════════════════════════════════════════════════════
+ PHASE A: BOOTSTRAP (One-Time per Target Repository)
+═════════════════════════════════════════════════════════════════════════════
 
-══════════════════════════════════════════════════════════════════════
- PHASE 2: FEATURE DEVELOPMENT (repeat per feature)
-══════════════════════════════════════════════════════════════════════
+  ┌──────────────────────────────────────────────────┐
+  │  Stage 1: /sdd.context-builder                   │
+  │  ─────────────────────────────────────────────── │
+  │  Initialize repository context                   │
+  │                                                  │
+  │  What it does:                                   │
+  │  • Analyzes target repository structure          │
+  │  • Generates .context/repo_scope.md (business)   │
+  │  • Generates .context/repo_map.md (technical)    │
+  │  • Discovers flows → .context/flows/*.md         │
+  │  • Analyzes tests → .context/testing-patterns.md │
+  │                                                  │
+  │  Skills: repository-context-builder,             │
+  │          flow-and-scope-discovery,               │
+  │          test-pattern-discovery                  │
+  │                                                  │
+  │  Output: .context/ (5 artifacts)                 │
+  └────────────────┬─────────────────────────────────┘
+                   │
+                   ▼
+  ┌──────────────────────────────────────────────────┐
+  │  Stage 2: /sdd.instructions                      │
+  │  ─────────────────────────────────────────────── │
+  │  Create project copilot instructions             │
+  │                                                  │
+  │  What it does:                                   │
+  │  • Reads .context/repo_scope.md + repo_map.md    │
+  │  • Synthesizes repo-specific guardrails          │
+  │  • Generates .github/copilot-instructions.md     │
+  │                                                  │
+  │  Output: Copilot instructions (enforces          │
+  │          consistency across all agents)          │
+  └────────────────┬─────────────────────────────────┘
+                   │
+                   ▼ Ready for feature development
 
-  ┌───────────────────────────────────┐
-  │  Step 3: /sdd.groom  [OPTIONAL]   │
-  │  ─────────────────────────────── │
-  │  Break vague requirements into    │
-  │  structured user stories          │
-  │                                   │
-  │  Skills: artifact/markdown-generation,
-  │          artifact/markdown-validation
-  │                                   │
-  │  Input:  requirement text         │
-  │  Output: .apex/groom/<story>.md   │
-  └──────────────┬────────────────────┘
-                 │
-                 ▼
-  ┌───────────────────────────────────┐
-  │  Step 4: /sdd.specify             │
-  │  ─────────────────────────────── │
-  │  Create feature spec (WHAT/WHY)   │
-  │  No implementation details        │
-  │                                   │
-  │  Skills: artifact/markdown-generation,
-  │          artifact/markdown-validation
-  │                                   │
-  │  Input:  feature description      │
-  │  Output: .apex/specs/<ID>/        │
-  │            spec.md                │
-  │            requirements.md        │
-  └──────────────┬────────────────────┘
-                 │
-                 ▼
-  ┌───────────────────────────────────┐
-  │  Step 5: /sdd.clarify             │
-  │  ─────────────────────────────── │
-  │  Resolve ambiguities (max 5 Q's)  │
-  │  Interactive — one Q at a time    │
-  │  Answers encoded back into spec   │
-  │                                   │
-  │  Skills: interaction/question-orchestration,
-  │          artifact/artifact-patcher,
-  │          artifact/markdown-validation
-  │                                   │
-  │  Input:  spec.md                  │
-  │  Output: spec.md (updated)        │
-  │          clarifications.md (opt)  │
-  └──────────────┬────────────────────┘
-                 │
-                 ▼
-  ┌───────────────────────────────────┐
-  │  Step 6: /sdd.plan                │
-  │  ─────────────────────────────── │
-  │  Create implementation plan (HOW) │
-  │  Architecture + design decisions  │
-  │                                   │
-  │  Skills: artifact/artifact-modeling,
-  │          reasoning/design-synthesis,
-  │          artifact/markdown-validation
-  │                                   │
-  │  Input:  spec.md + constitution   │
-  │  Output: .apex/specs/<ID>/        │
-  │            plan.md                │
-  └──────────────┬────────────────────┘
-                 │
-                 ▼
-  ┌───────────────────────────────────┐
-  │  Step 7: /sdd.tasks               │
-  │  ─────────────────────────────── │
-  │  Generate task breakdown          │
-  │  Organized by user story          │
-  │                                   │
-  │  Skills: artifact/artifact-modeling,
-  │          reasoning/work-decomposition,
-  │          reasoning/dependency-analysis,
-  │          formatting/format-enforcer
-  │                                   │
-  │  Format:                          │
-  │  - [ ] T001 [P] [US1] desc path   │
-  │                                   │
-  │  Input:  plan.md + spec.md        │
-  │  Output: .apex/specs/<ID>/        │
-  │            tasks.md               │
-  └──────────────┬────────────────────┘
-                 │
-                 ▼
-  ┌───────────────────────────────────┐
-  │  Step 8: /sdd.analyze             │
-  │  ─────────────────────────────── │
-  │  Cross-artifact quality check     │
-  │  *** READ-ONLY — no files modified***     │
-  │                                   │
-  │  Skills: artifact/artifact-modeling,
-  │          reasoning/coverage-analysis,
-  │          formatting/format-enforcer
-  │                                   │
-  │  Checks:                          │
-  │  • Duplication across artifacts   │
-  │  • Ambiguity / placeholders       │
-  │  • Coverage gaps (req ↔ tasks)    │
-  │  • Constitution violations        │
-  │  • Terminology drift              │
-  │                                   │
-  │  Input:  spec + plan + tasks      │
-  │  Output: chat report only         │
-  │          (CRITICAL/HIGH/MED/LOW)  │
-  └──────────────┬────────────────────┘
-                 │
-                 ▼
-  ┌───────────────────────────────────┐
-  │  Step 9: /sdd.implement           │
-  │  ─────────────────────────────── │
-  │  Execute tasks phase-by-phase     │
-  │                                   │
-  │  Skills: reasoning/coverage-analysis,
-  │          reasoning/work-decomposition,
-  │          reasoning/dependency-analysis,
-  │          specialized/execution/task-execution-controller,
-  │          specialized/execution/progress-tracker
-  │                                   │
-  │  • Validates checklists first     │
-  │  • Phase 1: Setup                 │
-  │  • Phase 2: Foundational          │
-  │  • Phase 3+: User stories (P1→Pn) │
-  │  • Final: Polish                  │
-  │  • Marks tasks [X] on completion  │
-  │                                   │
-  │  Input:  tasks.md + plan.md       │
-  │  Output: source code              │
-  │          tasks.md (marked done)   │
-  └───────────────────────────────────┘
+═════════════════════════════════════════════════════════════════════════════
+ PHASE B: FEATURE DEVELOPMENT (Repeat per Story/Requirement)
+═════════════════════════════════════════════════════════════════════════════
+              9-Stage Workflow: Specify→Clarify→Plan→Tasks→Analyze→Implement→Analyze
 
-
-══════════════════════════════════════════════════════════════════════
- ARTIFACT FLOW
-══════════════════════════════════════════════════════════════════════
-
-  repo-intelligence ──→ repo_map.md ──────────────┐
-                   ──→ repo_scope.md ─────────────┤
-                                                    ▼
-  instructions ────→ copilot-instructions.md ──→ [CONSTITUTION]
-       ▲                                           │
-       │ reads repo_map.md + repo_scope.md         │
-       │ (skips full repo scan if available)        │
-                                                    ▼
-  groom ───────────→ user stories ─────┐
-                                       ▼
-  specify ─────────→ spec.md ──────→ clarify ──→ spec.md (refined)
-                      requirements.md               │
-                                                    ▼
-                                         plan ──→ plan.md
-                                                    │
-                                                    ▼
-                                         tasks ──→ tasks.md
-                                                    │
-                                                    ▼
-                                         analyze ─→ chat report
-                                                    │
-                                                    ▼
-                                         implement → source code
+  ┌──────────────────────────────────────────────────┐
+  │  Stage 3: /sdd.specify                           │
+  │  ─────────────────────────────────────────────── │
+  │  Create feature specification (WHAT/WHY)         │
+  │  No implementation details                       │
+  │                                                  │
+  │  Skills: session-bootstrap, feature-context-pack │
+  │          spec-authoring, ambiguity-detection,    │
+  │          quality-gates, report-renderer          │
+  │                                                  │
+  │  Input:  Feature description + .context/        │
+  │  Output: .arcus/specs/<ID>/                      │
+  │           • spec.md (requirements)               │
+  │           • requirements.md (testable list)      │
+  │           • context-pack.md (story context)      │
+  └────────────────┬─────────────────────────────────┘
+                   │
+                   ▼
+  ┌──────────────────────────────────────────────────┐
+  │  Stage 4: /sdd.clarify                           │
+  │  ─────────────────────────────────────────────── │
+  │  Resolve ambiguities (max 5 questions)           │
+  │  Interactive — one Q at a time                   │
+  │  Answers encoded back into spec                  │
+  │                                                  │
+  │  Skills: session-bootstrap, ambiguity-detection, │
+  │          question-orchestration,                 │
+  │          artifact-patcher,                       │
+  │          markdown-validation, quality-gates      │
+  │                                                  │
+  │  Input:  spec.md from Stage 3                    │
+  │  Output: spec.md (refined), clarifications noted │
+  └────────────────┬─────────────────────────────────┘
+                   │
+                   ▼
+  ┌──────────────────────────────────────────────────┐
+  │  Stage 5: /sdd.plan                              │
+  │  ─────────────────────────────────────────────── │
+  │  Create implementation plan (HOW)                │
+  │  Architecture + design decisions + phases        │
+  │                                                  │
+  │  Skills: session-bootstrap, artifact-modeling,   │
+  │          design-synthesis, dependency-analysis,  │
+  │          quality-gates, report-renderer          │
+  │                                                  │
+  │  Input:  spec.md + .context/repo_map.md          │
+  │  Output: plan.md (phased approach)               │
+  └────────────────┬──────────────────────────────────┘
+                   │
+                   ▼
+  ┌──────────────────────────────────────────────────┐
+  │  Stage 6: /sdd.tasks                             │
+  │  ─────────────────────────────────────────────── │
+  │  Generate granular task breakdown                │
+  │  Organized by phase + user story                 │
+  │  Includes acceptance criteria per task           │
+  │                                                  │
+  │  Skills: session-bootstrap, artifact-modeling,   │
+  │          work-decomposition,                     │
+  │          dependency-analysis,                    │
+  │          coverage-analysis, format-enforcer,     │
+  │          quality-gates, report-renderer          │
+  │                                                  │
+  │  Format: - [ ] T001 [Phase] [P1] desc [path]    │
+  │                                                  │
+  │  Input:  plan.md + spec.md                       │
+  │  Output: tasks.md (dependency-ordered)           │
+  └────────────────┬─────────────────────────────────┘
+                   │
+                   ▼
+  ┌──────────────────────────────────────────────────┐
+  │  Stage 7: /sdd.analyze (PRE-IMPLEMENTATION)      │
+  │  ─────────────────────────────────────────────── │
+  │  Cross-artifact quality check (READ-ONLY)        │
+  │  *** Does NOT modify any files ***               │
+  │                                                  │
+  │  Skills: session-bootstrap, artifact-modeling,   │
+  │          coverage-analysis, dependency-analysis, │
+  │          format-enforcer, quality-gates,         │
+  │          report-renderer                         │
+  │                                                  │
+  │  Checks:                                         │
+  │  • Requirement → Task traceability               │
+  │  • Test coverage strategy                        │
+  │  • Dependency completeness                       │
+  │  • Technical readiness                           │
+  │                                                  │
+  │  Input:  spec.md + plan.md + tasks.md            │
+  │  Output: Analysis report (CRITICAL/HIGH/MED/LOW) │
+  └────────────────┬─────────────────────────────────┘
+                   │
+                   ▼
+  ┌──────────────────────────────────────────────────┐
+  │  Stage 8: /sdd.implement                         │
+  │  ─────────────────────────────────────────────── │
+  │  Execute tasks phase-by-phase                    │
+  │                                                  │
+  │  Skills: session-bootstrap, coverage-analysis,   │
+  │          work-decomposition, dependency-analysis,│
+  │          task-execution-controller,              │
+  │          quality-gates, report-renderer          │
+  │                                                  │
+  │  Process:                                        │
+  │  • Validate implementation readiness             │
+  │  • Execute phases in order (respecting deps)     │
+  │  • Mark tasks [X] as completed                   │
+  │  • Track progress + errors                       │
+  │                                                  │
+  │  Input:  tasks.md + guidelines from .context/    │
+  │  Output: Source code + tests + updated tasks.md  │
+  └────────────────┬─────────────────────────────────┘
+                   │
+                   ▼
+  ┌──────────────────────────────────────────────────┐
+  │  Stage 9: /sdd.analyze (POST-IMPLEMENTATION)     │
+  │  ─────────────────────────────────────────────── │
+  │  Verify implementation completeness              │
+  │  Alignment with specification                    │
+  │  *** ALSO: Detect context drift & refresh ***    │
+  │                                                  │
+  │  Skills: session-bootstrap, coverage-analysis,   │
+  │          dependency-analysis,                    │
+  │          context-refresh-from-implementation,    │
+  │          format-enforcer, quality-gates,         │
+  │          report-renderer                         │
+  │                                                  │
+  │  Verifies:                                       │
+  │  • All spec requirements implemented             │
+  │  • All acceptance criteria met                   │
+  │  • Test coverage sufficient                      │
+  │  • No integration regressions                     │
+  │  • *** Code changes vs .context/ alignment ***   │
+  │  • *** Suggests context updates if needed ***    │
+  │                                                  │
+  │  Output:                                         │
+  │  • Verification report                           │
+  │  • Updated .context/ (if drift detected)         │
+  │  • Release readiness assessment                  │
+  │                                                  │
+  │  Input:  Implementation + tests + spec.md        │
+  │  Output: Verification report + release readiness │
+  └──────────────────────────────────────────────────┘
 
 
-══════════════════════════════════════════════════════════════════════
- SKILL DELEGATION MAP
-══════════════════════════════════════════════════════════════════════
+═════════════════════════════════════════════════════════════════════════════
+ ARTIFACT & CONTEXT FLOW
+═════════════════════════════════════════════════════════════════════════════
 
-This matrix shows which capability-based skills are commonly used by each agent. A checkmark indicates primary/regular usage; agents may reference additional skills as needed.
+  BOOTSTRAP:
+  ┌────────────────────────┐
+  │ context-builder        │  Analyzes target repo once
+  └──────────┬─────────────┘
+             │
+             │ Generates (read by agents):
+             ├─→ .context/repo_scope.md ────────────────┐
+             ├─→ .context/repo_map.md ──────────────────┤
+             ├─→ .context/flows/*.md ────────────────────┤
+             └─→ .context/testing-patterns.md           │
+                                                         │
+  ┌────────────────────────┐                            │
+  │ instructions           │◄───────────────────────────┘
+  │ (reads repo_scope      │
+  │  + repo_map once)      │  Generates (enforces via agents):
+  └──────────┬─────────────┘
+             │
+             └─→ .github/copilot-instructions.md ──→ [GOVERNANCE]
 
-| Agent              | artifact/* | reasoning/* | interaction/* | formatting/* | specialized/* |
-|-------------------:|:----------:|:-----------:|:-------------:|:------------:|:-------------:|
-| repo-intelligence  |     ✅     |      ✅     |       ✅      |      ✅      |       ✅      |
-| instructions       |     ✅     |      ✅     |       ✅      |      ✅      |       ✅      |
-| groom              |     ✅     |             |       ✅      |      ✅      |               |
-| specify            |     ✅     |             |               |      ✅      |               |
-| clarify            |     ✅     |             |       ✅      |      ✅      |               |
-| plan               |     ✅     |      ✅     |               |      ✅      |               |
-| tasks              |     ✅     |      ✅     |               |      ✅      |               |
-| analyze            |     ✅     |      ✅     |               |      ✅      |               |
-| implement          |           |      ✅     |               |             |       ✅      |
 
-(Legend: ✅ primary usage)
+  FEATURE DEVELOPMENT:
+  ┌────────────────────────┐
+  │ specify                │ ◄────────── Feature description + .context/
+  ├──────────────────────────────────────┐
+  │ spec.md + requirements.md + context   │
+  └────────────────────────┬──────────────┘
+             │
+             ▼
+  ┌────────────────────────┐
+  │ clarify                │ ◄────────── Interactive Q&A (max 5 Q's)
+  ├──────────────────────────────────────┐
+  │ spec.md (refined)                    │
+  └────────────────────────┬──────────────┘
+             │
+             ▼
+  ┌────────────────────────┐
+  │ plan                   │ ◄────────── Architecture + phases
+  ├──────────────────────────────────────┐
+  │ plan.md                              │
+  └────────────────────────┬──────────────┘
+             │
+             ▼
+  ┌────────────────────────┐
+  │ tasks                  │ ◄────────── Granular decomposition
+  ├──────────────────────────────────────┐
+  │ tasks.md (dependency-ordered)        │
+  └────────────────────────┬──────────────┘
+             │
+             ▼
+  ┌────────────────────────┐
+  │ analyze (pre-impl)     │ ◄────────── Quality check (READ-ONLY)
+  ├──────────────────────────────────────┐
+  │ Analysis report                      │
+  └────────────────────────┬──────────────┘
+             │
+             ▼
+  ┌────────────────────────┐
+  │ implement              │ ◄────────── Execute phase-by-phase
+  ├──────────────────────────────────────┐
+  │ Source code + tests                  │
+  └────────────────────────┬──────────────┘
+             │
+             ▼
+  ┌────────────────────────┐
+  │ analyze (post-impl)    │ ◄────────── Verification (READ-ONLY)
+  ├──────────────────────────────────────┐
+  │ Verification report + release ok     │
+  └────────────────────────────────────────┘
 
-``` 
+
+═════════════════════════════════════════════════════════════════════════════
+ SKILL DELEGATION MAP (Which Skills Each Agent Uses)
+═════════════════════════════════════════════════════════════════════════════
+
+| Agent              | Core | Artifact | Reasoning | Context | Interaction | Formatting | Specialized |
+|--------------------|:----:|:--------:|:---------:|:-------:|:-----------:|:---------:|:-----------:|
+| context-builder    |  2   |    1     |     -     |    2    |      -      |     -     |      -      |
+| instructions       |  2   |    1     |     -     |    -    |      1      |     1     |      -      |
+| groom              |  2   |    2     |     -     |    -    |      1      |     1     |      -      |
+| specify            |  3   |    1     |     -     |    1    |      -      |     1     |      1      |
+| clarify            |  3   |    2     |     -     |    1    |      1      |     1     |      1      |
+| plan               |  3   |    1     |     1     |    -    |      -      |     1     |      -      |
+| tasks              |  3   |    1     |     3     |    -    |      -      |     1     |      -      |
+| analyze            |  3   |    1     |     2     |    -    |      -      |     1     |      -      |
+| implement          |  3   |    -     |     3     |    -    |      -      |     -     |      1      |
+
+Legend:
+- Core (3): session-bootstrap, quality-gates, report-renderer
+- Artifact (4): artifact-modeling, artifact-patcher, markdown-gen, markdown-validation
+- Reasoning (4): design-synthesis, work-decomposition, dependency-analysis, coverage-analysis
+- Context (2): feature-context-pack-builder, context-drift-and-reconcile
+- Interaction (1): question-orchestration
+- Formatting (1): format-enforcer
+- Specialized (8): repo-context-builder, flow-discovery, test-pattern-discovery, spec-authoring, ambiguity-detection, task-execution-controller, + others
+```
 

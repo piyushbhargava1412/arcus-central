@@ -1,7 +1,7 @@
 # Orders Service Specification
 
 ## Overview
-This is a sandbox example demonstrating a typical microservice specification created with APEX Central (SDD framework).
+This is a sandbox example demonstrating a typical microservice specification created with ARCUS Central (SDD framework).
 
 ## Service Purpose
 The Orders Service handles order creation, tracking, and management for the e-commerce platform.

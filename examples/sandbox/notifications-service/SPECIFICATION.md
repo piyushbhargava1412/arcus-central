@@ -1,7 +1,7 @@
 # Notifications Service Specification
 
 ## Overview
-This is a sandbox example of the Notifications Service specification created with APEX Central (SDD framework).
+This is a sandbox example of the Notifications Service specification created with ARCUS Central (SDD framework).
 
 ## Service Purpose
 The Notifications Service handles sending notifications (email, SMS, push) to users across the platform.

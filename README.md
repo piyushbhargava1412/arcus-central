@@ -1,43 +1,44 @@
-# APEX Central - Spec Driven Development Framework
+# ARCUS Central - Spec Driven Development Framework
 
 Central **SDD (Spec Driven Development)** repository providing refined and hardened agents, prompts, templates, scripts, and instruction architecture that can be integrated with any repository for spec-driven development.
 
-**APEX** is the team. **SDD** is the methodology. This framework distributes the SDD methodology to any codebase.
+**ARCUS** is the initiative (Any Repository Can Use SDD). **SDD** is the methodology. This framework distributes the SDD methodology to any codebase.
 
 ## Quick Start
 
 ```bash
 # 1. Clone this repo (once per machine)
-git clone <central-repo-url> ~/apex-central
+git clone <central-repo-url> ~/arcus-central
 
 # 2. Install the CLI command (once per machine)
-cd ~/apex-central
+cd ~/arcus-central
 ./install-cli.sh
 
 # 3. Integrate any target repo with SDD framework
 cd ~/projects/my-service
-apex-integrate
+arcus-integrate
 ```
 
 ## CLI Commands
 
-| Command                 | Description |
-|-------------------------|-------------|
-| `apex-integrate`        | Integrate current directory |
-| `apex-integrate --sync` | Re-sync all symlinks |
-| `apex-integrate --yes`  | Non-interactive (CI/CD) |
+| Command                    | Description                 |
+|----------------------------|-----------------------------|
+| `arcus-integrate`          | Integrate current directory |
+| `arcus-integrate --sync`   | Re-sync all symlinks        |
+| `arcus-integrate --remove` | Remove all copied files     |
+| `arcus-integrate --yes`    | Non-interactive (CI/CD)     |
 
 ## Project Structure
 
 **Agents** → Business logic for SDD workflow  
-**Skills** → Reusable infrastructure (paths, templates, validation)  
+**Skills** → Reusable, focused capabilities used by agents. Each Skill implements a small unit of functionality (e.g., path and template resolution, repository analysis, markdown generation/validation, session bootstrap, quality gates, and formatting). Skills are the building blocks agents call to perform specific tasks across repositories.
 **Templates** → Document templates for specs, plans, tasks  
 **Prompts** → Integration with repo-intelligence (minimal - redirects to agents)  
 **Instructions** → Engineering and architecture guidelines  
 
 ## Key Files
 
-- [Integration Guide](APEX_INTEGRATION_GUIDE.md) — Full setup and usage
-- [Repository Structure](STRUCTURE.md) — Central repo layout
-- [Agent Registry](registry/AGENT_REGISTRY.md) — All agents 
-- [Skill Registry](registry/SKILLS_REGISTRY.md) — All skills 
+- [Integration Guide](ARCUS_INTEGRATION_GUIDE.md) — Full setup and usage
+- [Repository Structure](.context/repo_map.md) — Central repo layout and navigation
+- [Agent Registry](registry/AGENT_REGISTRY.md) — All agents and workflow
+- [Skill Registry](registry/SKILLS_REGISTRY.md) — All skills and domains 

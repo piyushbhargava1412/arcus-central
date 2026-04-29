@@ -31,12 +31,12 @@ Receive the requirement text from user input and prepare the grooming workspace.
 
 Set paths directly (do not execute commands):
 
-- `FEATURE_DIR = .apex/groom/`
+- `FEATURE_DIR = .arcus/groom/`
 
 Rules:
 
 - Do **NOT** delete any existing files in the groom directory.
-- Create a new `.md` file inside `.apex/groom/` with a filename derived from the requirement.
+- Create a new `.md` file inside `.arcus/groom/` with a filename derived from the requirement.
 - Operate strictly within the current repository context.
 
 ---
@@ -69,7 +69,7 @@ Generate stories based on the analyzed requirement.
 Rules:
 
 - Use the template located at
-  `.apex/templates/stories/story-template.md`
+  `.arcus/templates/stories/story-template.md`
 - Follow the template **exactly**
 - Fill **all template sections**
 - Do **not modify section names or structure**
@@ -145,7 +145,7 @@ Output rules:
 
 **Apply Markdown Validation Skills** (see `skills/markdown-validation/SKILL.md`) to ensure each story document has proper structure, no broken links, and consistent formatting.
 
-Create the file(s) in `.apex/groom/` directory and confirm the creation with a brief summary listing the created files.
+Create the file(s) in `.arcus/groom/` directory and confirm the creation with a brief summary listing the created files.
 
 ---
 

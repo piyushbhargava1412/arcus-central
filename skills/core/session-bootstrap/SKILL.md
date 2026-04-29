@@ -25,9 +25,9 @@ Provide a single reusable mechanism to initialize stage context so path logic is
 ## Processing Rules
 
 1. Extract `story_id` from user input (pattern like `BFCO-1234`).
-2. Build canonical feature directory: `.apex/specs/<story_id>/`.
+2. Build canonical feature directory: `.arcus/specs/<story_id>/`.
 3. Build stage artifact paths under feature directory.
-4. Resolve template paths from `.apex/templates/` with fallback to `templates/`.
+4. Resolve template paths from `.arcus/templates/` with fallback to `templates/`.
 5. Return a deterministic path map with absolute and repo-relative forms.
 
 ## Output Contract
@@ -43,7 +43,7 @@ Provide a single reusable mechanism to initialize stage context so path logic is
 ## Validation Gates
 
 - [ ] Story ID extracted and valid
-- [ ] Feature path follows `.apex/specs/<story_id>/`
+- [ ] Feature path follows `.arcus/specs/<story_id>/`
 - [ ] Required templates resolved
 - [ ] Returned path map is deterministic
 

@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# uninstall.sh — Remove the `apex-integrate` CLI command
+# uninstall.sh — Remove the `arcus-integrate` CLI command
 #
 # Removes the globally installed SDD (Spec Driven Development) framework integration command.
 #
 # Usage:
-#   cd otto_apex-central
+#   cd bigfin_arcus-central
 #   ./uninstall.sh
 
 set -e
@@ -14,7 +14,7 @@ GREEN='\033[0;32m'
 NC='\033[0m'
 
 INSTALL_DIR="/usr/local/bin"
-COMMAND_NAME="apex-integrate"
+COMMAND_NAME="arcus-integrate"
 
 # ─── Uninstall ────────────────────────────────────────────────────
 if [[ -f "$INSTALL_DIR/$COMMAND_NAME" ]]; then

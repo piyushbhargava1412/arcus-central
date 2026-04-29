@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# integrate.sh — APEX SDD Framework Integration Script v5.0
+# integrate.sh — ARCUS SDD Framework Integration Script v5.0
 #
-# Distributes the SDD framework to target repos via symlinks + read-only copies.
+# Distributes the SDD framework to a target repository.
 # Run with --help for usage details.
 
 set -e
@@ -14,10 +14,10 @@ Usage: integrate.sh [target-repo-path] [options]
 
 Distributes the SDD framework to a target repository.
 
-  .apex/          → symlinks to central (templates, scripts, instructions)
+  .arcus/          → symlinks to central (templates, scripts, instructions)
   .github/agents/ → read-only copies   (IntelliJ agent tab needs real files)
   .github/prompts/→ read-only copies   (IntelliJ agent tab needs real files)
-  .apex-ignore    → copied once        (tells agents which paths to skip)
+  .arcus-ignore    → copied once        (tells agents which paths to skip)
 
 Arguments:
   target-repo-path    Path to integrate (default: current directory)
@@ -26,13 +26,13 @@ Options:
   -h, --help          Show this help message
   -y, --yes           Skip confirmation prompts (for CI/CD)
   --sync              Re-create symlinks and re-copy agent/prompt files
-  --remove            Remove managed integration artifacts (preserves .apex/instructions and .apex/ directory)
+  --remove            Remove managed integration artifacts (preserves .arcus/instructions and .arcus/ directory)
 
 Examples:
-  cd my-project && ../otto_apex-central/integrate.sh
-  apex-integrate --sync
-  apex-integrate --yes
-  apex-integrate --remove
+  cd my-project && ../bigfin_arcus-central/integrate.sh
+  arcus-integrate --sync
+  arcus-integrate --yes
+  arcus-integrate --remove
 HELP
     exit 0
 }
@@ -69,7 +69,7 @@ fi
 
 # ─── Target repo = first arg, or current working directory ────────
 TARGET_REPO="${POSITIONAL_ARGS[0]:-.}"
-SDD_DIR=".apex"
+SDD_DIR=".arcus"
 
 # ─── Resolve absolute paths ──────────────────────────────────────
 if [[ ! -d "$TARGET_REPO" ]]; then
@@ -80,13 +80,13 @@ fi
 TARGET_REPO=$(cd "$TARGET_REPO" && pwd)
 
 # Guard: don't integrate central into itself
-if [[ "$TARGET_REPO" == "$CENTRAL_REPO" ]]; then
-    echo -e "${RED}[ERROR]${NC} Cannot integrate central repo into itself."
-    echo "Run this script from inside your target project, or pass the target path:"
-    echo "  cd <your-project> && $0"
-    echo "  $0 <path-to-your-project>"
-    exit 1
-fi
+#if [[ "$TARGET_REPO" == "$CENTRAL_REPO" ]]; then
+#    echo -e "${RED}[ERROR]${NC} Cannot integrate central repo into itself."
+#    echo "Run this script from inside your target project, or pass the target path:"
+#    echo "  cd <your-project> && $0"
+#    echo "  $0 <path-to-your-project>"
+#    exit 1
+#fi
 
 # ─── Helper functions ─────────────────────────────────────────────
 log()     { echo -e "${GREEN}[INFO]${NC} $1"; }
@@ -106,7 +106,7 @@ get_relative_path() {
     python3 -c "import os.path; print(os.path.relpath('$2', '$1'))"
 }
 
-# ─── Symlink helpers (for .apex/) ─────────────────────────────────
+# ─── Symlink helpers (for .arcus/) ─────────────────────────────────
 create_dir_symlink() {
     local target="$1"
     local link_name="$2"
@@ -250,11 +250,11 @@ main() {
     echo ""
     echo "╔══════════════════════════════════════════════════════════╗"
     if [[ "$REMOVE_MODE" == true ]]; then
-        echo "║   APEX SDD Framework Integration v5.0 (REMOVE)          ║"
+        echo "║   ARCUS SDD Framework Integration v5.0 (REMOVE)          ║"
     elif [[ "$SYNC_MODE" == true ]]; then
-        echo "║   APEX SDD Framework Integration v5.0 (SYNC)           ║"
+        echo "║   ARCUS SDD Framework Integration v5.0 (SYNC)           ║"
     else
-        echo "║   APEX SDD Framework Integration v5.0                  ║"
+        echo "║   ARCUS SDD Framework Integration v5.0                  ║"
     fi
     echo "╚══════════════════════════════════════════════════════════╝"
     echo ""
@@ -267,23 +267,23 @@ main() {
     validate_central_structure "$CENTRAL_REPO"
     echo ""
 
-    # ══════════════════════════════════════════════════════════════
-    # REMOVE MODE: Exit early if --remove flag was used
-    # ══════════════════════════════════════════════════════════════
+    # ═════════════════════════════════════════════════════════════=
+    # PHASE 1: .arcus/ — SYMLINKS for templates, scripts, instructions
+    # ═════════════════════════════════════════════════════════════=
     if [[ "$REMOVE_MODE" == true ]]; then
         log "Removing integration artifacts..."
         local removal_count=0
 
-        # Remove symlinked directories inside .apex/ (but preserve .apex/ folder itself)
-        # DO NOT remove .apex/instructions/ — developers may reference it in their copilot-instructions.md
-        # Developers may have created local artifacts in .apex/ that they want to keep
+        # Remove symlinked directories inside .arcus/ (but preserve .arcus/ folder itself)
+        # DO NOT remove .arcus/instructions/ — developers may reference it in their copilot-instructions.md
+        # Developers may have created local artifacts in .arcus/ that they want to keep
         local symlink_dirs=("templates" "scripts")
         for symdir in "${symlink_dirs[@]}"; do
             local sympath="$TARGET_REPO/$SDD_DIR/$symdir"
             if [[ -L "$sympath" ]]; then
                 rm -f "$sympath"
                 ((removal_count++))
-                success "Removed: .apex/$symdir (symlink)"
+                success "Removed: .arcus/$symdir (symlink)"
             fi
         done
 
@@ -302,18 +302,18 @@ main() {
         skill_removals=$(remove_md_files "$TARGET_REPO/.github/skills" "SKILL.md" "skill")
         ((removal_count += skill_removals))
 
-        # Remove .apex-ignore
-        if [[ -f "$TARGET_REPO/.apex-ignore" ]]; then
-            rm -f "$TARGET_REPO/.apex-ignore"
+        # Remove .arcus-ignore
+        if [[ -f "$TARGET_REPO/.arcus-ignore" ]]; then
+            rm -f "$TARGET_REPO/.arcus-ignore"
             ((removal_count++))
-            success "Removed: .apex-ignore"
+            success "Removed: .arcus-ignore"
         fi
 
-        # Remove .apex-metadata.json
-        if [[ -f "$TARGET_REPO/.apex-metadata.json" ]]; then
-            rm -f "$TARGET_REPO/.apex-metadata.json"
+        # Remove .arcus-metadata.json
+        if [[ -f "$TARGET_REPO/.arcus-metadata.json" ]]; then
+            rm -f "$TARGET_REPO/.arcus-metadata.json"
             ((removal_count++))
-            success "Removed: .apex-metadata.json"
+            success "Removed: .arcus-metadata.json"
         fi
 
         echo ""
@@ -326,7 +326,7 @@ main() {
         echo ""
         printf "  ${GREEN}✓${NC} Removed $removal_count framework artifacts\n"
         echo ""
-        info "Note: .apex/ folder preserved (may contain local developer artifacts)"
+        info "Note: .arcus/ folder preserved (may contain local developer artifacts)"
         echo ""
         success "Removal complete."
         exit 0
@@ -349,12 +349,12 @@ main() {
         log "Phase 0.5: Cleaning up existing integration artifacts..."
         local cleanup_count=0
 
-        # Remove .apex/ symlinks
+        # Remove .arcus/ symlinks
         for name in templates scripts instructions; do
             if [[ -L "$TARGET_REPO/$SDD_DIR/$name" ]] || [[ -e "$TARGET_REPO/$SDD_DIR/$name" ]]; then
                 rm -rf "${TARGET_REPO:?}/${SDD_DIR:?}/$name"
                 ((cleanup_count++))
-                info "Removed: .apex/$name"
+                info "Removed: .arcus/$name"
             fi
         done
 
@@ -374,10 +374,10 @@ main() {
         ((cleanup_count += skill_cleanup))
 
         # Remove metadata file
-        if [[ -f "$TARGET_REPO/.apex-metadata.json" ]]; then
-            rm -f "$TARGET_REPO/.apex-metadata.json"
+        if [[ -f "$TARGET_REPO/.arcus-metadata.json" ]]; then
+            rm -f "$TARGET_REPO/.arcus-metadata.json"
             ((cleanup_count++))
-            info "Removed: .apex-metadata.json"
+            info "Removed: .arcus-metadata.json"
         fi
 
         success "Phase 0.5 done: $cleanup_count items cleaned up"
@@ -385,9 +385,9 @@ main() {
     fi
 
     # ══════════════════════════════════════════════════════════════
-    # PHASE 1: .apex/ — SYMLINKS for templates, scripts, instructions
+    # PHASE 1: .arcus/ — SYMLINKS for templates, scripts, instructions
     # ══════════════════════════════════════════════════════════════
-    log "Phase 1: .apex/ directory symlinks..."
+    log "Phase 1: .arcus/ directory symlinks..."
     mkdir -p "$TARGET_REPO/$SDD_DIR"
 
     local SDD_DIRS=("templates" "scripts" "instructions")
@@ -419,21 +419,16 @@ main() {
     done < <(find "$CENTRAL_REPO/agents" -name "*.agent.md" -type f -print0 2>/dev/null)
     info "$agent_count agent files copied to .github/agents/"
 
+    # Copy all prompt files so IDEs can discover them (no allowlist).
     local prompt_count=0
-    # Only copy prompts that add value to IDE discovery.
-    # Prompts for specify, plan, implement, groom are frontmatter-only stubs
-    # (3-4 lines, just "agent: sdd.<name>") and add no value beyond the agent file.
-    local PROMPT_ALLOWLIST="sdd.repo-intelligence.prompt.md sdd.instructions.prompt.md sdd.analyze.prompt.md sdd.clarify.prompt.md sdd.tasks.prompt.md"
     while IFS= read -r -d '' prompt_file; do
         local filename
         filename=$(basename "$prompt_file")
-        if echo "$PROMPT_ALLOWLIST" | grep -qw "$filename"; then
-            if copy_file_readonly "$prompt_file" "$TARGET_REPO/.github/prompts/$filename"; then
-                ((prompt_count++))
-            fi
+        if copy_file_readonly "$prompt_file" "$TARGET_REPO/.github/prompts/$filename"; then
+            ((prompt_count++))
         fi
     done < <(find "$CENTRAL_REPO/prompts" -name "*.prompt.md" -type f -print0 2>/dev/null)
-    info "$prompt_count prompt files copied to .github/prompts/ (filtered: repo-intelligence, instructions, analyze, clarify, tasks)"
+    info "$prompt_count prompt files copied to .github/prompts/"
 
     # Skills: copy SKILL.md files preserving capability folder structure
     mkdir -p "$TARGET_REPO/.github/skills"
@@ -453,34 +448,34 @@ main() {
     success "Phase 2 done: $agent_count agents, $prompt_count prompts, $skill_count skills copied"
     echo ""
 
-    # ══════════════════════════════════════════════════════════════
-    # PHASE 2.5: .apex-ignore — copy template (only if not exists)
-    #            Users may customize this file, so never overwrite.
-    # ══════════════════════════════════════════════════════════════
-    local apex_ignore_copied=false
-    if [[ -f "$CENTRAL_REPO/.apex-ignore" ]]; then
-        if [[ -f "$TARGET_REPO/.apex-ignore" ]]; then
-            info ".apex-ignore already exists in target — keeping existing (user may have customized)"
+    # ═════════════════════════════════════════════════════════════=
+    # PHASE 2.5: .arcus-ignore — copy template (only if not exists)
+    # ═════════════════════════════════════════════════════════════=
+    if [[ -f "$CENTRAL_REPO/.arcus-ignore" ]]; then
+        if [[ -f "$TARGET_REPO/.arcus-ignore" ]]; then
+            info ".arcus-ignore already exists in target — keeping existing (user may have customized)"
+            arcus_ignore_copied=false
         else
-            cp "$CENTRAL_REPO/.apex-ignore" "$TARGET_REPO/.apex-ignore"
-            apex_ignore_copied=true
-            success "Copied .apex-ignore template to target"
+            cp "$CENTRAL_REPO/.arcus-ignore" "$TARGET_REPO/.arcus-ignore"
+            success "Copied .arcus-ignore template to target"
+            arcus_ignore_copied=true
         fi
     else
-        warning ".apex-ignore not found in central repo — skipping"
+        warning ".arcus-ignore not found in central repo — skipping"
+        arcus_ignore_copied=false
     fi
     echo ""
 
-    # ══════════════════════════════════════════════════════════════
-    # PHASE 2.6: Update .gitignore with APEX integration entries
-    # ══════════════════════════════════════════════════════════════
+    # ═════════════════════════════════════════════════════════════=
+    # PHASE 2.6: Update .gitignore with ARCUS integration entries
+    # ═════════════════════════════════════════════════════════════=
     log "Phase 2.6: Updating .gitignore..."
     local gitignore_file="$TARGET_REPO/.gitignore"
 
-    # APEX entries to add
-    local apex_entries=(
-        "### APEX Integration ###"
-        ".apex*"
+    # ARCUS entries to add
+    local arcus_entries=(
+        "### ARCUS Integration ###"
+        ".arcus*"
         ".github/agents"
         ".github/prompts"
         ".github/skills"
@@ -492,18 +487,18 @@ main() {
         info "Created new .gitignore file"
     fi
 
-    # Check if APEX section already exists
-    if grep -q "### APEX Integration ###" "$gitignore_file" 2>/dev/null; then
-        info ".gitignore already contains APEX Integration section — skipping"
+    # Check if ARCUS section already exists
+    if grep -q "### ARCUS Integration ###" "$gitignore_file" 2>/dev/null; then
+        info ".gitignore already contains ARCUS Integration section — skipping"
     else
-        # Add APEX entries to .gitignore
+        # Add ARCUS entries to .gitignore
         {
             echo ""
-            for entry in "${apex_entries[@]}"; do
+            for entry in "${arcus_entries[@]}"; do
                 echo "$entry"
             done
         } >> "$gitignore_file"
-        success "Added APEX Integration entries to .gitignore"
+        success "Added ARCUS Integration entries to .gitignore"
     fi
     echo ""
 
@@ -513,10 +508,10 @@ main() {
     log "Phase 3: Validating integration..."
     echo ""
 
-    log ".apex/ (symlinks):"
+    log ".arcus/ (symlinks):"
     for name in "${SDD_DIRS[@]}"; do
         [[ -L "$TARGET_REPO/$SDD_DIR/$name" ]] && \
-            validate_symlink "$TARGET_REPO/$SDD_DIR/$name" ".apex/$name"
+            validate_symlink "$TARGET_REPO/$SDD_DIR/$name" ".arcus/$name"
     done
     echo ""
 
@@ -531,14 +526,14 @@ main() {
     # ══════════════════════════════════════════════════════════════
     # PHASE 4: Metadata
     # ══════════════════════════════════════════════════════════════
-    local metadata_file="$TARGET_REPO/.apex-metadata.json"
+    local metadata_file="$TARGET_REPO/.arcus-metadata.json"
     cat > "$metadata_file" << EOF
 {
   "integrated_at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
   "central_repo": "$(basename "$CENTRAL_REPO")",
   "target_repo": "$(basename "$TARGET_REPO")",
   "framework": "SDD (Spec Driven Development)",
-  "team": "APEX",
+  "team": "ARCUS",
   "integration_type": "hybrid (symlinks + read-only copies)",
   "flow": "pull (target runs central script)",
   "sdd_framework": {
@@ -556,15 +551,15 @@ main() {
     "skill_count": $skill_count,
     "reason": "IntelliJ agent tab does not follow symlinks"
   },
-  "apex_ignore": {
-    "file": ".apex-ignore",
-    "copied": $apex_ignore_copied,
+  "arcus_ignore": {
+    "file": ".arcus-ignore",
+    "copied": $arcus_ignore_copied,
     "note": "Tells sdd.instructions agent which paths to skip during analysis"
   },
   "version": "5.0"
 }
 EOF
-    log "Metadata: .apex-metadata.json"
+    log "Metadata: .arcus-metadata.json"
     echo ""
 
     # ══════════════════════════════════════════════════════════════
@@ -578,10 +573,10 @@ EOF
     printf "  Target:  %s\n" "$(basename "$TARGET_REPO")"
     printf "  Central: %s\n" "$(basename "$CENTRAL_REPO")"
     echo ""
-    echo "  ── .apex/ (symlinks → central) ──"
+    echo "  ── .arcus/ (symlinks → central) ──"
     for name in "${SDD_DIRS[@]}"; do
         [[ -L "$TARGET_REPO/$SDD_DIR/$name" ]] && \
-            printf "    ${GREEN}✓${NC} .apex/%-15s -> %s\n" "$name" "$(readlink "$TARGET_REPO/$SDD_DIR/$name")"
+            printf "    ${GREEN}✓${NC} .arcus/%-15s -> %s\n" "$name" "$(readlink "$TARGET_REPO/$SDD_DIR/$name")"
     done
     echo ""
     echo "  ── .github/ (read-only copies for IDE) ──"
@@ -589,14 +584,14 @@ EOF
     printf "    ${GREEN}✓${NC} prompts/  (%d files, chmod 444)\n" "$prompt_count"
     printf "    ${GREEN}✓${NC} skills/   (%d files, chmod 444)\n" "$skill_count"
     echo ""
-    if [[ "$apex_ignore_copied" == true ]]; then
+    if [[ "$arcus_ignore_copied" == true ]]; then
         echo "  ── Configuration ──"
-        printf "    ${GREEN}✓${NC} .apex-ignore (template copied)\n"
+        printf "    ${GREEN}✓${NC} .arcus-ignore (template copied)\n"
         echo ""
     fi
     echo "  ── How to use ──"
-    echo "    Sync:    apex-integrate --sync"
-    echo "    .apex/:  symlinks — instant central updates"
+        echo "    Sync:    arcus-integrate --sync"
+    echo "    .arcus/:  symlinks — instant central updates"
     echo "    .github: read-only copies — run --sync to update"
     echo ""
 

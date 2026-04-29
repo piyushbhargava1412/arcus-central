@@ -9,10 +9,9 @@
 
   This file should be MINIMAL - it's a lightweight project-specific index, not full documentation.
 
-  1. RESPECT .apex-ignore:
-     - Check for .apex-ignore file in project root
-     - COMPLETELY EXCLUDE all matching files/folders from analysis
-     - DO NOT mention ignored paths anywhere (especially NOT .apex/, .github/agents/, .github/prompts/)
+  1. RESPECT .arcus-ignore:
+     - Check for .arcus-ignore file in project root
+     - DO NOT mention ignored paths anywhere (especially NOT .arcus/, .github/agents/, .github/prompts/)
      - Treat ignored paths as if they don't exist
 
   2. NEVER DUPLICATE CONTENT:
@@ -35,14 +34,14 @@
   4. DOCUMENT ONLY PROJECT-SPECIFIC CONTENT:
      - Project context (name, purpose, actual tech stack)
      - Application features found in actual code (NOT framework features)
-     - Application modules found in actual code (NOT .apex/ or .github/)
+     - Application modules found in actual code (NOT .arcus/ or .github/)
      - If no application code exists, state "No application code found"
 
   5. NEVER DOCUMENT FRAMEWORK/TOOLING:
-     - DO NOT document agents (they're in .apex-ignore)
-     - DO NOT document templates (they're in .apex-ignore)
-     - DO NOT document scripts (they're in .apex-ignore)
-     - DO NOT document .apex/ or .github/ directories
+     - DO NOT document agents (they're in .arcus-ignore)
+     - DO NOT document templates (they're in .arcus-ignore)
+     - DO NOT document scripts (they're in .arcus-ignore)
+     - DO NOT document .arcus/ or .github/ directories
 -->
 
 ---
@@ -136,15 +135,11 @@ All engineering principles, architecture guidelines, language standards, testing
   Organize by subfolder and use the file name to derive the display label.
 -->
 
-- **Engineering Principles**: See [../.apex/instructions/engineering/engineering-guidelines.md](../.apex/instructions/engineering/engineering-guidelines.md)
-
-- **Architecture Guidelines**: See [../.apex/instructions/architecture/architecture-guidelines.md](../.apex/instructions/architecture/architecture-guidelines.md)
-
-- **Language & Coding Standards**: See [../.apex/instructions/languages/language-guidelines.md](../.apex/instructions/languages/language-guidelines.md)
-
-- **Infrastructure Standards**: See [../.apex/instructions/infra/infrastructure-guidelines.md](../.apex/instructions/infra/infrastructure-guidelines.md)
-
-- **Testing Guidelines**: See [../.apex/instructions/testing/testing-guidelines.md](../.apex/instructions/testing/testing-guidelines.md)
+- **Engineering Principles**: See [../.arcus/instructions/engineering/engineering-guidelines.md](../.arcus/instructions/engineering/engineering-guidelines.md)
+- **Architecture Guidelines**: See [../.arcus/instructions/architecture/architecture-guidelines.md](../.arcus/instructions/architecture/architecture-guidelines.md)
+- **Language & Coding Standards**: See [../.arcus/instructions/languages/language-guidelines.md](../.arcus/instructions/languages/language-guidelines.md)
+- **Infrastructure Standards**: See [../.arcus/instructions/infra/infrastructure-guidelines.md](../.arcus/instructions/infra/infrastructure-guidelines.md)
+- **Testing Guidelines**: See [../.arcus/instructions/testing/testing-guidelines.md](../.arcus/instructions/testing/testing-guidelines.md)
 
 <!--
   If additional instruction files are found in instructions/ subfolders,
@@ -171,22 +166,22 @@ OR
 
 ### Repository Analysis
 
-1. **ALWAYS** check `.apex-ignore` before analyzing repository
-2. **ALWAYS** exclude paths matching `.apex-ignore` patterns
+1. **ALWAYS** check `.arcus-ignore` before analyzing repository
+2. **ALWAYS** exclude paths matching `.arcus-ignore` patterns
 3. **NEVER** mention ignored paths in any artifacts
 4. **ONLY** document application code (not framework/tooling)
 
 ### Code Generation
 
-1. **READ** architecture guidelines from `../.apex/instructions/architecture/` before generating code
-2. **READ** language standards from `../.apex/instructions/languages/` before generating code
-3. **VALIDATE** against engineering principles from `../.apex/instructions/engineering/`
+1. **READ** architecture guidelines from `../.arcus/instructions/architecture/` before generating code
+2. **READ** language standards from `../.arcus/instructions/languages/` before generating code
+3. **VALIDATE** against engineering principles from `../.arcus/instructions/engineering/`
 4. **RESPECT** existing architecture and module boundaries
 
 ### Quality Assurance
 
-1. **ENFORCE** testing requirements defined in `../.apex/instructions/testing/`
-2. **VALIDATE** infrastructure changes against `../.apex/instructions/infra/`
+1. **ENFORCE** testing requirements defined in `../.arcus/instructions/testing/`
+2. **VALIDATE** infrastructure changes against `../.arcus/instructions/infra/`
 3. **CHECK** cross-references point to valid files
 4. **ENSURE** no unexplained bracket tokens `[...]` remain in artifacts
 

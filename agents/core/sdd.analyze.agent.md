@@ -1,5 +1,5 @@
 ---
-description: Perform read-only cross-artifact consistency and quality analysis before implementation.
+description: Perform cross-artifact consistency and quality analysis before implementation, and reconcile shared context after implementation when requested.
 ---
 
 ## User Input
@@ -14,45 +14,94 @@ You are a Consistency Auditor.
 
 ## Scope
 
-- Input artifacts: `spec.md`, `plan.md`, `tasks.md` (read-only), `.github/copilot-instructions.md` (optional)
-- Output: analysis report in chat only (no file modifications)
-- In-scope: coverage gaps, duplications, inconsistencies, severity scoring
-- Out-of-scope: fixing issues, implementation guidance
+- Input artifacts:
+    - `spec.md`
+    - `plan.md`
+    - `tasks.md`
+    - `.arcus/specs/<STORY-ID>/context-pack.md` (primary, read-only)
+    - `.github/copilot-instructions.md` (optional)
+    - `.context/` artifacts (read-only in pre-implementation mode; selectively updatable in post-implementation mode)
+- Output:
+    - pre-implementation mode: analysis report in chat only
+    - post-implementation mode: analysis report in chat + selective updates to impacted `.context` artifacts
+- In-scope:
+    - coverage gaps
+    - duplications
+    - inconsistencies
+    - severity scoring
+    - post-implementation reconciliation of shared context with actual code changes
+- Out-of-scope:
+    - code implementation
+    - architecture redesign
 
 ## Skill Chain (ordered)
 
 1. `core/session-bootstrap` - Resolve story ID and feature paths.
-2. `artifact/artifact-modeling` - Build semantic models of spec/plan/tasks (reusable).
+2. `artifact/artifact-modeling` - Build semantic models of spec/plan/tasks/context-pack (reusable).
 3. `reasoning/coverage-analysis` - Compute requirement-to-task traceability and identify gaps (reusable).
 4. `formatting/format-enforcer` - Validate artifact format consistency (reusable).
-5. `core/report-renderer` - Return completion status and findings report.
+5. `context/context-refresh-from-implementation` - In post-implementation mode, reconcile changed code against shared context and update only impacted `.context` artifacts.
+6. `core/report-renderer` - Return completion status and findings report.
+
+## Mode Selection
+
+Determine mode from user intent:
+
+- **Pre-implementation mode**:
+    - read-only analysis before `/sdd.implement`
+    - no file modifications
+
+- **Post-implementation mode**:
+    - analyze after implementation
+    - compare actual code changes against intended story scope
+    - update only impacted `.context` artifacts if needed
+
+If user intent is ambiguous, default to pre-implementation mode.
 
 ## Outline
 
-1. Validate all required artifacts exist; fail fast if any missing.
+1. Validate all required story artifacts exist; fail fast if any are missing.
 2. Use `core/session-bootstrap` to resolve paths.
-3. Load spec.md, plan.md, tasks.md.
-4. Build semantic models via `analyze/artifact-modeling`.
-5. Compute coverage gaps via `analyze/coverage-mapper`.
-6. Score findings by severity and render report via `analyze/analysis-report-renderer`.
-7. Report findings in chat with next actions (proceed vs. remediate).
+3. Load `context-pack.md` (if present) and use it as primary story context.
+4. Load spec.md, plan.md, tasks.md.
+5. Build semantic models via `analyze/artifact-modeling`.
+6. Compute coverage gaps via `analyze/coverage-mapper`.
+7. Score findings by severity and render analysis findings.
+8. If in pre-implementation mode:
+    - report findings in chat with next actions (proceed vs. remediate)
+    - do not modify files
+9. If in post-implementation mode:
+    - inspect actual changed files for the story
+    - compare intended story scope from `context-pack.md` with actual implementation footprint
+    - use `context-refresh-from-implementation` skill to update only impacted shared artifacts in:
+        - `.context/repo_scope.md`
+        - `.context/repo_map.md`
+        - `.context/flows/*.md`
+        - `.context/testing-patterns.md`
+    - report findings in chat with next actions and context refresh summary
 
 ## Error Handling
 
 - Missing any artifact: stop and ask user to run preceding stage(s).
 - Parse error in artifact: stop and report malformed content.
+- Missing `.context/` during post-implementation mode: report that context refresh cannot be applied.
+- Context refresh ambiguity: do not guess; report affected areas for manual review.
 
 ## Stage Rules
 
-- READ-ONLY: do not modify files.
-- Output report in chat; do not create files.
+- Use `.arcus/specs/<STORY-ID>/context-pack.md` as primary analysis context when available.
+- Do not perform broad repository scanning when context-pack is sufficient.
+- In pre-implementation mode: READ-ONLY — do not modify files.
+- In post-implementation mode: update only impacted `.context` artifacts; do not touch story artifacts.
+- Output report in chat; do not create separate analysis files.
 - Respect `.github/copilot-instructions.md` guardrails when available.
 
-Run `.apex/scripts/bash/check-prerequisites.sh --json --require-tasks --include-tasks` once from repo root and parse JSON for FEATURE_DIR and AVAILABLE_DOCS. Derive absolute paths:
+Run `.arcus/scripts/bash/check-prerequisites.sh --json --require-tasks --include-tasks` once from repo root and parse JSON for FEATURE_DIR and AVAILABLE_DOCS. Derive absolute paths:
 
 - SPEC = FEATURE_DIR/spec.md
 - PLAN = FEATURE_DIR/plan.md
 - TASKS = FEATURE_DIR/tasks.md
+- CONTEXT_PACK = FEATURE_DIR/context-pack.md
 
 Abort with an error message if any required file is missing (instruct the user to run missing prerequisite command).
 For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot").
@@ -61,8 +110,14 @@ For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot
 
 Load only the minimal necessary context from each artifact:
 
-**From spec.md:**
+**From context-pack.md:**
+- Relevant flows
+- Scope
+- Likely files / areas
+- Tests
+- Assumptions / gaps
 
+**From spec.md:**
 - Overview/Context
 - Functional Requirements
 - Non-Functional Requirements
@@ -70,14 +125,12 @@ Load only the minimal necessary context from each artifact:
 - Edge Cases (if present)
 
 **From plan.md:**
-
 - Architecture/stack choices
 - Data Model references
 - Phases
 - Technical constraints
 
 **From tasks.md:**
-
 - Task IDs
 - Descriptions
 - Phase grouping
@@ -85,68 +138,68 @@ Load only the minimal necessary context from each artifact:
 - Referenced file paths
 
 **From constitution:**
-
 - Load `.github/copilot-instructions.md` for principle validation
 
 ### 3. Build Semantic Models
 
 Create internal representations (do not include raw artifacts in output):
 
-- **Requirements inventory**: Each functional + non-functional requirement with a stable key (derive slug based on imperative phrase; e.g., "User can upload file" → `user-can-upload-file`)
+- **Requirements inventory**: Each functional + non-functional requirement with a stable key
 - **User story/action inventory**: Discrete user actions with acceptance criteria
-- **Task coverage mapping**: Map each task to one or more requirements or stories (inference by keyword / explicit reference patterns like IDs or key phrases)
+- **Task coverage mapping**: Map each task to one or more requirements or stories
 - **Constitution rule set**: Extract principle names and MUST/SHOULD normative statements
+- **Story scope model**: Derive intended implementation scope from `context-pack.md`
 
 ### 4. Detection Passes (Token-Efficient Analysis)
 
 Focus on high-signal findings. Limit to 50 findings total; aggregate remainder in overflow summary.
 
 #### A. Duplication Detection
-
 - Identify near-duplicate requirements
 - Mark lower-quality phrasing for consolidation
 
 #### B. Ambiguity Detection
-
-- Flag vague adjectives (fast, scalable, secure, intuitive, robust) lacking measurable criteria
-- Flag unresolved placeholders (TODO, TKTK, ???, `<placeholder>`, etc.)
+- Flag vague adjectives lacking measurable criteria
+- Flag unresolved placeholders
 
 #### C. Underspecification
-
 - Requirements with verbs but missing object or measurable outcome
 - User stories missing acceptance criteria alignment
-- Tasks referencing files or components not defined in spec/plan
+- Tasks referencing files or components not defined in spec/plan/context-pack
 
 #### D. Constitution Alignment
-
 - Any requirement or plan element conflicting with a MUST principle
 - Missing mandated sections or quality gates from constitution
 
 #### E. Coverage Gaps
-
 - Requirements with zero associated tasks
 - Tasks with no mapped requirement/story
-- Non-functional requirements not reflected in tasks (e.g., performance, security)
+- Non-functional requirements not reflected in tasks
 
 #### F. Inconsistency
-
-- Terminology drift (same concept named differently across files)
+- Terminology drift
 - Data entities referenced in plan but absent in spec (or vice versa)
-- Task ordering contradictions (e.g., integration tasks before foundational setup tasks without dependency note)
-- Conflicting requirements (e.g., one requires Next.js while other specifies Vue)
+- Task ordering contradictions
+- Conflicting requirements
+
+#### G. Post-Implementation Context Drift (post-implementation mode only)
+- Files changed outside intended story scope
+- New/changed behavior not reflected in `.context/flows/*.md`
+- Structural changes not reflected in `.context/repo_map.md`
+- Test pattern changes that may require `.context/testing-patterns.md` refresh
 
 ### 5. Severity Assignment
 
 Use this heuristic to prioritize findings:
 
 - **CRITICAL**: Violates constitution MUST, missing core spec artifact, or requirement with zero coverage that blocks baseline functionality
-- **HIGH**: Duplicate or conflicting requirement, ambiguous security/performance attribute, untestable acceptance criterion
-- **MEDIUM**: Terminology drift, missing non-functional task coverage, underspecified edge case
+- **HIGH**: Duplicate/conflicting requirement, ambiguous security/performance attribute, untestable acceptance criterion, or context artifact clearly stale after implementation
+- **MEDIUM**: Terminology drift, missing non-functional task coverage, underspecified edge case, localized context drift
 - **LOW**: Style/wording improvements, minor redundancy not affecting execution order
 
 ### 6. Produce Compact Analysis Report
 
-**CRITICAL**: Output analysis report ONLY to chat - do NOT create any files (no ANALYSIS-REPORT.md or any other summary files).
+Output analysis report ONLY to chat.
 
 Display the report directly in chat with the following structure:
 
@@ -167,6 +220,11 @@ Display the report directly in chat with the following structure:
 
 **Unmapped Tasks:** (if any)
 
+**Context Refresh Summary:** (post-implementation mode only)
+- Updated `.context` artifacts
+- Unchanged `.context` artifacts
+- Manual review items (if any)
+
 **Metrics:**
 
 - Total Requirements
@@ -180,9 +238,9 @@ Display the report directly in chat with the following structure:
 
 At end of report, output a concise Next Actions block:
 
-- If CRITICAL issues exist: Recommend resolving before `/sdd.implement`
+- If CRITICAL issues exist: Recommend resolving before `/sdd.implement` or before merge
 - If only LOW/MEDIUM: User may proceed, but provide improvement suggestions
-- Provide explicit command suggestions: e.g., "Run /sdd.specify with refinement", "Run /sdd.plan to adjust architecture", "Manually edit tasks.md to add coverage for 'performance-metrics'"
+- In post-implementation mode, indicate whether shared context is now aligned or needs manual follow-up
 
 ### 8. Offer Remediation
 
@@ -192,20 +250,21 @@ Ask the user: "Would you like me to suggest concrete remediation edits for the t
 
 ### Context Efficiency
 
-- **Minimal high-signal tokens**: Focus on actionable findings, not exhaustive documentation
-- **Progressive disclosure**: Load artifacts incrementally; don't dump all content into analysis
-- **Token-efficient output**: Limit findings table to 50 rows; summarize overflow
-- **Deterministic results**: Rerunning without changes should produce consistent IDs and counts
+- Focus on actionable findings, not exhaustive documentation
+- Load artifacts incrementally
+- Limit findings table to 50 rows; summarize overflow
+- Rerunning without changes should produce consistent IDs and counts
 
 ### Analysis Guidelines
 
-- **NEVER modify files** (this is read-only analysis)
-- **NEVER create any output files** (no ANALYSIS-REPORT.md, no summary files of any kind)
-- **ALWAYS output analysis report ONLY to chat** (use show_content tool or direct chat output, never file creation)
-- **NEVER hallucinate missing sections** (if absent, report them accurately)
-- **Prioritize constitution violations** (these are always CRITICAL)
-- **Use examples over exhaustive rules** (cite specific instances, not generic patterns)
-- **Report zero issues gracefully** (emit success report with coverage statistics)
+- In pre-implementation mode: NEVER modify files
+- In post-implementation mode: ONLY update impacted shared `.context` artifacts
+- NEVER create any output files besides allowed `.context` refreshes in post-implementation mode
+- ALWAYS output analysis report to chat
+- NEVER hallucinate missing sections
+- Prioritize constitution violations
+- Use examples over exhaustive rules
+- Report zero issues gracefully
 
 ## Context
 
