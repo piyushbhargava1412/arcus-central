@@ -1,5 +1,12 @@
 # Implementation Plan: [FEATURE]
 
+<!-- arcus-artifact-meta
+generated-by: sdd.plan
+template: plan-template.md
+arcus-version: [ARCUS_VERSION]
+generated-at: [ISO-TIMESTAMP]
+-->
+
 **Branch**: `[###-feature-name]` | **Date**: [DATE] | **Spec**: [link]
 **Input**: Feature specification from `/specs/[###-feature-name]/spec.md`
 

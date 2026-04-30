@@ -153,6 +153,10 @@ Write all three artifacts atomically in this order:
 2. `spec.md` (feature specification)
 3. `requirements.md` (testable checklist)
 
+Before writing `spec.md` and `requirements.md`, populate the `arcus-artifact-meta` block in the template with:
+- `arcus-version`: read from `.arcus-metadata.json` → `version` field; use `unknown` if unavailable
+- `generated-at`: current ISO timestamp (`YYYY-MM-DDThh:mm:ssZ`)
+
 All files written to `FEATURE_DIR`. Create the directory if it does not exist.
 
 ### 12. Report
