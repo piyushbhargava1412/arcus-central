@@ -135,5 +135,5 @@ Must include:
 
 Used by:
 - `flow-and-scope-discovery`
-- `context-drift-and-reconcile`
+- `context-sync`
 - `feature-context-pack-builder`

@@ -1,28 +1,108 @@
 # .arcus-ignore
-# This file specifies files/folders that the ARCUS instructions agent should COMPLETELY IGNORE
-# when analyzing a target repository. Copy this file into your project root to keep ARCUS
-# from documenting / reading certain files or directories that are not part of your spec.
+#
+# This file specifies files/folders that ARCUS agents should COMPLETELY IGNORE
+# when analysing project structure and generating .context/ artifacts or
+# copilot-instructions.md.
+#
+# WHAT "IGNORE" MEANS:
+#   - Files/folders matching these patterns are EXCLUDED from all analysis
+#   - They will NOT be mentioned in copilot-instructions.md
+#   - They will NOT appear in feature lists, module tables, flow files, or any
+#     generated documentation
+#   - They are treated as if they don't exist in the repository
+#
+# WHEN IT APPLIES:
+#   - /sdd.context-builder  — scanning the repo to generate .context/
+#   - /sdd.instructions     — scanning the repo to generate copilot-instructions.md
+#   - /sdd.specify          — context drift reconciliation before specifying
+#   - Any agent that calls context/context-sync or foundation/repository-context-builder
+#
+# USE CASES:
+#   - Exclude dependencies (node_modules/, vendor/)
+#   - Exclude build artifacts (dist/, build/, target/)
+#   - Exclude framework/tooling files that aren't your application code
+#   - Exclude ARCUS framework directories (.arcus/, .github/agents/, .github/skills/)
+#
+# SYNTAX:
+#   - Lines starting with # are comments
+#   - Each line specifies one pattern, matched against paths relative to repo root
+#   - Use / as the directory separator
+#   - Trailing / indicates a directory (all contents ignored)
+#   - *  matches any sequence of characters (except /)
+#   - ** matches any sequence of characters (including /)
+#   - Blank lines are ignored
+#
+# EXAMPLES:
+#   node_modules/       — ignore the node_modules directory and everything in it
+#   dist/               — ignore build output
+#   *.log               — ignore all log files anywhere in the repo
+#   temp/**             — ignore temp directory and all subdirectories
+#   **/*.min.js         — ignore all minified JS files anywhere in the repo
+#
+# CUSTOMISATION:
+#   This file is copied once on first integration and is yours to edit.
+#   Re-running `arcus-integrate --sync` will NOT overwrite your customisations.
+#   Add project-specific exclusions below the default entries.
 
-# Exclude local ARCUS integration artifacts (symlinks + templates)
-.arcus/
-.arcus/scripts/
-.arcus/templates/
+# ─── Dependencies ─────────────────────────────────────────────────────────────
+node_modules/
+vendor/
+venv/
+env/
+.env/
+.venv/
 
-# Files created by ARCUS integration
-.arcus-ignore
-.arcus-metadata.json
-
-# Standard IDE / OS files
-.DS_Store
-.node_modules/
-
-# Example: exclude auto-generated docs or build artifacts
+# ─── Build outputs and generated files ───────────────────────────────────────
 dist/
 build/
+out/
+target/
+*.min.js
+*.min.css
+*.bundle.js
+__pycache__/
+*.pyc
+*.class
 
-# Arcus legacy note
-# .arcus/ patterns preserved for backward compatibility
-.arcus/
+# ─── IDE and editor files ─────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ─── Version control ──────────────────────────────────────────────────────────
+.git/
+.svn/
+.hg/
+
+# ─── Logs and temporary files ─────────────────────────────────────────────────
+*.log
+logs/
+tmp/
+temp/
+.cache/
+
+# ─── OS-specific files ────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ─── Test coverage and reports ────────────────────────────────────────────────
+coverage/
+.nyc_output/
+test-results/
+.pytest_cache/
+
+# ─── Documentation build artifacts ───────────────────────────────────────────
+docs/_build/
+site/
+
+# ─── ARCUS framework directories (never document framework internals) ─────────
 .arcus/scripts/
 .arcus/templates/
+.arcus/guidelines/
+.github/agents/
+.github/prompts/
+.github/skills/
 
+# ─── Project-specific exclusions (add yours below) ───────────────────────────

@@ -15,24 +15,24 @@ You are a Consistency Auditor.
 ## Scope
 
 - Input artifacts:
-    - `spec.md`
-    - `plan.md`
-    - `tasks.md`
-    - `.arcus/specs/<STORY-ID>/context-pack.md` (primary, read-only)
-    - `.github/copilot-instructions.md` (optional)
-    - `.context/` artifacts (read-only in pre-implementation mode; selectively updatable in post-implementation mode)
+  - `spec.md`
+  - `plan.md`
+  - `tasks.md`
+  - `.arcus/specs/<STORY-ID>/context-pack.md` (primary, read-only)
+  - `.github/copilot-instructions.md` (optional)
+  - `.context/` artifacts (read-only in pre-implementation mode; selectively updatable in post-implementation mode)
 - Output:
-    - pre-implementation mode: analysis report in chat only
-    - post-implementation mode: analysis report in chat + selective updates to impacted `.context` artifacts
+  - pre-implementation mode: analysis report in chat only
+  - post-implementation mode: analysis report in chat + selective updates to impacted `.context` artifacts
 - In-scope:
-    - coverage gaps
-    - duplications
-    - inconsistencies
-    - severity scoring
-    - post-implementation reconciliation of shared context with actual code changes
+  - coverage gaps
+  - duplications
+  - inconsistencies
+  - severity scoring
+  - post-implementation reconciliation of shared context with actual code changes
 - Out-of-scope:
-    - code implementation
-    - architecture redesign
+  - code implementation
+  - architecture redesign
 
 ## Skill Chain (ordered)
 
@@ -40,7 +40,7 @@ You are a Consistency Auditor.
 2. `artifact/artifact-modeling` - Build semantic models of spec/plan/tasks/context-pack (reusable).
 3. `reasoning/coverage-analysis` - Compute requirement-to-task traceability and identify gaps (reusable).
 4. `formatting/format-enforcer` - Validate artifact format consistency (reusable).
-5. `context/context-refresh-from-implementation` - In post-implementation mode, reconcile changed code against shared context and update only impacted `.context` artifacts.
+5. `context/context-sync` - In post-implementation mode, reconcile changed code against shared context using story-scoped mode (context_pack provided).
 6. `core/report-renderer` - Return completion status and findings report.
 
 ## Mode Selection
@@ -48,13 +48,13 @@ You are a Consistency Auditor.
 Determine mode from user intent:
 
 - **Pre-implementation mode**:
-    - read-only analysis before `/sdd.implement`
-    - no file modifications
+  - read-only analysis before `/sdd.implement`
+  - no file modifications
 
 - **Post-implementation mode**:
-    - analyze after implementation
-    - compare actual code changes against intended story scope
-    - update only impacted `.context` artifacts if needed
+  - analyze after implementation
+  - compare actual code changes against intended story scope
+  - update only impacted `.context` artifacts if needed
 
 If user intent is ambiguous, default to pre-implementation mode.
 
@@ -64,21 +64,21 @@ If user intent is ambiguous, default to pre-implementation mode.
 2. Use `core/session-bootstrap` to resolve paths.
 3. Load `context-pack.md` (if present) and use it as primary story context.
 4. Load spec.md, plan.md, tasks.md.
-5. Build semantic models via `artifact/artifact-modeling`.
-6. Compute coverage gaps via `reasoning/coverage-analysis`.
+5. Build semantic models via `analyze/artifact-modeling`.
+6. Compute coverage gaps via `analyze/coverage-mapper`.
 7. Score findings by severity and render analysis findings.
 8. If in pre-implementation mode:
-    - report findings in chat with next actions (proceed vs. remediate)
-    - do not modify files
+  - report findings in chat with next actions (proceed vs. remediate)
+  - do not modify files
 9. If in post-implementation mode:
-    - inspect actual changed files for the story
-    - compare intended story scope from `context-pack.md` with actual implementation footprint
-    - use `context-refresh-from-implementation` skill to update only impacted shared artifacts in:
-        - `.context/repo_scope.md`
-        - `.context/repo_map.md`
-        - `.context/flows/*.md`
-        - `.context/testing-patterns.md`
-    - report findings in chat with next actions and context refresh summary
+  - inspect actual changed files for the story
+  - compare intended story scope from `context-pack.md` with actual implementation footprint
+  - use `context/context-sync` skill (story-scoped mode, with `context_pack`) to update only impacted shared artifacts in:
+    - `.context/repo_scope.md`
+    - `.context/repo_map.md`
+    - `.context/flows/*.md`
+    - `.context/testing-patterns.md`
+  - report findings in chat with next actions and context refresh summary
 
 ## Error Handling
 

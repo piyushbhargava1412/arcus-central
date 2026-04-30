@@ -37,7 +37,7 @@ You are a Specification Architect.
 ## Skill Chain (ordered)
 
 1. `core/session-bootstrap` — Resolve story ID, feature paths, and environment context.
-2. `maintenance/context-drift-and-reconcile` — Detect and reconcile any drift in `.context/` before use.
+2. `context/context-sync` — Detect and reconcile any drift in `.context/` before use (repo-wide mode — no context_pack).
 3. `context/feature-context-pack-builder` — Build a minimal story-scoped context pack from `.context/` artifacts.
 4. `specialized/spec/spec-authoring` — Transform feature description into structured spec content.
 5. `specialized/spec/ambiguity-detection` — Identify high-impact unknowns; emit ≤3 clarification markers.
@@ -77,10 +77,11 @@ Do not attempt to generate or infer `.context/` content — this agent is a cons
 
 ### 4. Drift Reconcile
 
-Run `maintenance/context-drift-and-reconcile` to detect whether `.context/` is stale relative to recent commits.
-
-- If drift is detected → report which artifacts are stale and suggest running `/sdd.context-builder` to refresh
-- If drift is minor or user confirms proceeding → continue with current `.context/`
+Run `context/context-sync` in repo-wide mode (no `context_pack` — it hasn't been built yet):
+- The skill reads verification commits from `.context/` artifacts and compares to current HEAD
+- If context is already current → skill returns immediately with no work done
+- If drift is detected → skill updates only impacted `.context/` artifacts and reports what changed
+- If drift is significant → surface it to the user and suggest running `/sdd.context-builder` for a full rebuild
 - Do not block on drift; surface it and let the user decide
 
 ### 5. Build Context Pack

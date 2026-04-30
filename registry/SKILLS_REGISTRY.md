@@ -16,13 +16,13 @@ This file maintains a registry of all available reusable skills, organized by ca
 
 ## Overview
 
-The SDD framework provides **22 reusable skills** organized by capability domain. Skills are stage-agnostic, meaning they can be used by multiple agents across the SDD lifecycle.
+The SDD framework provides **21 reusable skills** organized by capability domain. Skills are stage-agnostic, meaning they can be used by multiple agents across the SDD lifecycle.
 
 **Reusability Levels**:
 - 🟢 **Core** (3 skills): Used by all or most agents
 - 🟦 **Shared** (8 skills): Used by 2-4 agents
 - 🟨 **Multi-Use** (4 skills): Used by 2-3 agents
-- 🟪 **Specialized** (8 skills): Used by 1-2 agents (narrow context)
+- 🟪 **Specialized** (6 skills): Used by 1-2 agents (narrow context)
 
 ---
 
@@ -36,10 +36,10 @@ These skills are foundational and used by all or most agents across the SDD life
 - **Purpose**: Initialize stage context and resolve canonical artifact/template paths
 - **Inputs**: `user_input`, `repository_root`
 - **Outputs**: `story_id`, `feature_dir`, `artifact_paths`, `template_paths`
-- **Used By**: All 6 core agents (`specify`, `clarify`, `plan`, `tasks`, `analyze`, `implement`)
-- **Reusability**: ⭐⭐⭐⭐⭐ (6/6 agents)
+- **Used By**: All core agents (`specify`, `clarify`, `plan`, `tasks`, `analyze`, `implement`, `close`)
+- **Reusability**: ⭐⭐⭐⭐⭐ (7/7 agents)
 - **Key Responsibilities**:
-  - Extract story ID from user input
+  - Extract story ID from user input (3-step cascade: explicit → git branch → ask user)
   - Build canonical feature directory path (`.arcus/specs/<STORY-ID>/`)
   - Resolve template paths
   - Ensure deterministic path generation
@@ -50,8 +50,8 @@ These skills are foundational and used by all or most agents across the SDD life
 - **Purpose**: Render concise, deterministic stage completion reports for chat output
 - **Inputs**: `stage_name`, `output_paths`, `status`, `warnings`
 - **Outputs**: `chat_report`
-- **Used By**: All 6 core agents (`specify`, `clarify`, `plan`, `tasks`, `analyze`, `implement`)
-- **Reusability**: ⭐⭐⭐⭐⭐ (6/6 agents)
+- **Used By**: All core agents (`specify`, `clarify`, `plan`, `tasks`, `analyze`, `implement`, `close`)
+- **Reusability**: ⭐⭐⭐⭐⭐ (7/7 agents)
 - **Key Responsibilities**:
   - Generate compact status summaries
   - Include artifact paths and readiness info
@@ -64,13 +64,15 @@ These skills are foundational and used by all or most agents across the SDD life
 - **Purpose**: Apply deterministic quality checks to stage artifacts with pass/fail results
 - **Inputs**: `artifact`, `checklist_template`, `gate_profile`, `guardrails` (optional)
 - **Outputs**: `checklist`, `gate_results`, `remediation_items`
-- **Used By**: 4 agents (`specify`, `plan`, `tasks`, `analyze`)
-- **Reusability**: ⭐⭐⭐⭐ (4/5 agents)
+- **Used By**: 3 agents (`specify`, `plan`, `tasks`)
+- **Reusability**: ⭐⭐⭐⭐ (3 agents)
+- **Gate Profiles**: `spec-gates`, `plan-gates`, `tasks-gates`
 - **Key Responsibilities**:
-  - Validate artifacts against stage-specific gates
-  - Record pass/fail with evidence
+  - Validate artifacts against stage-specific gate profiles
+  - Read and validate `arcus-artifact-meta` block
+  - Record pass/fail with evidence citations
   - Generate remediation items
-  - Support bounded re-validation loops
+  - Support bounded re-validation loops (max 3 passes)
 
 ---
 
@@ -85,7 +87,7 @@ These skills handle artifact creation, modification, and validation.
 - **Inputs**: `artifacts`, `artifact_types`
 - **Outputs**: `semantic_models`, `traceability_mappings`
 - **Used By**: 3 agents (`plan`, `tasks`, `analyze`)
-- **Reusability**: ⭐⭐⭐⭐ (3/5 agents)
+- **Reusability**: ⭐⭐⭐⭐ (3 agents)
 - **Key Responsibilities**:
   - Extract entities from spec/plan/tasks
   - Build invertible traceability mappings
@@ -99,7 +101,7 @@ These skills handle artifact creation, modification, and validation.
 - **Inputs**: `artifact_draft`, `patches`, `patch_mappings`
 - **Outputs**: `patched_artifact`, `change_log`
 - **Used By**: 2+ agents (`clarify`, `plan`, extensions)
-- **Reusability**: ⭐⭐⭐ (2+/5 agents, extends to `groom`)
+- **Reusability**: ⭐⭐⭐ (2+ agents)
 - **Key Responsibilities**:
   - Locate and replace markers in artifacts
   - Detect conflicts with existing content
@@ -112,8 +114,8 @@ These skills handle artifact creation, modification, and validation.
 - **Purpose**: Generate well-formatted markdown documents with proper structure
 - **Inputs**: `content`, `format_style`
 - **Outputs**: `formatted_markdown`
-- **Used By**: 3+ agents (extensions: `groom`, `instructions`, `context-builder`)
-- **Reusability**: ⭐⭐⭐ (3+ agents, specialized use)
+- **Used By**: 4+ agents (`groom`, `instructions`, `close`, `context-builder`)
+- **Reusability**: ⭐⭐⭐ (4+ agents)
 - **Key Responsibilities**:
   - Create proper heading hierarchy
   - Format tables, lists, code blocks
@@ -126,8 +128,8 @@ These skills handle artifact creation, modification, and validation.
 - **Purpose**: Validate markdown documents including paths, links, and quality
 - **Inputs**: `artifact`, `validation_rules`
 - **Outputs**: `validation_results`, `violations`
-- **Used By**: 2+ agents (`clarify`, `analyze`, extensions)
-- **Reusability**: ⭐⭐⭐ (2+/5 agents)
+- **Used By**: 3+ agents (`clarify`, `analyze`, `close`, extensions)
+- **Reusability**: ⭐⭐⭐ (3+ agents)
 - **Key Responsibilities**:
   - Validate artifact structure against rules
   - Check file paths and links
@@ -146,8 +148,8 @@ These skills handle design, decomposition, and analysis reasoning.
 - **Purpose**: Decompose requirements into comprehensive design with decisions and trade-offs
 - **Inputs**: `requirements_context`, `constraints`, `guardrails`
 - **Outputs**: `design_sections`, `design_decisions`
-- **Used By**: 2 agents (`plan`, `analyze`, potentially new stages)
-- **Reusability**: ⭐⭐ (2/5 agents, extends to future stages)
+- **Used By**: 2 agents (`plan`, `analyze`)
+- **Reusability**: ⭐⭐ (2 agents)
 - **Key Responsibilities**:
   - Extract architectural concerns from requirements
   - Compose design sections (architecture, data, error handling, etc.)
@@ -161,7 +163,7 @@ These skills handle design, decomposition, and analysis reasoning.
 - **Inputs**: `requirements`, `design_context`, `organization_model`, `guardrails`
 - **Outputs**: `work_items`, `organization_structure`
 - **Used By**: 3 agents (`tasks`, `analyze`, `implement`)
-- **Reusability**: ⭐⭐⭐⭐ (3/5 agents)
+- **Reusability**: ⭐⭐⭐⭐ (3 agents)
 - **Key Responsibilities**:
   - Extract work-driving elements (stories, features, components)
   - Organize by specified model (story-phase, component, priority)
@@ -176,7 +178,7 @@ These skills handle design, decomposition, and analysis reasoning.
 - **Inputs**: `work_items`, `dependency_relationships`
 - **Outputs**: `dependency_graph`, `execution_phases`, `parallel_opportunities`
 - **Used By**: 3 agents (`tasks`, `analyze`, `implement`)
-- **Reusability**: ⭐⭐⭐⭐ (3/5 agents)
+- **Reusability**: ⭐⭐⭐⭐ (3 agents)
 - **Key Responsibilities**:
   - Parse dependency relationships
   - Build directed acyclic graph (DAG)
@@ -191,7 +193,7 @@ These skills handle design, decomposition, and analysis reasoning.
 - **Inputs**: `artifacts_models`, `severity_profile`
 - **Outputs**: `coverage_matrix`, `gap_list`, `overlap_list`, `metrics`
 - **Used By**: 2 agents (`analyze`, `implement`)
-- **Reusability**: ⭐⭐ (2/5 agents)
+- **Reusability**: ⭐⭐ (2 agents)
 - **Key Responsibilities**:
   - Map top-level items to lower-level items
   - Detect unmapped requirements (gaps)
@@ -203,16 +205,14 @@ These skills handle design, decomposition, and analysis reasoning.
 
 ## User Interaction Skills (🟨)
 
-These skills handle user interaction patterns.
-
 ### `interaction/question-orchestration`
 
 - **File**: `skills/interaction/question-orchestration/SKILL.md`
 - **Purpose**: Conduct interactive questioning with recommendations and answer capture
 - **Inputs**: `question_queue`, `max_questions`, `user_interaction_mode`
 - **Outputs**: `answered_questions`, `response_mappings`
-- **Used By**: 2+ agents (`clarify`, `analyze`, extensions like `context-builder`)
-- **Reusability**: ⭐⭐⭐ (2+/5 agents)
+- **Used By**: 2+ agents (`clarify`, `instructions`)
+- **Reusability**: ⭐⭐⭐ (2+ agents)
 - **Key Responsibilities**:
   - Present one question at a time
   - Provide recommended answers with options
@@ -224,8 +224,6 @@ These skills handle user interaction patterns.
 
 ## Output Formatting Skills (🟨)
 
-These skills handle output formatting and validation.
-
 ### `formatting/format-enforcer`
 
 - **File**: `skills/formatting/format-enforcer/SKILL.md`
@@ -233,7 +231,7 @@ These skills handle output formatting and validation.
 - **Inputs**: `artifact`, `format_schema`, `normalization_rules`
 - **Outputs**: `normalized_artifact`, `format_violations`
 - **Used By**: 2-3 agents (`tasks`, `analyze`, extensions)
-- **Reusability**: ⭐⭐⭐ (2-3/5 agents)
+- **Reusability**: ⭐⭐⭐ (2-3 agents)
 - **Key Responsibilities**:
   - Validate structure against schema
   - Enforce required/optional fields
@@ -256,11 +254,24 @@ These skills establish baseline repository context for all downstream operations
 - **Used By**: 1 agent (`context-builder`)
 - **Reusability**: ⭐⭐ (foundational to all operations)
 - **Key Responsibilities**:
-  - Generate `.context/repo_scope.md`
-  - Generate `.context/repo_map.md`
+  - Generate `.context/repo_scope.md` with `arcus-context-meta` block
+  - Generate `.context/repo_map.md` with `arcus-context-meta` block
+  - Capture current git HEAD commit as `verification-commit`
   - Analyze repository structure and tech stack
   - Extract implementation evidence
-  - Build navigation artifacts for downstream agents
+
+### `foundation/test-pattern-discovery`
+
+- **File**: `skills/foundation/test-pattern-discovery/SKILL.md`
+- **Purpose**: Analyse existing tests and persist shared repository test-writing conventions
+- **Inputs**: `repository_root`, `repo_scope`, `repo_map`
+- **Outputs**: `testing_patterns`
+- **Used By**: 1 agent (`context-builder`)
+- **Reusability**: ⭐⭐ (foundational)
+- **Key Responsibilities**:
+  - Identify test roots and frameworks
+  - Capture recurring test conventions with evidence
+  - Generate `.context/testing-patterns.md` with `arcus-context-meta` block
 
 ### `discovery/flow-and-scope-discovery`
 
@@ -271,46 +282,47 @@ These skills establish baseline repository context for all downstream operations
 - **Used By**: 1 agent (`context-builder`)
 - **Reusability**: ⭐⭐ (discovery-specific)
 - **Key Responsibilities**:
-  - Identify key business flows
+  - Identify key business flows from entry surfaces
   - Map flows to implementation scope
-  - Persist each flow as separate file in `.context/flows/`
-  - Document flow-to-feature relationships
+  - Persist each flow as separate file in `.context/flows/` with `arcus-context-meta` block
+  - Keep flows small, specific, and independently readable
 
 ---
 
-## Context & Maintenance Skills (🟨)
+## Context Skills (🟨)
 
-These skills manage feature-specific context and detect/reconcile context drift.
+These skills manage feature-specific context and keep shared context aligned with code.
 
 ### `context/feature-context-pack-builder`
 
 - **File**: `skills/context/feature-context-pack-builder/SKILL.md`
-- **Purpose**: Build minimal story-specific context pack from shared artifacts
+- **Purpose**: Build minimal story-specific context pack from shared `.context/` artifacts
 - **Inputs**: `story_description`, `story_id`
 - **Outputs**: `context_pack`
-- **Used By**: Multiple agents (spec, plan, tasks phases)
+- **Used By**: `specify` (and indirectly all downstream agents via context-pack)
 - **Reusability**: ⭐⭐⭐ (multi-stage usage)
 - **Key Responsibilities**:
-  - Reference `.context/repo_scope.md`
-  - Reference `.context/repo_map.md`
-  - Reference `.context/flows/*.md`
-  - Build story-specific context pack
+  - Select 1-2 relevant flows from `.context/flows/`
+  - Extract relevant sections from `repo_scope.md` and `repo_map.md`
+  - Build minimal story-scoped context pack
   - Write to `.arcus/specs/<STORY-ID>/context-pack.md`
 
-### `maintenance/context-drift-and-reconcile`
+### `context/context-sync`
 
-- **File**: `skills/maintenance/context-drift-and-reconcile/SKILL.md`
-- **Purpose**: Detect and reconcile drift between code and shared context artifacts
-- **Inputs**: `repository_root`
+- **File**: `skills/context/context-sync/SKILL.md`
+- **Purpose**: Detect and reconcile drift between code and shared `.context/` artifacts using git verification commits. Operates in repo-wide or story-scoped mode.
+- **Inputs**: `repository_root`, `story_id` (optional), `context_pack` (optional)
 - **Outputs**: `updated_context`
-- **Used By**: 1+ agent (start of story work)
-- **Reusability**: ⭐⭐ (maintenance/lifecycle)
+- **Used By**: 3 agents (`specify`, `analyze`, `close`)
+- **Reusability**: ⭐⭐⭐ (3 agents, two modes)
+- **Modes**:
+  - **Repo-wide** (no `context_pack`): catches all changes since last verification — used by `sdd.specify`
+  - **Story-scoped** (`context_pack` provided): targets only story-relevant changes — used by `sdd.analyze` and `sdd.close`
 - **Key Responsibilities**:
-  - Use verification commits and git diff
-  - Detect changes to repository structure
-  - Update impacted `.context/` files
-  - Preserve context integrity
-  - Minimize drift-introduced changes
+  - Freshness check first — early exit if `verification-commit` matches HEAD
+  - Compute git diff between `verification-commit` and `CURRENT_HEAD`
+  - Classify changed files and detect impact on `.context/` artifacts
+  - Update only impacted artifacts; refresh `arcus-context-meta` blocks
 
 ---
 
@@ -324,15 +336,16 @@ These skills are context-specific or narrow in scope, used by 1-2 agents.
 
 - **File**: `skills/specialized/spec/spec-authoring/SKILL.md`
 - **Purpose**: Convert natural language into structured, technology-agnostic specifications
-- **Inputs**: `feature_description`, `spec_template`, `guardrails`
-- **Outputs**: `spec_sections`, `assumptions`
-- **Used By**: 1 agent (`specify`)
-- **Reusability**: ⭐ (1/5 agents - spec-specific)
+- **Inputs**: `feature_description`, `spec_template`, `context_pack` (optional), `guardrails` (optional)
+- **Outputs**: `spec_sections`, `requirements_list`, `assumptions`
+- **Used By**: 2 agents (`specify`, `groom`)
+- **Reusability**: ⭐⭐ (2 agents)
 - **Key Responsibilities**:
-  - Extract actors, goals, constraints
-  - Populate spec sections in template order
-  - Capture defaults as assumptions
-  - Keep language technology-agnostic
+  - Extract actors, goals, constraints from feature description
+  - Generate sections in order: User Scenarios → Requirements → Success Criteria → Edge Cases
+  - Enforce technology-agnostic language (no stack/API/code details)
+  - Record assumptions separately from spec body
+  - Enforce spec/requirements.md boundary
 
 #### `specialized/spec/ambiguity-detection`
 
@@ -340,8 +353,8 @@ These skills are context-specific or narrow in scope, used by 1-2 agents.
 - **Purpose**: Identify and prioritize unresolved requirement ambiguities
 - **Inputs**: `spec_draft`, `assumptions`, `guardrails`
 - **Outputs**: `clarification_markers`, `prioritized_questions`
-- **Used By**: 1 agent (`clarify`)
-- **Reusability**: ⭐ (1/5 agents - spec-specific)
+- **Used By**: 2 agents (`specify`, `clarify`)
+- **Reusability**: ⭐⭐ (2 agents)
 - **Key Responsibilities**:
   - Scan for vague/conflicting statements
   - Prioritize by impact (scope > security > UX > technical)
@@ -353,17 +366,31 @@ These skills are context-specific or narrow in scope, used by 1-2 agents.
 #### `specialized/execution/task-execution-controller`
 
 - **File**: `skills/specialized/execution/task-execution-controller/SKILL.md`
-- **Purpose**: Execute tasks in phase order respecting dependencies
-- **Inputs**: `tasks_list`, `dependency_graph`, `execution_policy`
+- **Purpose**: Execute tasks in phase order respecting dependencies and applying execution policy
+- **Inputs**: `tasks_list`, `dependency_graph`, `execution_policy`, `context_pack` (optional)
 - **Outputs**: `completed_tasks`, `execution_log`, `errors`
 - **Used By**: 1 agent (`implement`)
-- **Reusability**: ⭐ (1/5 agents - execution-specific)
+- **Reusability**: ⭐ (execution-specific)
 - **Key Responsibilities**:
-  - Execute phase-by-phase
-  - Respect dependencies
-  - Mark completed tasks
-  - Handle failures gracefully
-  - Maintain execution log
+  - Execute phase-by-phase (Setup → Foundational → Stories → Polish)
+  - Translate tasks into concrete actions (CREATE FILE, EDIT FILE, CREATE DIRECTORY, RUN COMMAND)
+  - Enforce file ownership — no two parallel tasks write the same file
+  - Mark completed tasks atomically in `tasks.md`
+  - Handle failures gracefully per phase type
+
+#### `specialized/execution/progress-tracker`
+
+- **File**: `skills/specialized/execution/progress-tracker/SKILL.md`
+- **Purpose**: Update and render task progress status with completion metrics
+- **Inputs**: `tasks_file`, `execution_log`
+- **Outputs**: `progress_report`, `completion_metrics`
+- **Used By**: 1 agent (`implement`)
+- **Reusability**: ⭐ (execution-specific)
+- **Key Responsibilities**:
+  - Count completed, failed, and pending tasks per phase
+  - Compute completion percentages
+  - Identify next actionable task
+  - Render concise progress summary after each batch
 
 ---
 
@@ -371,62 +398,66 @@ These skills are context-specific or narrow in scope, used by 1-2 agents.
 
 ### By Domain
 
-| Domain | Skills | Total Use | Avg Reuse |
-|--------|--------|-----------|-----------|
-| Core | 3 | 18 agent-calls | ⭐⭐⭐⭐⭐ |
-| Artifact | 4 | 9 agent-calls | ⭐⭐⭐ |
-| Reasoning | 4 | 8 agent-calls | ⭐⭐⭐⭐ |
-| Foundation | 1 | 2 agent-calls | ⭐⭐ |
-| Discovery | 1 | 2 agent-calls | ⭐⭐ |
-| Context | 1 | 3+ agent-calls | ⭐⭐⭐ |
-| Maintenance | 1 | 2+ agent-calls | ⭐⭐ |
-| Interaction | 1 | 2+ agent-calls | ⭐⭐⭐ |
-| Formatting | 1 | 2-3 agent-calls | ⭐⭐⭐ |
-| Specialized | 6 | 8 agent-calls | ⭐ |
+| Domain | Skills | Agents Using | Avg Reuse |
+|--------|--------|-------------|-----------|
+| Core | 3 | 7 agents each | ⭐⭐⭐⭐⭐ |
+| Artifact | 4 | 2-4 agents | ⭐⭐⭐ |
+| Reasoning | 4 | 2-3 agents | ⭐⭐⭐ |
+| Foundation | 2 | 1 agent (foundational) | ⭐⭐ |
+| Discovery | 1 | 1 agent (foundational) | ⭐⭐ |
+| Context | 2 | 1-3 agents | ⭐⭐⭐ |
+| Interaction | 1 | 2+ agents | ⭐⭐⭐ |
+| Formatting | 1 | 2-3 agents | ⭐⭐⭐ |
+| Specialized | 5 | 1-2 agents | ⭐ |
 
 ### By Agent
 
-| Agent | Skills Used | Core | Artifact | Reasoning | Context | Specialized |
-|-------|-------------|------|----------|-----------|---------|-------------|
-| context-builder | 5 | 2 | 1 | - | 2 | - |
-| specify | 5 | 3 | - | - | - | 2 |
-| clarify | 6 | 3 | 2 | - | - | 1 |
-| plan | 6 | 3 | 1 | 1 | - | - |
-| tasks | 7 | 3 | 1 | 3 | - | - |
-| analyze | 5 | 3 | 1 | 1 | - | - |
-| implement | 7 | 3 | - | 3 | - | 2 |
+| Agent | Core | Artifact | Reasoning | Context | Interaction | Formatting | Specialized |
+|-------|:----:|:--------:|:---------:|:-------:|:-----------:|:----------:|:-----------:|
+| context-builder | 2 | 1 | - | 1 | - | - | 2 (foundation) |
+| specify | 3 | - | - | 2 | - | - | 2 |
+| clarify | 3 | 2 | - | - | 1 | - | 1 |
+| plan | 3 | 1 | 1 | - | - | - | - |
+| tasks | 3 | 1 | 3 | - | - | 1 | - |
+| analyze | 3 | 1 | 2 | 1 | - | 1 | - |
+| implement | 3 | - | 3 | - | - | - | 2 |
+| groom | 2 | 2 | - | - | - | - | 1 |
+| instructions | 2 | 2 | - | - | 1 | 1 | - |
+| close | 3 | 2 | - | 1 | - | - | - |
 
 ---
 
 ## Skills by Usage Level
 
 ### 🟢 Used by All Agents (3)
-- `core/session-bootstrap` (all agents)
-- `core/report-renderer` (all agents)
-- `core/quality-gates` (universal validator)
+- `core/session-bootstrap` (all 10 agents)
+- `core/report-renderer` (all 10 agents)
+- `core/quality-gates` (3 core agents — spec, plan, tasks)
 
 ### 🟦 Widely Reusable (8)
 - `artifact/artifact-modeling` (3 agents)
 - `artifact/artifact-patcher` (2+ agents)
-- `artifact/markdown-generation` (3+ agents)
-- `artifact/markdown-validation` (2+ agents)
+- `artifact/markdown-generation` (4+ agents)
+- `artifact/markdown-validation` (3+ agents)
 - `reasoning/design-synthesis` (2 agents)
 - `reasoning/work-decomposition` (3 agents)
 - `reasoning/dependency-analysis` (3 agents)
 - `reasoning/coverage-analysis` (2 agents)
 
-### 🟨 Multi-Agent Context & Formatting (4)
+### 🟨 Multi-Agent Context & Formatting (5)
 - `context/feature-context-pack-builder` (multi-stage)
+- `context/context-sync` (3 agents, 2 modes)
 - `interaction/question-orchestration` (2+ agents)
 - `formatting/format-enforcer` (2-3 agents)
 - `discovery/flow-and-scope-discovery` (1 agent, foundational)
 
-### 🟪 Specialized/Narrow (8)
+### 🟪 Specialized/Narrow (5)
 - `foundation/repository-context-builder` (foundational)
-- `maintenance/context-drift-and-reconcile` (lifecycle)
-- `specialized/spec/spec-authoring` (1 agent)
-- `specialized/spec/ambiguity-detection` (1 agent)
+- `foundation/test-pattern-discovery` (foundational)
+- `specialized/spec/spec-authoring` (2 agents)
+- `specialized/spec/ambiguity-detection` (2 agents)
 - `specialized/execution/task-execution-controller` (1 agent)
+- `specialized/execution/progress-tracker` (1 agent)
 
 ---
 
@@ -434,12 +465,23 @@ These skills are context-specific or narrow in scope, used by 1-2 agents.
 
 | Metric | Value |
 |--------|-------|
-| **Total Skills** | 22 |
-| **Reusable (used 2+ agents/stages)** | 14 (64%) |
-| **Specialized/Domain-Specific** | 8 (36%) |
-| **Skills by domain** | 10 domains |
-| **Total skill uses** | 50+ agent-skill connections |
-| **Average skill reuse** | 2.2 agents per skill |
+| **Total Skills** | 21 |
+| **Reusable (used by 2+ agents)** | 15 (71%) |
+| **Specialized/Domain-Specific** | 6 (29%) |
+| **Skills by domain** | 9 domains |
+| **Agents covered** | 10 (6 core + 4 extensions) |
+
+---
+
+## Changelog
+
+| Version | Change |
+|---------|--------|
+| Current | Merged `context-drift-and-reconcile` + `context-refresh-from-implementation` → `context/context-sync` (two-mode unified skill) |
+| Current | Removed `specialized/repository-analysis` (stale, unused) |
+| Current | Added `sdd.close` agent to registry |
+| Current | Added `foundation/test-pattern-discovery` (was missing from registry) |
+| Current | Added `specialized/execution/progress-tracker` (was missing from registry) |
 
 ---
 

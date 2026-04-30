@@ -199,7 +199,7 @@ confidence: high | medium | low
 ## Handoff
 
 Used by:
-- `context-drift-and-reconcile`
+- `context-sync`
 - `feature-context-pack-builder`
 
 Produces reusable flow-level context only.
