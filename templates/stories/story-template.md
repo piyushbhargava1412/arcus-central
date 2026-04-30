@@ -64,6 +64,12 @@
 
 **Then** [expected outcome/result]
 
+<!--
+  Add as many scenarios as needed to fully validate the story.
+  Aim to cover: happy path, edge cases, failure/error cases, and boundary conditions.
+  Two scenarios above are the MINIMUM — not the target.
+-->
+
 ---
 
 ## Open Questions

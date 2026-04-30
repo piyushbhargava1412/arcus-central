@@ -111,7 +111,7 @@ For each story, populate all sections of `.arcus/templates/stories/story-templat
 - **Assumptions**: conditions assumed true for this story to be valid
 - **Tech Notes**: concise technical guidance relevant to this story (architecture constraints, key APIs, patterns to follow) — use `.context/repo_scope.md` and `.context/repo_map.md` if available
 - **Test Plan**: core verification approach — key scenarios and critical checks
-- **Acceptance Criteria**: minimum 2 Given/When/Then scenarios (happy path + at least one edge/failure case)
+- **Acceptance Criteria**: write as many Given/When/Then scenarios as needed to fully validate the story — cover the happy path, all meaningful edge cases, and key failure/error conditions. Two scenarios is the floor, not the target. Each scenario must be independently verifiable.
 - **Open Questions**: surface genuinely unresolved decisions using `specialized/spec/ambiguity-detection` — record as questions, do not invent answers
 
 Do NOT modify section names or structure. Fill every section — do not leave placeholder text.
