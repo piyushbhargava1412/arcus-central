@@ -108,11 +108,11 @@ These are not theoretical — they reflect the problems ARCUS was built to solve
 
 ---
 
-## The Self-Hosting Principle
+## The Self-Hosting Principle (Beta)
 
-ARCUS is developed using ARCUS. New features to the framework go through `sdd.specify` → `sdd.clarify` → `sdd.plan` → `sdd.tasks` → `sdd.implement`. This is the strongest test of the framework's validity: if it cannot describe its own development, it is not production-grade.
+ARCUS is being developed using ARCUS. New features to the framework are developed using the same harness and context awareness that gets generated in any other target repository. This is the strongest test of the framework's validity: if it cannot describe its own development, it is not production-grade.
 
-The central repo has integrated ARCUS on itself. The `.context/` folder, the `.arcus/specs/` directory, and the story artifacts you see in this repo are the framework's own development history.
+The central repo has integrated ARCUS on itself. The `.context/` folder you see in this repo is its understanding of itself.
 
 ## CLI Commands
 
