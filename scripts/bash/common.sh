@@ -13,9 +13,9 @@ get_repo_root() {
     fi
 }
 
-# Get current branch, with fallback for non-git repositories
+# Get current branch or story ID, with fallback for non-git repositories
 get_current_branch() {
-    # First check if SPECIFY_FEATURE environment variable is set
+    # First check if SPECIFY_FEATURE environment variable is set (manual override)
     if [[ -n "${SPECIFY_FEATURE:-}" ]]; then
         echo "$SPECIFY_FEATURE"
         return
@@ -27,40 +27,17 @@ get_current_branch() {
         return
     fi
 
-    # For non-git repos, try to find the latest feature directory
+    # For non-git repos, find the most recently modified spec directory
     local repo_root
     repo_root=$(get_repo_root)
     local specs_dir="$repo_root/.arcus/specs"
 
     if [[ -d "$specs_dir" ]]; then
-        local latest_feature=""
-        local highest=0
-
-        for dir in "$specs_dir"/*; do
-            if [[ -d "$dir" ]]; then
-                local dirname
-                dirname=$(basename "$dir")
-                # Support BFCO-<story>-name and numeric prefixes like 001-
-                if [[ "$dirname" =~ ^BFCO-([0-9]+)- ]]; then
-                    local number=${BASH_REMATCH[1]}
-                    number=$((10#$number))
-                    if [[ "$number" -gt "$highest" ]]; then
-                        highest=$number
-                        latest_feature=$dirname
-                    fi
-                elif [[ "$dirname" =~ ^([0-9]{3})- ]]; then
-                    local number=${BASH_REMATCH[1]}
-                    number=$((10#$number))
-                    if [[ "$number" -gt "$highest" ]]; then
-                        highest=$number
-                        latest_feature=$dirname
-                    fi
-                fi
-            fi
-        done
-
-        if [[ -n "$latest_feature" ]]; then
-            echo "$latest_feature"
+        # Return the most recently modified spec directory name
+        local latest
+        latest=$(ls -t "$specs_dir" 2>/dev/null | head -1)
+        if [[ -n "$latest" ]]; then
+            echo "$latest"
             return
         fi
     fi
@@ -73,102 +50,82 @@ has_git() {
     git rev-parse --show-toplevel >/dev/null 2>&1
 }
 
+# Validate branch name — warn if it doesn't follow a recommended convention but never block
 check_feature_branch() {
     local branch="$1"
     local has_git_repo="$2"
 
     # Require a git repository for branch validation
     if [[ "$has_git_repo" != "true" ]]; then
-        echo "[specify] ERROR: Git repository not detected; branch validation requires a git repo" >&2
-        return 1
+        echo "[arcus] WARNING: Git repository not detected; branch validation skipped." >&2
+        return 0
     fi
 
     # Detect detached HEAD or missing branch
     if [[ -z "$branch" || "$branch" == "HEAD" ]]; then
-        echo "ERROR: Detached HEAD or no branch detected. Please checkout a branch." >&2
+        echo "ERROR: Detached HEAD or no branch detected. Please checkout a feature branch." >&2
         return 1
     fi
 
-    # Preferred branch name pattern: 3-4 letters, a hyphen, then digits (e.g., abc-123 or abcd-123)
-    if [[ "$branch" =~ ^[A-Za-z]{3,4}-[0-9]+$ ]]; then
-        echo "[specify] Branch name '$branch' matches preferred pattern ^[A-Za-z]{3,4}-[0-9]+$." >&2
-        return 0
+    # main / master / develop are not valid story branches
+    if [[ "$branch" == "main" || "$branch" == "master" || "$branch" == "develop" ]]; then
+        echo "ERROR: Branch '$branch' is not a feature branch. Please checkout a feature branch before running SDD agents." >&2
+        return 1
     fi
 
-    # Branch name does not match preferred pattern — warn but continue
-    echo "[specify] WARNING: Branch name '$branch' does not follow the recommended pattern '[abcd]-123'." >&2
-    echo "[specify] Recommended: three or four letters, a hyphen, then an issue number (e.g., abc-123 or abcd-456). Proceeding anyway." >&2
+    # Recommended pattern: <id>-<description> or <prefix>-<number> (e.g., PROJ-123, 001-feature-name)
+    # This is a soft recommendation — any branch name is accepted
+    if [[ "$branch" =~ ^[A-Za-z0-9]+-[A-Za-z0-9] ]]; then
+        echo "[arcus] Branch '$branch' looks good." >&2
+    else
+        echo "[arcus] WARNING: Branch name '$branch' does not follow the recommended pattern '<id>-<description>'." >&2
+        echo "[arcus] Recommended: use a ticket ID or short prefix followed by a hyphen and description (e.g., PROJ-123, 001-add-auth). Proceeding anyway." >&2
+    fi
+
     return 0
 }
 
 get_feature_dir() { echo "$1/.arcus/specs/$2"; }
 
-# Find feature directory by prefix (BFCO-<num>- or numeric) instead of exact branch match
+# Find feature directory for the given branch name
+# Uses the branch name directly as the story ID — no format-specific parsing
 find_feature_dir_by_prefix() {
     local repo_root="$1"
     local branch_name="$2"
     local specs_dir="$repo_root/.arcus/specs"
 
-    # If branch uses BFCO-<num> prefix, derive canonical spec dir name BFCO-<num>
-    if [[ "$branch_name" =~ ^BFCO-([0-9]+)(-|$) ]]; then
-        local story_num=${BASH_REMATCH[1]}
-        local canonical_dir="BFCO-${story_num}"
-        # If exact canonical dir exists, prefer it
-        if [[ -d "$specs_dir/$canonical_dir" ]]; then
-            echo "$specs_dir/$canonical_dir"
-            return
-        fi
-        # Otherwise fall back to searching for directories that start with BFCO-<num>-
-        local prefix="BFCO-${story_num}-"
-        local matches=()
-        if [[ -d "$specs_dir" ]]; then
-            for dir in "$specs_dir"/${prefix}*; do
-                if [[ -d "$dir" ]]; then
-                    matches+=("$(basename "$dir")")
-                fi
-            done
-        fi
-        if [[ ${#matches[@]} -eq 1 ]]; then
-            echo "$specs_dir/${matches[0]}"
-            return
-        elif [[ ${#matches[@]} -gt 1 ]]; then
-            echo "ERROR: Multiple spec directories found with prefix '$prefix': ${matches[*]}" >&2
-            echo "Please ensure only one spec directory exists per story prefix." >&2
-            echo "$specs_dir/$branch_name"
-            return
-        fi
-        # No matches found; prefer canonical path even if it doesn't exist (so setup creates canonical)
-        echo "$specs_dir/$canonical_dir"
+    # Sanitise branch name for use as a directory name
+    # Remove characters illegal in file/directory names
+    local safe_id
+    safe_id=$(echo "$branch_name" | tr -cd '[:alnum:]._-')
+
+    # Check if an exact match directory already exists
+    if [[ -d "$specs_dir/$safe_id" ]]; then
+        echo "$specs_dir/$safe_id"
         return
     fi
 
-    # Fallback to numeric prefix (e.g., 001-)
-    if [[ "$branch_name" =~ ^([0-9]{3})- ]]; then
-        local prefix_num="${BASH_REMATCH[1]}"
+    # Check if any existing spec directory starts with the same prefix
+    # (handles cases where the branch name was truncated or slightly differs)
+    if [[ -d "$specs_dir" ]]; then
         local matches=()
-        if [[ -d "$specs_dir" ]]; then
-            for dir in "$specs_dir"/${prefix_num}-*; do
-                if [[ -d "$dir" ]]; then
-                    matches+=("$(basename "$dir")")
-                fi
-            done
-        fi
+        for dir in "$specs_dir"/${safe_id}*; do
+            if [[ -d "$dir" ]]; then
+                matches+=("$(basename "$dir")")
+            fi
+        done
+
         if [[ ${#matches[@]} -eq 1 ]]; then
             echo "$specs_dir/${matches[0]}"
             return
         elif [[ ${#matches[@]} -gt 1 ]]; then
-            echo "ERROR: Multiple spec directories found with prefix '$prefix_num': ${matches[*]}" >&2
-            echo "Please ensure only one spec directory exists per numeric prefix." >&2
-            echo "$specs_dir/$branch_name"
-            return
+            echo "ERROR: Multiple spec directories found matching '$safe_id': ${matches[*]}" >&2
+            echo "Please ensure only one spec directory exists per story. Defaulting to exact path." >&2
         fi
     fi
 
-    # No recognized prefix; return exact canonical prefixless path under specs by branch name
-    # Strip characters that are illegal in file names if any (safety)
-    local safe_branch_name
-    safe_branch_name=$(echo "$branch_name" | tr -cd '[:alnum:]._-')
-    echo "$specs_dir/$safe_branch_name"
+    # Default: return the canonical path using the sanitised branch name
+    echo "$specs_dir/$safe_id"
 }
 
 get_feature_paths() {
@@ -182,10 +139,10 @@ get_feature_paths() {
         has_git_repo="true"
     fi
 
-    # Validate branch naming
+    # Validate branch naming (warns but does not block)
     check_feature_branch "$current_branch" "$has_git_repo" || exit 1
 
-    # Use prefix-based lookup to support multiple branches per spec
+    # Derive feature directory from branch name
     local feature_dir
     feature_dir=$(find_feature_dir_by_prefix "$repo_root" "$current_branch")
 
