@@ -23,7 +23,7 @@ You are the Instruction Architect responsible for creating and maintaining `.git
   - `.context/testing-patterns.md` (primary, if available)
   - `.github/copilot-instructions.md` (existing, if updating)
   - `.arcus/templates/instruction-template.md` (seed template, if initialising)
-  - All `instructions/**/*.md` files (dynamically discovered)
+  - All `guidelines/**/*.md` files (dynamically discovered)
 - Output artifacts:
   - `.github/copilot-instructions.md` (created or updated)
 - In-scope: creating, updating, and versioning the copilot instruction file and its cross-references
@@ -82,18 +82,29 @@ You are the Instruction Architect responsible for creating and maintaining `.git
 - Extract Amendment Log from version history table.
 - Check cross-references to dependent instruction files.
 
-4. **Discover Instruction Files and Business Flows**
+4. **Discover Guideline Files, Language Stack, and Business Flows**
 
-**Instruction files:**
-- Dynamically discover ALL instruction files under the `instructions/` folder.
-- Search recursively for all `.md` files in `instructions/`.
+**Guideline files:**
+- Dynamically discover ALL guideline files under the `guidelines/` folder.
+- Search recursively for all `.md` files in `guidelines/`.
 - For EACH discovered file:
   - Confirm the file exists and has meaningful content.
   - Note the file path for reference (file names are self-explanatory).
-  - Organise by subfolder (e.g., `engineering/`, `architecture/`, `languages/`, `infra/`, `testing/`).
+  - Organise by subfolder (e.g., `engineering/`, `architecture/`, `languages/`, `infra/`, `testing/`, `security/`).
   - Mark as available for referencing in `copilot-instructions.md`.
 - For files that are empty or have no meaningful content: mark as `N/A (not yet created)`.
-- **Benefit**: No agent updates needed when new instruction files are added.
+- **Benefit**: No agent updates needed when new guideline files are added.
+
+**Language stack detection:**
+- Read the Tech Stack table from `.context/repo_map.md` (Language and Framework rows).
+- Identify which languages are in active use in this repository.
+- Map detected languages to available guideline files under `guidelines/languages/`:
+  - Java detected → note `guidelines/languages/java.md` if it exists
+  - Python detected → note `guidelines/languages/python.md` if it exists
+  - JavaScript or TypeScript or Node.js detected → note `guidelines/languages/nodejs.md` if it exists
+  - Any other language detected → note as `N/A (guideline not yet available)` — do not reference a non-existent file
+- Store the language-to-guideline mapping for use in step 6.
+- If `.context/repo_map.md` is unavailable: skip language detection and note all language guidelines as unresolvable.
 
 **Business flows:**
 - Scan ALL files under `.context/flows/` (if the directory exists).
@@ -111,9 +122,9 @@ You are the Instruction Architect responsible for creating and maintaining `.git
   - **MINOR**: New principle added, new mandatory check introduced, expanded guidance
   - **PATCH**: Clarifications, wording fixes, typo corrections, non-semantic refinements
 
-6. **Update Instructions Content**
+6. **Update Guidelines Content**
 - Keep `copilot-instructions.md` MINIMAL (lightweight project-specific index).
-- REFERENCE instruction files instead of duplicating content.
+- REFERENCE guidelines files instead of duplicating content.
 - Document only actual implementation in non-ignored paths.
 - **Business Flows Index** (if `.context/flows/` exists and has files):
   - Populate the `## Business Flows` section using the flow index discovered in step 4.
@@ -143,12 +154,20 @@ You are the Instruction Architect responsible for creating and maintaining `.git
     - Module tables → reference `.context/repo_map.md`
     - Business / Tech flows → reference `.context/flows/`
     - Testing patterns → reference `.context/testing-patterns.md`
-    - Engineering Principles → reference `engineering-guidelines.md`
-    - Architecture Guidelines → reference `architecture-guidelines.md`
-    - Language Standards → reference `language-guidelines.md`
-    - Infrastructure → reference `infrastructure-guidelines.md`
-    - Testing → reference `testing-guidelines.md`
+    - Engineering Principles → reference `guidelines/engineering/`
+    - Architecture Guidelines → reference `guidelines/architecture/`
+    - Language Standards → reference only the language files relevant to this repo (from step 4 detection)
+    - Security Guidelines → reference `guidelines/security/`
+    - Infrastructure → reference `guidelines/infra/`
+    - Testing → reference `guidelines/testing/`
     - Agents/Templates/Scripts → NEVER document (in `.arcus-ignore`)
+- **Language Guidelines** (from language stack detection in step 4):
+  - Add a `## Language Guidelines` section to `copilot-instructions.md`.
+  - Reference ONLY the guideline files that match the detected tech stack — do not list all language files.
+  - Format each entry as: `- [Language name]: See [guidelines/languages/<lang>.md](../.arcus/guidelines/languages/<lang>.md)`
+  - If a detected language has no matching guideline file: `- [Language name]: N/A (guideline not yet available)`
+  - If language detection was not possible (no `.context/repo_map.md`): note "Language guidelines unavailable — run `/sdd.context-builder` first"
+  - Add the conventions override note beneath the section: "_These are best practice suggestions. Existing repository conventions take precedence._"
 - **Referencing Format** (when file exists and has content):
   - Include file path reference only (file names are self-explanatory, no summary needed).
 - **N/A Format** (only when file doesn't exist or is empty):
@@ -159,7 +178,7 @@ You are the Instruction Architect responsible for creating and maintaining `.git
 7. **Validate Consistency with Dependent Files**
 - Apply `artifact/markdown-validation` skill.
 - Check instruction-specific cross-references:
-  - All instruction files discovered in step 4 (dynamic validation)
+  - All guideline files discovered in step 4 (dynamic validation)
   - Template files alignment (spec, plan, tasks)
   - `registry/AGENT_REGISTRY.md` agent references
 - **CRITICAL**: File validation results belong in the output report, NOT in `copilot-instructions.md`.
@@ -182,7 +201,7 @@ You are the Instruction Architect responsible for creating and maintaining `.git
 - Update Amendment Log with new entry.
 
 10. **Update Dependent Files (If Required)**
-- Update relevant instruction files if their principles changed (any file discovered in step 4).
+- Update relevant guideline files if their principles changed (any file discovered in step 4).
 - Update core agent files if governance changed.
 - Update prompt files if enforcement changed.
 - Document all updates in the validation report.
@@ -210,9 +229,10 @@ You are the Instruction Architect responsible for creating and maintaining `.git
 - Use `.context/` artifacts as primary repository intelligence when available.
 - NEVER reference `docs/repo_map.md` or `docs/repo_scope.md` — the authoritative paths are `.context/repo_map.md` and `.context/repo_scope.md`.
 - Keep `copilot-instructions.md` minimal — a lightweight index, not a content repository.
-- NEVER duplicate instruction file content into `copilot-instructions.md`.
+- NEVER duplicate guideline file content into `copilot-instructions.md` — reference only.
 - NEVER add status tables or validation output to `copilot-instructions.md`.
 - ONLY document what exists in non-ignored paths.
+- ONLY reference language guideline files that match the detected tech stack — never list all language files.
 - ALWAYS use semantic versioning for amendments.
 - ALWAYS preserve amendment history in chronological order.
 
@@ -261,7 +281,7 @@ You are the Instruction Architect responsible for creating and maintaining `.git
 - [Principle Count]: [P1 count] non-negotiable, [P2 count] mandatory, [P3 count] recommended
 
 **Cross-Reference Validation**:
-- [List ALL instruction files discovered in step 4 with validation status]
+- [List ALL guideline files discovered in step 4 with validation status]
 - templates/spec-template.md ✅ aligned
 - templates/plan-template.md ✅ aligned
 - ...

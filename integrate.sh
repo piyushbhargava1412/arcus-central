@@ -14,7 +14,7 @@ Usage: integrate.sh [target-repo-path] [options]
 
 Distributes the SDD framework to a target repository.
 
-  .arcus/          → symlinks to central (templates, scripts, instructions)
+  .arcus/          → symlinks to central (templates, scripts, guidelines)
   .github/agents/ → read-only copies   (IntelliJ agent tab needs real files)
   .github/prompts/→ read-only copies   (IntelliJ agent tab needs real files)
   .arcus-ignore    → copied once        (tells agents which paths to skip)
@@ -26,7 +26,7 @@ Options:
   -h, --help          Show this help message
   -y, --yes           Skip confirmation prompts (for CI/CD)
   --sync              Re-create symlinks and re-copy agent/prompt files
-  --remove            Remove managed integration artifacts (preserves .arcus/instructions and .arcus/ directory)
+  --remove            Remove managed integration artifacts (preserves .arcus/guidelines and .arcus/ directory)
 
 Examples:
   cd my-project && ../bigfin_arcus-central/integrate.sh
@@ -221,7 +221,7 @@ validate_readonly_copies() {
 # ─── Validation ───────────────────────────────────────────────────
 validate_central_structure() {
     local central_path="$1"
-    local required_dirs=("agents" "prompts" "skills" "templates" "scripts" "instructions")
+    local required_dirs=("agents" "prompts" "skills" "templates" "scripts" "guidelines")
     for dir in "${required_dirs[@]}"; do
         if [[ ! -d "$central_path/$dir" ]]; then
             error "Missing required directory in central repo: $dir"
@@ -268,14 +268,14 @@ main() {
     echo ""
 
     # ═════════════════════════════════════════════════════════════=
-    # PHASE 1: .arcus/ — SYMLINKS for templates, scripts, instructions
+    # PHASE 1: .arcus/ — SYMLINKS for templates, scripts, guidelines
     # ═════════════════════════════════════════════════════════════=
     if [[ "$REMOVE_MODE" == true ]]; then
         log "Removing integration artifacts..."
         local removal_count=0
 
         # Remove symlinked directories inside .arcus/ (but preserve .arcus/ folder itself)
-        # DO NOT remove .arcus/instructions/ — developers may reference it in their copilot-instructions.md
+        # DO NOT remove .arcus/guidelines/ — developers may reference it in their copilot-instructions.md
         # Developers may have created local artifacts in .arcus/ that they want to keep
         local symlink_dirs=("templates" "scripts")
         for symdir in "${symlink_dirs[@]}"; do
@@ -333,7 +333,7 @@ main() {
     fi
     log "Phase 0: Setting central source files read-only..."
     local readonly_count=0
-    for dir in agents prompts skills templates scripts instructions; do
+    for dir in agents prompts skills templates scripts guidelines; do
         find "$CENTRAL_REPO/$dir" -type f -exec chmod a-w {} \;
         local cnt
         cnt=$(find "$CENTRAL_REPO/$dir" -type f | wc -l | tr -d ' ')
@@ -350,7 +350,7 @@ main() {
         local cleanup_count=0
 
         # Remove .arcus/ symlinks
-        for name in templates scripts instructions; do
+        for name in templates scripts guidelines; do
             if [[ -L "$TARGET_REPO/$SDD_DIR/$name" ]] || [[ -e "$TARGET_REPO/$SDD_DIR/$name" ]]; then
                 rm -rf "${TARGET_REPO:?}/${SDD_DIR:?}/$name"
                 ((cleanup_count++))
@@ -385,12 +385,12 @@ main() {
     fi
 
     # ══════════════════════════════════════════════════════════════
-    # PHASE 1: .arcus/ — SYMLINKS for templates, scripts, instructions
+    # PHASE 1: .arcus/ — SYMLINKS for templates, scripts, guidelines
     # ══════════════════════════════════════════════════════════════
     log "Phase 1: .arcus/ directory symlinks..."
     mkdir -p "$TARGET_REPO/$SDD_DIR"
 
-    local SDD_DIRS=("templates" "scripts" "instructions")
+    local SDD_DIRS=("templates" "scripts" "guidelines")
     local sdd_count=0
     for name in "${SDD_DIRS[@]}"; do
         if create_dir_symlink "$CENTRAL_REPO/$name" "$TARGET_REPO/$SDD_DIR/$name"; then
@@ -540,7 +540,7 @@ main() {
     "sdd_dir": "$SDD_DIR",
     "templates": "$SDD_DIR/templates (symlink)",
     "scripts": "$SDD_DIR/scripts (symlink)",
-    "instructions": "$SDD_DIR/instructions (symlink)"
+    "guidelines": "$SDD_DIR/guidelines (symlink)"
   },
   "ide_discovery": {
     "agents_dir": ".github/agents/ (read-only copies)",

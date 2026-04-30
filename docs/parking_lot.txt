@@ -1,5 +1,4 @@
 - Make prompts copying optional and disabled by default
-- Refine the instructions folder
 - refactor the agents that are optimised for reduced token usage
 - add skills
 - remove extension and core subfolders from agents/prompts and think of a better categorisation like tech, business, developer, architect, etc etc

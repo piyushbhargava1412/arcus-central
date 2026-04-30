@@ -185,11 +185,11 @@ All engineering principles, architecture guidelines, language standards, testing
   Organize by subfolder and use the file name to derive the display label.
 -->
 
-- **Engineering Principles**: See [../.arcus/instructions/engineering/engineering-guidelines.md](../.arcus/instructions/engineering/engineering-guidelines.md)
-- **Architecture Guidelines**: See [../.arcus/instructions/architecture/architecture-guidelines.md](../.arcus/instructions/architecture/architecture-guidelines.md)
-- **Language & Coding Standards**: See [../.arcus/instructions/languages/language-guidelines.md](../.arcus/instructions/languages/language-guidelines.md)
-- **Infrastructure Standards**: See [../.arcus/instructions/infra/infrastructure-guidelines.md](../.arcus/instructions/infra/infrastructure-guidelines.md)
-- **Testing Guidelines**: See [../.arcus/instructions/testing/testing-guidelines.md](../.arcus/instructions/testing/testing-guidelines.md)
+- **Engineering Principles**: See [../.arcus/guidelines/engineering/engineering-guidelines.md](../.arcus/guidelines/engineering/engineering-guidelines.md)
+- **Architecture Guidelines**: See [../.arcus/guidelines/architecture/architecture-guidelines.md](../.arcus/guidelines/architecture/architecture-guidelines.md)
+- **Language & Coding Standards**: See [../.arcus/guidelines/languages/language-guidelines.md](../.arcus/guidelines/languages/language-guidelines.md)
+- **Infrastructure Standards**: See [../.arcus/guidelines/infra/infrastructure-guidelines.md](../.arcus/guidelines/infra/infrastructure-guidelines.md)
+- **Testing Guidelines**: See [../.arcus/guidelines/testing/testing-guidelines.md](../.arcus/guidelines/testing/testing-guidelines.md)
 
 <!--
   If additional instruction files are found in instructions/ subfolders,
@@ -208,6 +208,12 @@ All engineering principles, architecture guidelines, language standards, testing
 
 ---
 
+## Conventions Override
+
+> **Repository conventions always take precedence over generic guidelines.** The patterns, tooling, structure, and standards already established in this repository (as captured in `.context/`) are the authoritative source. Guideline files under `guidelines/` provide best practice suggestions to fill gaps — they must not be used to override or restructure existing repository conventions unless the user explicitly requests a change.
+
+---
+
 ## Agent Behavioral Rules
 
 ### Repository Analysis
@@ -219,15 +225,15 @@ All engineering principles, architecture guidelines, language standards, testing
 
 ### Code Generation
 
-1. **READ** architecture guidelines from `../.arcus/instructions/architecture/` before generating code
-2. **READ** language standards from `../.arcus/instructions/languages/` before generating code
-3. **VALIDATE** against engineering principles from `../.arcus/instructions/engineering/`
+1. **READ** architecture guidelines from `../.arcus/guidelines/architecture/` before generating code
+2. **READ** language standards from `../.arcus/guidelines/languages/` before generating code
+3. **VALIDATE** against engineering principles from `../.arcus/guidelines/engineering/`
 4. **RESPECT** existing architecture and module boundaries
 
 ### Quality Assurance
 
-1. **ENFORCE** testing requirements defined in `../.arcus/instructions/testing/`
-2. **VALIDATE** infrastructure changes against `../.arcus/instructions/infra/`
+1. **ENFORCE** testing requirements defined in `../.arcus/guidelines/testing/`
+2. **VALIDATE** infrastructure changes against `../.arcus/guidelines/infra/`
 3. **CHECK** cross-references point to valid files
 4. **ENSURE** no unexplained bracket tokens `[...]` remain in artifacts
 
