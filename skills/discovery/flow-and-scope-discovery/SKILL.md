@@ -49,14 +49,21 @@ Each flow must be:
 
 ## Processing Rules
 
-### 1. Identify entry surfaces
+### 1. Capture verification metadata
+
+Before generating any flow files:
+- Read `verification-commit` from the `arcus-context-meta` block of `repo_scope.md` — use this as `CURRENT_COMMIT`
+- Capture the current ISO timestamp as `GENERATED_AT`
+- If `verification-commit` is `unknown` or missing: use `unknown`
+
+### 2. Identify entry surfaces
 
 Use `repo_map` to identify:
 - controllers
 - listeners / consumers
 - schedulers / jobs
 
-### 2. Group into flows
+### 3. Group into flows
 
 Group entry surfaces into flows only when there is evidence of shared:
 - orchestration path
@@ -65,7 +72,7 @@ Group entry surfaces into flows only when there is evidence of shared:
 
 Prefer narrower flows over broad groupings.
 
-### 3. Trace minimal path
+### 4. Trace minimal path
 
 For each flow, capture only:
 - entry points
@@ -74,13 +81,13 @@ For each flow, capture only:
 - integrations/events (if evident)
 - related tests (if evident)
 
-### 4. Define scope
+### 5. Define scope
 
 Capture:
 - relevant packages/modules
 - small set of key classes
 
-### 5. Keep flows tight
+### 6. Keep flows tight
 
 Each flow must represent one execution path, not a subsystem.
 
@@ -88,7 +95,7 @@ Examples:
 - `email-resend-request-handling`
 - `communication-status-update`
 
-### 6. Assign confidence
+### 7. Assign confidence
 
 - high: clear evidence
 - medium: partial trace
@@ -97,32 +104,43 @@ Examples:
 ## Persistence Rules
 
 1. Ensure directory exists:
-    - `.context/flows/`
+  - `.context/flows/`
 
 2. Persist one file per flow:
-    - `.context/flows/<flow-name>.md`
+  - `.context/flows/<flow-name>.md`
 
 3. Naming:
-    - kebab-case
-    - concise and specific
+  - kebab-case
+  - concise and specific
 
 4. If file exists:
-    - update it
-    - do not duplicate
+  - update it
+  - do not duplicate
 
 5. Never create:
-    - `business_flows.md`
-    - `all_flows.md`
-    - `technical_integrations.md`
+  - `business_flows.md`
+  - `all_flows.md`
+  - `technical_integrations.md`
 
 6. Integrations must be captured:
-    - in `repo_scope.md` (high-level), or
-    - within the relevant flow file
+  - in `repo_scope.md` (high-level), or
+  - within the relevant flow file
+
+7. Write the `arcus-context-meta` block at the top of every flow file immediately after the header:
+
+```
+<!-- arcus-context-meta
+verification-commit: <CURRENT_COMMIT>
+generated-at: <GENERATED_AT>
+confidence: <high | medium | low>
+-->
+```
 
 ## Output Contract
 
 Each flow file must include:
 
+- `arcus-context-meta` block with `verification-commit`, `generated-at`, `confidence`
 - Flow Name
 - Entry Points
 - Core Path
@@ -130,14 +148,17 @@ Each flow file must include:
 - Integrations (if evident)
 - Scope
 - Tests (if evident)
-- Verification:
-    - commit
-    - confidence
 
 ## Recommended Structure
 
 ```md
 # Flow: <Flow Name>
+
+<!-- arcus-context-meta
+verification-commit: <hash or unknown>
+generated-at: <ISO-TIMESTAMP>
+confidence: high | medium | low
+-->
 
 ## Entry Points
 - ...
@@ -156,10 +177,6 @@ Each flow file must include:
 
 ## Tests
 - ...
-
-## Verification
-commit: <hash or unknown>
-confidence: high | medium | low
 ```
 
 ## Validation Gates
@@ -170,18 +187,19 @@ confidence: high | medium | low
 - [ ] no speculative flows
 - [ ] one file per flow
 - [ ] no aggregated flow document created
+- [ ] `arcus-context-meta` block written to every flow file with `verification-commit`
 
 ## Failure Modes
 
-- NO_ENTRY_SURFACES
-- INSUFFICIENT_TRACE
-- OVER_GENERALIZATION
-- DUPLICATE_FLOW_MATCH
+- `NO_ENTRY_SURFACES`: no controllers/listeners/schedulers found — report and stop
+- `INSUFFICIENT_TRACE`: cannot trace a minimal path for a candidate flow — omit that flow, continue others
+- `OVER_GENERALIZATION`: detected flow covers too many entry surfaces — split into narrower flows
+- `DUPLICATE_FLOW_MATCH`: two flow files would cover the same entry surface — merge or disambiguate
 
 ## Handoff
 
 Used by:
-- context-drift-and-reconcile
-- feature-context-pack-builder
+- `context-drift-and-reconcile`
+- `feature-context-pack-builder`
 
 Produces reusable flow-level context only.

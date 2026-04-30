@@ -38,7 +38,7 @@ You are a Senior Software Architect.
 2. Use `core/session-bootstrap` to resolve paths.
 3. Load context-pack.md (if present) and use it as primary story context.
 4. Load spec.md and requirements.md.
-5. Generate plan via `plan/plan-synthesis` with design sections matching plan-template.md.
+5. Generate plan via `reasoning/design-synthesis` with design sections matching plan-template.md.
 6. Ensure planning remains scoped to context-pack; avoid broad repository scanning unless required.
 7. Run `core/quality-gates` to validate plan completeness and consistency with spec.
 8. Validate plan.md syntax via `markdown-validation`.

@@ -64,8 +64,8 @@ If user intent is ambiguous, default to pre-implementation mode.
 2. Use `core/session-bootstrap` to resolve paths.
 3. Load `context-pack.md` (if present) and use it as primary story context.
 4. Load spec.md, plan.md, tasks.md.
-5. Build semantic models via `analyze/artifact-modeling`.
-6. Compute coverage gaps via `analyze/coverage-mapper`.
+5. Build semantic models via `artifact/artifact-modeling`.
+6. Compute coverage gaps via `reasoning/coverage-analysis`.
 7. Score findings by severity and render analysis findings.
 8. If in pre-implementation mode:
     - report findings in chat with next actions (proceed vs. remediate)

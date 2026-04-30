@@ -41,36 +41,50 @@ Do not:
 
 1. Resolve repository root; stop if unresolved.
 2. Apply ignore rules:
-    - `.arcus-ignore` if present
-    - exclude build/generated/vendor/cache/IDE folders
+  - `.arcus-ignore` if present
+  - exclude build/generated/vendor/cache/IDE folders
 3. Traverse only non-ignored areas.
 4. Use only evidence from:
-    - directory structure
-    - build/config files
-    - source/test/config roots
-    - package layout
-    - Spring entry surfaces (controllers/listeners/schedulers)
-    - adapter/integration areas
+  - directory structure
+  - build/config files
+  - source/test/config roots
+  - package layout
+  - Spring entry surfaces (controllers/listeners/schedulers)
+  - adapter/integration areas
 5. Extract:
-    - repository purpose (only if clearly evident)
-    - major implementation areas
-    - module/package structure
-    - source/test/config roots
-    - entry surface locations
-    - tech stack signals
-    - shared/common areas
+  - repository purpose (only if clearly evident)
+  - major implementation areas
+  - module/package structure
+  - source/test/config roots
+  - entry surface locations
+  - tech stack signals
+  - shared/common areas
 6. Prefer omission over weak inference.
 7. Assign confidence: high / medium / low.
+8. Capture the current git HEAD commit hash before writing outputs:
+  - Run: `git -C <repository_root> rev-parse HEAD`
+  - Store as `CURRENT_COMMIT`
+  - If git is unavailable or the repo has no commits: use `unknown`
+9. Capture the current ISO timestamp: `GENERATED_AT`
 
 ## Persistence Rules
 
 1. Ensure `.context/` exists.
 2. Write:
-    - `repo_scope.md`
-    - `repo_map.md`
+  - `repo_scope.md`
+  - `repo_map.md`
 3. If files exist → update them (do not duplicate).
 4. Preserve structure; replace outdated content.
 5. Do not write outside `.context/`.
+6. Write the `arcus-context-meta` block at the top of every artifact immediately after the header:
+
+```
+<!-- arcus-context-meta
+verification-commit: <CURRENT_COMMIT>
+generated-at: <GENERATED_AT>
+confidence: <high | medium | low>
+-->
+```
 
 ## Output Contract
 
@@ -78,6 +92,7 @@ Do not:
 
 Must include:
 
+- `arcus-context-meta` block with `verification-commit`, `generated-at`, `confidence`
 - Purpose (1–2 lines)
 - Core Responsibilities (bullets)
 - Major Implementation Areas
@@ -85,14 +100,12 @@ Must include:
 - Tech Stack Signals
 - Boundaries / Exclusions (if evident)
 - Source/Test/Config Roots
-- Verification:
-    - commit (if available)
-    - confidence
 
 ### repo_map (`.context/repo_map.md`)
 
 Must include:
 
+- `arcus-context-meta` block with `verification-commit`, `generated-at`, `confidence`
 - Top-Level Structure
 - Key Packages / Modules
 - Entry Surface Locations
@@ -107,18 +120,20 @@ Must include:
 - [ ] ignore rules applied
 - [ ] outputs evidence-backed
 - [ ] both files created/updated
+- [ ] `arcus-context-meta` block written to both files with a non-empty `verification-commit`
 - [ ] no speculative flows/contracts
 
 ## Failure Modes
 
-- MISSING_ROOT
-- PARSE_ERROR
-- INSUFFICIENT_EVIDENCE
-- CONTEXT_TOO_WEAK
+- `MISSING_ROOT`: repository root unresolved — stop and report
+- `PARSE_ERROR`: file cannot be read — stop and report
+- `INSUFFICIENT_EVIDENCE`: not enough structure to build context — report what was found and stop
+- `CONTEXT_TOO_WEAK`: confidence too low across all areas — report and stop
+- `GIT_UNAVAILABLE`: git not found or repo has no commits — use `unknown` for verification-commit, continue
 
 ## Handoff
 
 Used by:
-- flow-and-scope-discovery
-- context-drift-and-reconcile
-- feature-context-pack-builder
+- `flow-and-scope-discovery`
+- `context-drift-and-reconcile`
+- `feature-context-pack-builder`

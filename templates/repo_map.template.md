@@ -1,8 +1,13 @@
 # Repository Map: [REPO NAME]
 
-**Generated**: [DATE]  
-**Generator**: `/sdd.repo-intelligence`  
+**Generated**: [DATE]
 **Confidence**: [HIGH | MEDIUM | LOW]
+
+<!-- arcus-context-meta
+verification-commit: unknown
+generated-at: [ISO-TIMESTAMP]
+confidence: high | medium | low
+-->
 
 ---
 
@@ -36,7 +41,7 @@
 
 <!-- Application entry points: main class, Lambda handler, CLI entry, etc. -->
 
-| Entry Point         | Type                | File Path                       |
+| Entry Point          | Type                | File Path                       |
 |----------------------|---------------------|---------------------------------|
 |                      |                     |                                 |
 
@@ -115,4 +120,3 @@
 |        | ✅ Detected / ❌ Not found |       |
 
 > **See also**: [repo_scope.md](repo_scope.md) for business ownership, interface boundaries, and full confidence analysis.
-

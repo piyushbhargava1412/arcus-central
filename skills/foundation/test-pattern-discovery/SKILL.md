@@ -45,7 +45,14 @@ Capture only recurring, evidence-backed test conventions that help future work f
 
 ## Processing Rules
 
-### 1. Identify test roots
+### 1. Capture verification metadata
+
+Before generating output:
+- Read `verification-commit` from the `arcus-context-meta` block of `repo_scope.md` — use this as `CURRENT_COMMIT`
+- Capture the current ISO timestamp as `GENERATED_AT`
+- If `verification-commit` is `unknown` or missing: use `unknown`
+
+### 2. Identify test roots
 
 Use `repo_map` and repository structure to identify:
 - unit test locations
@@ -53,7 +60,7 @@ Use `repo_map` and repository structure to identify:
 - contract or API test locations
 - shared test utilities and fixtures
 
-### 2. Inspect representative tests
+### 3. Inspect representative tests
 
 Read a bounded but representative sample of test files to identify:
 - test frameworks and libraries
@@ -65,17 +72,17 @@ Read a bounded but representative sample of test files to identify:
 - Spring test styles
 - database, messaging, or async testing patterns if evident
 
-### 3. Identify recurring patterns
+### 4. Identify recurring patterns
 
 Capture only patterns that appear repeatedly or are clearly standard in the repo.
 
 Prefer omission over weak inference.
 
-### 4. Capture canonical examples
+### 5. Capture canonical examples
 
 Record a small set of representative test files that future agents can mimic.
 
-### 5. Assign confidence
+### 6. Assign confidence
 
 - high: pattern clearly repeated across tests
 - medium: pattern seen in limited but strong examples
@@ -84,16 +91,26 @@ Record a small set of representative test files that future agents can mimic.
 ## Persistence Rules
 
 1. Ensure directory exists:
-    - `.context/`
+  - `.context/`
 
 2. Write file:
-    - `.context/testing-patterns.md`
+  - `.context/testing-patterns.md`
 
 3. If file exists:
-    - update it
-    - do not duplicate
+  - update it
+  - do not duplicate
 
 4. Keep content concise and evidence-backed.
+
+5. Write the `arcus-context-meta` block at the top of the file immediately after the header:
+
+```
+<!-- arcus-context-meta
+verification-commit: <CURRENT_COMMIT>
+generated-at: <GENERATED_AT>
+confidence: <high | medium | low>
+-->
+```
 
 ## Output Contract
 
@@ -101,6 +118,7 @@ Record a small set of representative test files that future agents can mimic.
 
 Persist a single markdown file at `.context/testing-patterns.md` containing:
 
+- `arcus-context-meta` block with `verification-commit`, `generated-at`, `confidence`
 - Test Frameworks
 - Test Types and Locations
 - Naming Conventions
@@ -109,14 +127,17 @@ Persist a single markdown file at `.context/testing-patterns.md` containing:
 - Test Data / Fixture Patterns
 - Spring / Integration Test Patterns (if evident)
 - Canonical Example Files
-- Verification
-    - commit
-    - confidence
 
 ## Recommended Structure
 
 ```md
 # Testing Patterns
+
+<!-- arcus-context-meta
+verification-commit: <hash or unknown>
+generated-at: <ISO-TIMESTAMP>
+confidence: high | medium | low
+-->
 
 ## Test Frameworks
 - ...
@@ -141,10 +162,6 @@ Persist a single markdown file at `.context/testing-patterns.md` containing:
 
 ## Canonical Example Files
 - ...
-
-## Verification
-commit: <hash or unknown>
-confidence: high | medium | low
 ```
 
 ## Validation Gates
@@ -153,18 +170,19 @@ confidence: high | medium | low
 - [ ] recurring patterns evidenced from existing tests
 - [ ] canonical examples included
 - [ ] output written to `.context/testing-patterns.md`
+- [ ] `arcus-context-meta` block written with `verification-commit`
 - [ ] no invented conventions added
 
 ## Failure Modes
 
-- MISSING_TESTS
-- INSUFFICIENT_PATTERN_EVIDENCE
-- OVER_GENERALIZATION
+- `MISSING_TESTS`: no test files found in repo — report and write minimal file noting absence
+- `INSUFFICIENT_PATTERN_EVIDENCE`: fewer than 3 test files found — write what is found, mark confidence low
+- `OVER_GENERALIZATION`: patterns too vague to be actionable — omit and note in file
 
 ## Handoff
 
 Used by:
-- feature-context-pack-builder
+- `feature-context-pack-builder`
 - specify agent
 - plan agent
 - implement agent

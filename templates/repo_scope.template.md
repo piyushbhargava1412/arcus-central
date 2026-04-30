@@ -1,8 +1,13 @@
 # Repository Scope: [REPO NAME]
 
-**Generated**: [DATE]  
-**Generator**: `/sdd.repo-intelligence`  
+**Generated**: [DATE]
 **Confidence**: [HIGH | MEDIUM | LOW]
+
+<!-- arcus-context-meta
+verification-commit: unknown
+generated-at: [ISO-TIMESTAMP]
+confidence: high | medium | low
+-->
 
 ---
 
@@ -134,7 +139,7 @@
 
 ### Needs Human Confirmation
 
-<!-- IMPORTANT: These questions MUST be prompted to the user during generation. 
+<!-- IMPORTANT: These questions MUST be prompted to the user during generation.
      The agent must ask each question interactively and record answers here. -->
 
 | # | Question | Answer | Status |
@@ -148,4 +153,3 @@
 - [ item — directories/files searched ]
 
 > **See also**: [repo_map.md](repo_map.md) for technical topology and navigation.
-

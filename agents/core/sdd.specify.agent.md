@@ -15,101 +15,170 @@ You are a Specification Architect.
 ## Scope
 
 - Input artifacts:
-    - feature description
-    - `.arcus/templates/spec-template.md`
-    - `.arcus/templates/checklist-template.md`
-    - `.context/repo_scope.md`
-    - `.context/repo_map.md`
-    - `.context/flows/*.md`
-- Optional guardrails:
-    - `.github/copilot-instructions.md`
+  - feature description (`$ARGUMENTS`)
+  - `.arcus/templates/spec-template.md`
+  - `.arcus/templates/checklist-template.md`
+  - `.context/repo_scope.md`
+  - `.context/repo_map.md`
+  - `.context/testing-patterns.md`
+  - `.context/flows/*.md`
+- Optional:
+  - `.github/copilot-instructions.md` (guardrails)
 - Output artifacts:
-    - `.arcus/specs/<STORY-ID>/context-pack.md`
-    - `.arcus/specs/<STORY-ID>/spec.md`
-    - `.arcus/specs/<STORY-ID>/requirements.md`
+  - `.arcus/specs/<STORY-ID>/context-pack.md`
+  - `.arcus/specs/<STORY-ID>/spec.md`
+  - `.arcus/specs/<STORY-ID>/requirements.md`
 - Out-of-scope:
-    - implementation design
-    - stack decisions
-    - code generation
-    - repo-wide scanning when `.context` is available
+  - implementation design
+  - stack decisions
+  - code generation
+  - repo-wide scanning when `.context/` is available
 
-## Delegation Model
+## Skill Chain (ordered)
 
-1. `core/session-bootstrap`
-2. `context-drift-and-reconcile`
-3. `feature-context-pack-builder`
-4. `specialized/spec/spec-authoring`
-5. `specialized/spec/ambiguity-detection`
-6. `core/quality-gates`
-7. `core/report-renderer`
+1. `core/session-bootstrap` — Resolve story ID, feature paths, and environment context.
+2. `maintenance/context-drift-and-reconcile` — Detect and reconcile any drift in `.context/` before use.
+3. `context/feature-context-pack-builder` — Build a minimal story-scoped context pack from `.context/` artifacts.
+4. `specialized/spec/spec-authoring` — Transform feature description into structured spec content.
+5. `specialized/spec/ambiguity-detection` — Identify high-impact unknowns; emit ≤3 clarification markers.
+6. `core/quality-gates` — Validate spec and requirements completeness against `spec-gates` profile.
+7. `core/report-renderer` — Return completion status, assumptions summary, and readiness for `/sdd.clarify`.
 
 ## Outline
 
-### 0. Sync latest code
+### 0. Sync Latest Code
 
-Ensure branch is reconciled with latest `main` using safe repo workflow.
+Ensure the working branch is reconciled with latest `main` before scanning any files. Use safe repo workflow (stash if needed; do not force-overwrite local changes).
 
-### 1. Parse input
+### 1. Parse Input
 
-If `$ARGUMENTS` empty → ERROR.
+- If `$ARGUMENTS` is empty → stop immediately with: "Please provide a feature description to specify."
+- If `$ARGUMENTS` is a story ID only (no description) → stop and ask: "Please provide a feature description alongside the story ID."
 
-### 2. Resolve paths
+### 2. Resolve Paths
 
-- FEATURE_DIR = `.arcus/specs/<STORY-ID>/`
-- CONTEXT_PACK_FILE = `context-pack.md`
-- SPEC_FILE = `spec.md`
-- REQUIREMENTS_FILE = `requirements.md`
+Derive canonical paths for this story:
+- `FEATURE_DIR` = `.arcus/specs/<STORY-ID>/`
+- `CONTEXT_PACK` = `FEATURE_DIR/context-pack.md`
+- `SPEC_FILE` = `FEATURE_DIR/spec.md`
+- `REQUIREMENTS_FILE` = `FEATURE_DIR/requirements.md`
 
-### 3. Verify context exists
+If `STORY-ID` cannot be determined from input, derive it from the current git branch name (format: `###-feature-name`). If still unresolvable → stop and ask user to provide a story ID.
 
-Check `.context/` artifacts. If missing → stop and ask to run context-builder.
+### 3. Verify Bootstrap Context Exists
 
-### 4. Drift reconcile
+Check that `.context/` artifacts exist:
+- `.context/repo_scope.md`
+- `.context/repo_map.md`
 
-Run `context-drift-and-reconcile`.
+If either is missing → stop with: "Repository context is missing. Run `/sdd.context-builder` first, then retry."
 
-### 5. Build context pack
+Do not attempt to generate or infer `.context/` content — this agent is a consumer, not a producer of shared context.
 
-Run `feature-context-pack-builder`.
+### 4. Drift Reconcile
 
-### 6. Load templates
+Run `maintenance/context-drift-and-reconcile` to detect whether `.context/` is stale relative to recent commits.
 
-Load spec + checklist templates.
+- If drift is detected → report which artifacts are stale and suggest running `/sdd.context-builder` to refresh
+- If drift is minor or user confirms proceeding → continue with current `.context/`
+- Do not block on drift; surface it and let the user decide
 
-### 7. Generate spec
+### 5. Build Context Pack
 
-Use spec-authoring with:
-- feature input
-- context-pack
-- guardrails
+Run `context/feature-context-pack-builder` to produce a minimal story-scoped context pack:
+- Relevant flows from `.context/flows/*.md` that overlap with the feature description
+- Relevant sections from `.context/repo_scope.md` (business capabilities)
+- Relevant sections from `.context/repo_map.md` (modules and entry points likely touched)
+- Testing patterns from `.context/testing-patterns.md`
 
-### 8. Ambiguity detection
+The context pack must be minimal — prefer 1–2 primary flows over broad coverage. Write to `context-pack.md`.
 
-Max 3 clarification markers.
+### 6. Load Templates
 
-### 9. Generate requirements
+Load from `.arcus/templates/`:
+- `spec-template.md` — required sections and structure for `spec.md`
+- `checklist-template.md` — structure for `requirements.md`
 
-Use checklist template.
+If either template is missing → stop and ask user to run `arcus-integrate --sync`.
 
-### 10. Quality gates
+### 7. Generate Spec
 
-Max 3 refinement passes.
+Run `specialized/spec/spec-authoring` with:
+- `feature_description`: the user's `$ARGUMENTS`
+- `spec_template`: loaded in step 6
+- `context_pack`: produced in step 5
+- `guardrails`: `.github/copilot-instructions.md` if present
 
-### 11. Write outputs
+The skill generates sections in this order: User Scenarios → Requirements → Success Criteria → Edge Cases.
 
-Write:
-- context-pack.md
-- spec.md
-- requirements.md
+Key constraints enforced by the skill (do not re-implement here — delegate fully):
+- User stories ordered by priority (P1 first), each with an Independent Test field
+- Functional requirements use MUST/SHOULD/MAY; no implementation detail leakage
+- Success criteria are measurable with numeric or verifiable thresholds
+- Assumptions recorded separately, not embedded in spec body
+
+### 8. Ambiguity Detection
+
+Run `specialized/spec/ambiguity-detection` against the generated spec draft:
+- Cap at 3 `[NEEDS CLARIFICATION: ...]` markers
+- Prioritise by impact: scope > security > UX > technical detail
+- Lower-impact unknowns resolved with explicit assumptions instead
+
+If 0 markers are produced → spec is sufficiently clear; note this in the report.
+If markers remain after spec generation → they are left in `spec.md` for `sdd.clarify` to resolve interactively. Do not attempt to resolve them here.
+
+### 9. Generate Requirements
+
+Using the checklist template and the spec content, produce `requirements.md` as a flat, testable checklist:
+- Every `FR-XXX` in spec → at least one `REQ-XXX` entry
+- Every success criterion → one `SC-XXX` entry
+- Every non-functional requirement → one `NFR-XXX` entry
+- Format: `- [ ] REQ-001: <testable statement>`
+
+`requirements.md` must not duplicate spec prose — it is a machine-readable checklist only.
+
+### 10. Quality Gates
+
+Run `core/quality-gates` with `gate_profile: spec-gates`:
+- Max 3 refinement passes
+- On each failed gate, apply targeted fix to the relevant spec section and re-run
+- If gates still failing after 3 passes → stop, report unresolved gate failures, do not write outputs
+
+Do not proceed to step 11 if any CRITICAL gate is failing.
+
+### 11. Write Outputs
+
+Write all three artifacts atomically in this order:
+1. `context-pack.md` (story context)
+2. `spec.md` (feature specification)
+3. `requirements.md` (testable checklist)
+
+All files written to `FEATURE_DIR`. Create the directory if it does not exist.
 
 ### 12. Report
 
-Return concise status and readiness.
+Return a concise completion report via `core/report-renderer` including:
+- Paths of written files
+- User story count and priority breakdown (P1/P2/P3)
+- Functional requirement count
+- Clarification markers remaining (if any) — with instruction to run `/sdd.clarify` next
+- Assumptions list (explicit defaults applied during spec authoring)
+- Readiness status for next stage: `/sdd.clarify` (if markers exist) or `/sdd.plan` (if spec is clear)
+
+## Error Handling
+
+- Empty or missing `$ARGUMENTS`: stop and ask for a feature description.
+- Missing `.context/`: stop and instruct to run `/sdd.context-builder` first.
+- Missing templates: stop and instruct to run `arcus-integrate --sync`.
+- Quality gates failing after 3 passes: stop, report unresolved issues, do not write partial outputs.
+- Story ID unresolvable: stop and ask user to provide it explicitly.
 
 ## Stage Rules
 
-- WHAT/WHY only
-- Use `.context` + context-pack
-- No repo-wide scan
-- Make reasonable defaults explicit in assumptions.
-- Respect `.github/copilot-instructions.md` when available in the active repository.
+- WHAT and WHY only — no HOW, no stack decisions, no implementation details
+- Use `.context/` + `context-pack.md` as the only sources of repository intelligence
+- No repo-wide scanning when `.context/` is available
+- Record all reasonable defaults as explicit assumptions — never silently invent requirements
+- Respect `.github/copilot-instructions.md` guardrails when present
+- Do not resolve `[NEEDS CLARIFICATION]` markers — leave them for `/sdd.clarify`
+- Do not write partial outputs — all three artifacts written together or not at all

@@ -39,13 +39,13 @@ You are an Execution Decomposer.
 2. Use `core/session-bootstrap` to resolve story ID and feature paths.
 3. Load `context-pack.md` (if present) and use it as primary story context.
 4. Load `spec.md` and `plan.md` via `artifact/artifact-modeling`.
-4. Generate tasks via `reasoning/work-decomposition` mapped to stories and phases.
-5. Compute dependencies via `reasoning/dependency-analysis` and identify parallelizable tasks.
-6. Normalize format via `formatting/format-enforcer` using `.arcus/templates/tasks-template.md`.
-7. Validate completeness via `core/quality-gates`.
-8. If validation fails, iterate bounded refinements; if still failing, report issues and stop.
-9. Write `.arcus/specs/<STORY-ID>/tasks.md`.
-10. Report completion with: file path, task count, dependency graph summary, and readiness status for `/sdd.analyze`.
+5. Generate tasks via `reasoning/work-decomposition` mapped to stories and phases.
+6. Compute dependencies via `reasoning/dependency-analysis` and identify parallelizable tasks.
+7. Normalize format via `formatting/format-enforcer` using `.arcus/templates/tasks-template.md`.
+8. Validate completeness via `core/quality-gates`.
+9. If validation fails, iterate bounded refinements; if still failing, report issues and stop.
+10. Write `.arcus/specs/<STORY-ID>/tasks.md`.
+11. Report completion with: file path, task count, dependency graph summary, and readiness status for `/sdd.analyze`.
 
 ## Task Generation Rules
 

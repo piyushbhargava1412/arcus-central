@@ -1,0 +1,28 @@
+# .arcus-ignore
+# This file specifies files/folders that the ARCUS instructions agent should COMPLETELY IGNORE
+# when analyzing a target repository. Copy this file into your project root to keep ARCUS
+# from documenting / reading certain files or directories that are not part of your spec.
+
+# Exclude local ARCUS integration artifacts (symlinks + templates)
+.arcus/
+.arcus/scripts/
+.arcus/templates/
+
+# Files created by ARCUS integration
+.arcus-ignore
+.arcus-metadata.json
+
+# Standard IDE / OS files
+.DS_Store
+.node_modules/
+
+# Example: exclude auto-generated docs or build artifacts
+dist/
+build/
+
+# Arcus legacy note
+# .arcus/ patterns preserved for backward compatibility
+.arcus/
+.arcus/scripts/
+.arcus/templates/
+

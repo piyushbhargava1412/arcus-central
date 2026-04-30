@@ -112,7 +112,7 @@ These skills handle artifact creation, modification, and validation.
 - **Purpose**: Generate well-formatted markdown documents with proper structure
 - **Inputs**: `content`, `format_style`
 - **Outputs**: `formatted_markdown`
-- **Used By**: 3+ agents (extensions: `groom`, `instructions`, `repo-intelligence`)
+- **Used By**: 3+ agents (extensions: `groom`, `instructions`, `context-builder`)
 - **Reusability**: ⭐⭐⭐ (3+ agents, specialized use)
 - **Key Responsibilities**:
   - Create proper heading hierarchy
@@ -211,7 +211,7 @@ These skills handle user interaction patterns.
 - **Purpose**: Conduct interactive questioning with recommendations and answer capture
 - **Inputs**: `question_queue`, `max_questions`, `user_interaction_mode`
 - **Outputs**: `answered_questions`, `response_mappings`
-- **Used By**: 2+ agents (`clarify`, `analyze`, extensions like `repo-intelligence`)
+- **Used By**: 2+ agents (`clarify`, `analyze`, extensions like `context-builder`)
 - **Reusability**: ⭐⭐⭐ (2+/5 agents)
 - **Key Responsibilities**:
   - Present one question at a time

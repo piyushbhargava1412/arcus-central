@@ -33,7 +33,7 @@ arcus-integrate
 **Agents** → Business logic for SDD workflow  
 **Skills** → Reusable, focused capabilities used by agents. Each Skill implements a small unit of functionality (e.g., path and template resolution, repository analysis, markdown generation/validation, session bootstrap, quality gates, and formatting). Skills are the building blocks agents call to perform specific tasks across repositories.
 **Templates** → Document templates for specs, plans, tasks  
-**Prompts** → Integration with repo-intelligence (minimal - redirects to agents)  
+**Prompts** → Provides purpose and bounds to associated agents   
 **Instructions** → Engineering and architecture guidelines  
 
 ## Key Files
