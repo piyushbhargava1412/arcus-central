@@ -60,7 +60,7 @@ Each stage has defined entry/exit criteria, applicable agents, and quality gates
 **Agent**: `sdd.instructions`
 
 **Processing**:
-1. Load repository instructions from `.arcus/instructions/`
+1. Load repository guidelines from `.arcus/guidelines/`
 2. Load repo-specific constraints (from `.context/repo_scope.md`)
 3. Synthesize `.github/copilot-instructions.md` with:
    - Engineering guidelines
@@ -314,7 +314,7 @@ Each stage has defined entry/exit criteria, applicable agents, and quality gates
 - Pre-implementation analysis from Stage 7
 - Tasks from Stage 6
 - Specification from Stage 3
-- `.arcus/instructions/` (engineering/architecture/testing guidelines)
+- `.arcus/guidelines/` (engineering/architecture/testing guidelines)
 - `.context/testing-patterns.md` (repo testing conventions)
 
 **Outputs**:
@@ -337,7 +337,7 @@ Each stage has defined entry/exit criteria, applicable agents, and quality gates
 **Exit Criteria**:
 - ✅ All tasks implemented
 - ✅ Tests pass
-- ✅ Code follows style guidelines (from `.arcus/instructions/`)
+- ✅ Code follows style guidelines (from `.arcus/guidelines/`)
 - ✅ No security issues flagged by quality gates
 - ✅ Integration with other flows successful (if applicable)
 

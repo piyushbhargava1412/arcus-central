@@ -25,7 +25,7 @@
   - `.context/repo_map.md` (technical topology)
   - `.context/flows/*.md` (business flows)
   - `.context/testing-patterns.md` (testing conventions)
-  - `.arcus/templates/` and `.arcus/instructions/` (if needed)
+  - `.arcus/templates/` and `.arcus/guidelines/` (if needed)
   - `.github/copilot-instructions.md` (optional repo-local guardrails)
 
 ### 3. User Input Processing
@@ -64,25 +64,25 @@
 
 ## Data Touchpoints
 
-| Data | Type | Direction | Purpose |
-|------|------|-----------|---------|
-| Agent metadata | Markdown | `.github/agents/` (read) | Defines agent behavior |
-| User input | Text | User → Agent | Feature/requirement/code to analyze |
-| Repo scope context | Markdown | `.context/repo_scope.md` (read) | Business boundaries, capabilities |
-| Repo map context | Markdown | `.context/repo_map.md` (read) | Technical structure, entry points |
-| Flow definitions | Markdown | `.context/flows/*.md` (read) | Business flows to respect |
-| Testing patterns | Markdown | `.context/testing-patterns.md` (read) | Test conventions to follow |
-| Templates | Markdown | `.arcus/templates/` (read) | Spec, plan, task, checklist templates |
-| Instructions | Markdown | `.arcus/instructions/` (read) | Engineering, architecture, testing guidelines |
+| Data                | Type | Direction | Purpose |
+|---------------------|------|-----------|---------|
+| Agent metadata      | Markdown | `.github/agents/` (read) | Defines agent behavior |
+| User input          | Text | User → Agent | Feature/requirement/code to analyze |
+| Repo scope context  | Markdown | `.context/repo_scope.md` (read) | Business boundaries, capabilities |
+| Repo map context    | Markdown | `.context/repo_map.md` (read) | Technical structure, entry points |
+| Flow definitions    | Markdown | `.context/flows/*.md` (read) | Business flows to respect |
+| Testing patterns    | Markdown | `.context/testing-patterns.md` (read) | Test conventions to follow |
+| Templates           | Markdown | `.arcus/templates/` (read) | Spec, plan, task, checklist templates |
+| Guidelines          | Markdown | `.arcus/guidelines/` (read) | Engineering, architecture, testing guidelines |
 | Generated artifacts | Markdown | `.arcus/specs/`, `.arcus/plans/`, etc. (write) | Specification, plans, tasks |
-| Git history | Git | Project `.git/` (read) | Optional: detect recent changes |
+| Git history         | Git | Project `.git/` (read) | Optional: detect recent changes |
 
 ## Integrations
 
 - **Copilot Integration**: Agent is discovered via `.github/agents/*.agent.md`
 - **Skill System**: Agent delegates to 1+ skills via defined interfaces
 - **Template System**: Agent uses templates from `.arcus/templates/`
-- **Instruction Architecture**: Agent applies guidelines from `.arcus/instructions/`
+- **Guidelines**: Agent applies guidelines from `.arcus/guidelines/`
 - **Git**: Agent can read git history for context (optional; via skills)
 - **Markdown Validation**: Agent calls quality gates to validate artifacts before handoff
 

@@ -161,8 +161,8 @@
   DO NOT add status tables showing whether instruction files exist.
   Just reference the files - users will see if they exist when they follow the links.
 
-  CRITICAL: Dynamically discover all instruction files:
-  - Search for ALL .md files recursively under `instructions/` folder
+  CRITICAL: Dynamically discover all guideline files:
+  - Search for ALL .md files recursively under `guidelines/` folder
   - Group by subfolder (engineering/, architecture/, languages/, infra/, testing/, etc.)
   - For EACH discovered file that has content:
     * Use markdown link format: - **[Title]**: See [path/to/file.md](path/to/file.md)
@@ -171,7 +171,7 @@
     * Use format: "Reference: `path/to/file.md` — N/A (not yet created)"
     * Do NOT create markdown links for non-existent files
 
-  BENEFIT: When new instruction files are added to instructions/ folder,
+  BENEFIT: When new guideline files are added to guidelines/ folder,
   they will automatically appear here without manual updates.
 -->
 
@@ -180,21 +180,33 @@ All engineering principles, architecture guidelines, language standards, testing
 ### Core Guidelines
 
 <!--
-  The examples below are SAMPLES ONLY.
-  Dynamically discover and list ALL instruction files found in instructions/ folder.
-  Organize by subfolder and use the file name to derive the display label.
+  COMPLETE LIST of all guideline files distributed with ARCUS.
+  Organized by category. Paths use ../.arcus/guidelines/ for target repositories.
+  When sdd.instructions generates this file in a target repo, these symlinks will be active.
 -->
 
-- **Engineering Principles**: See [../.arcus/guidelines/engineering/engineering-guidelines.md](../.arcus/guidelines/engineering/engineering-guidelines.md)
-- **Architecture Guidelines**: See [../.arcus/guidelines/architecture/architecture-guidelines.md](../.arcus/guidelines/architecture/architecture-guidelines.md)
-- **Language & Coding Standards**: See [../.arcus/guidelines/languages/language-guidelines.md](../.arcus/guidelines/languages/language-guidelines.md)
-- **Infrastructure Standards**: See [../.arcus/guidelines/infra/infrastructure-guidelines.md](../.arcus/guidelines/infra/infrastructure-guidelines.md)
-- **Testing Guidelines**: See [../.arcus/guidelines/testing/testing-guidelines.md](../.arcus/guidelines/testing/testing-guidelines.md)
+**Engineering & Code Quality**:
+- See [../.arcus/guidelines/engineering/engineering-guidelines.md](../.arcus/guidelines/engineering/engineering-guidelines.md) — Code quality, patterns, design principles
+- See [../.arcus/guidelines/engineering/clean-code-guidelines.md](../.arcus/guidelines/engineering/clean-code-guidelines.md) — SOLID principles, code clarity, maintainability
 
-<!--
-  If additional instruction files are found in instructions/ subfolders,
-  list them here following the same pattern.
--->
+**Architecture & System Design**:
+- See [../.arcus/guidelines/architecture/architecture-guidelines.md](../.arcus/guidelines/architecture/architecture-guidelines.md) — System design, modularity, scalability, resilience
+
+**Language & Coding Standards**:
+- See [../.arcus/guidelines/languages/language-guidelines.md](../.arcus/guidelines/languages/language-guidelines.md) — Language-specific standards and idioms overview
+- See [../.arcus/guidelines/languages/java.md](../.arcus/guidelines/languages/java.md) — Java conventions and idioms
+- See [../.arcus/guidelines/languages/nodejs.md](../.arcus/guidelines/languages/nodejs.md) — Node.js conventions and idioms
+- See [../.arcus/guidelines/languages/python.md](../.arcus/guidelines/languages/python.md) — Python conventions and idioms
+
+**Testing & Quality Assurance**:
+- See [../.arcus/guidelines/testing/testing-guidelines.md](../.arcus/guidelines/testing/testing-guidelines.md) — Test writing, coverage, test architecture
+- See [../.arcus/guidelines/testing/tdd-guidelines.md](../.arcus/guidelines/testing/tdd-guidelines.md) — Test-driven development practices, red-green-refactor
+
+**Infrastructure & Deployment**:
+- See [../.arcus/guidelines/infra/infrastructure-guidelines.md](../.arcus/guidelines/infra/infrastructure-guidelines.md) — Deployment, configuration, infrastructure patterns
+
+**Security**:
+- See [../.arcus/guidelines/security/security.md](../.arcus/guidelines/security/security.md) — Security principles, threat modeling, secure coding practices
 
 ### Project-Specific Overrides
 

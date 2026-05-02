@@ -110,7 +110,7 @@ If a task description is ambiguous about the target file path, do not guess — 
 When writing code as part of a task:
 
 - Follow the language and framework conventions declared in `plan.md` Technical Context
-- Follow any coding standards in `.github/copilot-instructions.md` or `instructions/` files
+- Follow any coding standards in `.github/copilot-instructions.md` or `guidelines/` files
 - Write complete, runnable code — not pseudocode, not stubs with `TODO` comments, not placeholder implementations
 - If a task requires external dependencies not yet in the dependency manifest, add them and note the addition in the execution log
 - Tests are first-class tasks — if a task is a test task, write real tests with real assertions, not `assert True`

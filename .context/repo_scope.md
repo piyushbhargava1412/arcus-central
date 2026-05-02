@@ -131,7 +131,7 @@ Organized by category:
 | Artifact | Distribution Method | Mutability | Purpose |
 |----------|---------------------|-----------|---------|
 | `.arcus/templates/` | Symlink to central | Read-only | Templates shared across all integrated repos |
-| `.arcus/instructions/` | Symlink to central | Read-only | Guidelines shared across all integrated repos |
+| `.arcus/guidelines/` | Symlink to central | Read-only | Guidelines shared across all integrated repos |
 | `.arcus/scripts/` | Symlink to central | Read-only | Automation scripts shared across all integrated repos |
 | `.github/agents/*.md` | Copy (chmod 444) | Read-only | IntelliJ agent discovery (symlinks not supported) |
 | `.github/prompts/*.md` | Copy (chmod 444) | Read-only | SDD prompt definitions for agents |
@@ -144,7 +144,7 @@ Central → Target repositories. Pull model — target repos invoke `arcus-integ
 
 - On first integration: Symlinks created, files copied, `.arcus-ignore` seeded
 - On re-sync (`--sync`): Symlinks recreated, copies refreshed (`.arcus-ignore` preserved)
-- On removal (`--remove`): Managed artifacts removed; `.arcus/instructions/` preserved if referenced in `.github/copilot-instructions.md`
+- On removal (`--remove`): Managed artifacts removed; `.arcus/guidelines/` preserved if referenced in `.github/copilot-instructions.md`
 
 ## Data Flows
 
@@ -191,14 +191,14 @@ Example: sdd.specify → feature-context-pack-builder → analyze repo state →
 
 ## Non-Functional Characteristics
 
-| Aspect | Value | Notes |
-|--------|-------|-------|
-| **Distribution Model** | One-way (Central → Target) | Pull-based; target repos invoke integration command |
-| **Synchronization** | Manual symlink re-creation | Requires explicit `--sync` flag; not automatic |
-| **Scalability** | Unbounded | Same command works for 1 repo or 100+ repos |
-| **Consistency** | Via symlinks | Changes in central propagate instantly to all repos (for symlinked content) |
-| **Mutability** | Mostly read-only | Templates, instructions, scripts immutable; `.arcus-ignore` editable per-project |
-| **Durability** | ~Per-repo** | Integration metadata stored in `.arcus-metadata.json` and git history |
+| Aspect | Value | Notes                                                                                                   |
+|--------|-------|---------------------------------------------------------------------------------------------------------|
+| **Distribution Model** | One-way (Central → Target) | Pull-based; target repos invoke integration command                                                     |
+| **Synchronization** | Manual symlink re-creation | Requires explicit `--sync` flag; not automatic                                                          |
+| **Scalability** | Unbounded | Same command works for 1 repo or 100+ repos                                                             |
+| **Consistency** | Via symlinks | Changes in central propagate instantly to all repos (for symlinked content)                             |
+| **Mutability** | Mostly read-only | Templates, guidelines, scripts immutable; `.arcus-ignore` editable per-project                          |
+| **Durability** | ~Per-repo** | Integration metadata stored in `.arcus-metadata.json` and git history                                   |
 | **Safety** | Write-protected | Read-only permissions (chmod 444 on files, chmod a-w on central source) prevent accidental modification |
 
 ## Dependencies
@@ -213,7 +213,7 @@ Example: sdd.specify → feature-context-pack-builder → analyze repo state →
 ### Downstream (Target Repos Depend On Framework)
 
 - All repositories integrated via `arcus-integrate` depend on:
-  - Symlinks to central `.arcus/templates/`, `.arcus/scripts/`, `.arcus/instructions/`
+  - Symlinks to central `.arcus/templates/`, `.arcus/scripts/`, `.arcus/guidelines/`
   - Copied agent/prompt files in `.github/agents/`, `.github/prompts/`
   - Skill definitions from `.github/skills/`
   - Context artifacts (`.context/repo_scope.md`, `.context/repo_map.md`, `.context/flows/`)
@@ -223,7 +223,7 @@ Example: sdd.specify → feature-context-pack-builder → analyze repo state →
 - **New Agents**: Can be added to `agents/core/` or `agents/extensions/` and registered
 - **New Skills**: Can be added to `skills/*/` and included in skill registry
 - **New Templates**: Can be added to `templates/` and referenced by agents
-- **New Instructions**: Can be added to `instructions/` and inherited by integrated repos
+- **New Guidelines**: Can be added to `guidelines/` and inherited by integrated repos
 - **Prompts**: New prompts for agents can be added to `prompts/` and copied to target repos
 
 ---

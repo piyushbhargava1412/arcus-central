@@ -94,13 +94,15 @@ The following instruction files define reusable guidelines that target repositor
 
 | Guideline | Purpose | Reference |
 |-----------|---------|-----------|
-| Engineering Standards | Code quality, patterns, design principles | `instructions/engineering/engineering-guidelines.md` |
-| Architecture Principles | System design, modularity, scalability, resilience | `instructions/architecture/architecture-guidelines.md` |
-| Language Conventions | Language-specific standards and idioms | `instructions/languages/language-guidelines.md` |
-| Infrastructure Patterns | Deployment, configuration, infrastructure | `instructions/infra/infrastructure-guidelines.md` |
-| Testing Standards | Test writing, coverage, test-driven development | `instructions/testing/testing-guidelines.md` |
-| Clean Code | SOLID principles, code clarity, maintainability | `instructions/clean-code.instructions.md` |
-| TDD Guidelines | Test-driven development practices | `instructions/tdd-guidelines.instructions.md` |
+| Engineering Standards | Code quality, patterns, design principles | `guidelines/engineering/engineering-guidelines.md` |
+| Clean Code | SOLID principles, code clarity, maintainability | `guidelines/engineering/clean-code-guidelines.md` |
+| Architecture Principles | System design, modularity, scalability, resilience | `guidelines/architecture/architecture-guidelines.md` |
+| Language Conventions | Language-specific standards and idioms | `guidelines/languages/language-guidelines.md` |
+| Language-Specific Guides | Java, Node.js, Python idioms and patterns | `guidelines/languages/java.md`, `guidelines/languages/nodejs.md`, `guidelines/languages/python.md` |
+| Infrastructure Patterns | Deployment, configuration, infrastructure | `guidelines/infra/infrastructure-guidelines.md` |
+| Testing Standards | Test writing, coverage, test-driven development | `guidelines/testing/testing-guidelines.md` |
+| TDD Guidelines | Test-driven development practices | `guidelines/testing/tdd-guidelines.md` |
+| Security Standards | Security principles, threat modeling, secure coding | `guidelines/security/security.md` |
 
 ---
 

@@ -255,7 +255,7 @@ arcus-integrate --remove
 - ✅ `.arcus-metadata.json` (metadata)
 
 **What is preserved:**
-- ✅ `.arcus/instructions/` (symlink) — developers may reference this in their `.github/copilot-instructions.md`
+- ✅ `.arcus/guidelines/` (symlink) — developers may reference this in their `.github/copilot-instructions.md`
 - ✅ `.arcus/` folder itself (in case you've added local artifacts)
 - ✅ Other `.github/` files and subdirectories (workflows, actions, etc.)
 - ✅ Project source code and configuration

@@ -95,19 +95,24 @@ bigfin_arcus-central/
 │   └── stories/
 │       └── groom-story-template.md
 │
-├── instructions/                          # Engineering guidelines
-│   ├── clean-code.instructions.md
-│   ├── tdd-guidelines.instructions.md
-│   ├── engineering/
-│   │   └── engineering-guidelines.md
+├── guidelines/                          # Engineering guidelines (6 domains)
 │   ├── architecture/
 │   │   └── architecture-guidelines.md
+│   ├── engineering/
+│   │   ├── engineering-guidelines.md
+│   │   └── clean-code-guidelines.md
 │   ├── languages/
-│   │   └── language-guidelines.md
+│   │   ├── language-guidelines.md
+│   │   ├── java.md
+│   │   ├── nodejs.md
+│   │   └── python.md
 │   ├── infra/
 │   │   └── infrastructure-guidelines.md
+│   ├── security/
+│   │   └── security.md
 │   └── testing/
-│       └── testing-guidelines.md
+│       ├── testing-guidelines.md
+│       └── tdd-guidelines.md
 │
 ├── scripts/bash/                          # Automation scripts (5)
 │   ├── common.sh                          # Shared utilities
@@ -127,7 +132,7 @@ bigfin_arcus-central/
 ├── .arcus/                                # Local symlinks (created on first setup)
 │   ├── templates → ../../templates
 │   ├── scripts → ../../scripts
-│   └── instructions → ../../instructions
+│   └── guidelines → ../../guidelines
 │
 ├── .github/                               # GitHub integration
 │   ├── agents/                            # Read-only copies of agent files
@@ -146,14 +151,14 @@ bigfin_arcus-central/
 
 ## Tech Stack
 
-| Category | Technology | Evidence |
-|----------|-----------|----------|
-| **Primary Language** | Bash / zsh | `integrate.sh`, `install-cli.sh`, `scripts/bash/*` |
-| **Configuration Format** | Markdown (.md) | All agents, prompts, templates, skills, instructions, guidelines |
-| **Scripting** | Python 3 | Path calculation during integration (relative path logic) |
-| **Version Control** | Git | `.git/` folder, `.gitignore` |
-| **Package Mgmt** | Shell PATH | `install-cli.sh` installs to `/usr/local/bin/arcus-integrate` |
-| **Documentation** | Markdown | README, ARCUS_INTEGRATION_GUIDE, all agent/skill/prompt docs |
+| Category | Technology | Evidence                                                       |
+|----------|-----------|----------------------------------------------------------------|
+| **Primary Language** | Bash / zsh | `integrate.sh`, `install-cli.sh`, `scripts/bash/*`             |
+| **Configuration Format** | Markdown (.md) | All agents, prompts, templates, skills, guidelines |
+| **Scripting** | Python 3 | Path calculation during integration (relative path logic)      |
+| **Version Control** | Git | `.git/` folder, `.gitignore`                                   |
+| **Package Mgmt** | Shell PATH | `install-cli.sh` installs to `/usr/local/bin/arcus-integrate`  |
+| **Documentation** | Markdown | README, ARCUS_INTEGRATION_GUIDE, all agent/skill/prompt docs   |
 
 ## Entry Points
 
@@ -200,16 +205,19 @@ bigfin_arcus-central/
 | Repo Scope Template | Markdown | `templates/repo_scope.template.md` | Template for repository scope context |
 | Repo Map Template | Markdown | `templates/repo_map.template.md` | Template for repository map context |
 
-### Instruction Architecture
+### Guidelines Architecture
 
 | Component | Type | File Path | Purpose |
 |-----------|------|-----------|---------|
-| Engineering Guidelines | Markdown | `instructions/engineering/engineering-guidelines.md` | Code quality, patterns, principles |
-| Architecture Guidelines | Markdown | `instructions/architecture/architecture-guidelines.md` | System design, component patterns |
-| Language Guidelines | Markdown | `instructions/languages/language-guidelines.md` | Language-specific conventions |
-| Testing Guidelines | Markdown | `instructions/testing/testing-guidelines.md` | Test writing standards |
-| Infrastructure Guidelines | Markdown | `instructions/infra/infrastructure-guidelines.md` | Deployment, config, infrastructure patterns |
-| TDD Guidelines | Markdown | `instructions/tdd-guidelines.instructions.md` | Test-driven development practices |
+| Engineering Standards | Markdown | `guidelines/engineering/engineering-guidelines.md` | Code quality, patterns, design principles |
+| Clean Code | Markdown | `guidelines/engineering/clean-code-guidelines.md` | SOLID principles, code clarity, maintainability |
+| Architecture Principles | Markdown | `guidelines/architecture/architecture-guidelines.md` | System design, modularity, scalability |
+| Language Guidelines | Markdown | `guidelines/languages/language-guidelines.md` | Language-specific standards and idioms |
+| Language-Specific Guides | Markdown | `guidelines/languages/java.md`, `nodejs.md`, `python.md` | Java, Node.js, Python idioms and patterns |
+| Infrastructure Patterns | Markdown | `guidelines/infra/infrastructure-guidelines.md` | Deployment, configuration, infrastructure |
+| Testing Standards | Markdown | `guidelines/testing/testing-guidelines.md` | Test writing, coverage, test-driven development |
+| TDD Guidelines | Markdown | `guidelines/testing/tdd-guidelines.md` | Test-driven development practices |
+| Security Standards | Markdown | `guidelines/security/security.md` | Security principles, threat modeling, secure coding |
 
 ### Configuration
 
@@ -244,21 +252,21 @@ bigfin_arcus-central/
 
 ## Module / Package Map
 
-| Module | Purpose | Key Files                                                      |
-|--------|---------|----------------------------------------------------------------|
-| **Integration** | Distribute framework to target repos | `integrate.sh`, `install-cli.sh`, `.arcus-metadata.json`       |
-| **Agent System** | Define and coordinate SDD agents | `agents/`, `prompts/`, `registry/AGENT_REGISTRY.md`            |
-| **Skill System** | Implement reusable capabilities | `skills/`, `registry/SKILLS_REGISTRY.md`                       |
-| **Template Library** | Provide artifact templates | `templates/`, `templates/stories/`                             |
-| **Instruction Architecture** | Distribute guidelines | `instructions/` (all subdirs)                                  |
-| **Automation** | Scripting and helpers | `scripts/bash/`                                                |
-| **Documentation** | Framework guides and examples | `README.md`, `ARCUS_INTEGRATION_GUIDE.md`, `docs/`, `registry/` |
+| Module                      | Purpose | Key Files                                                      |
+|-----------------------------|---------|----------------------------------------------------------------|
+| **Integration**             | Distribute framework to target repos | `integrate.sh`, `install-cli.sh`, `.arcus-metadata.json`       |
+| **Agent System**            | Define and coordinate SDD agents | `agents/`, `prompts/`, `registry/AGENT_REGISTRY.md`            |
+| **Skill System**            | Implement reusable capabilities | `skills/`, `registry/SKILLS_REGISTRY.md`                       |
+| **Template Library**        | Provide artifact templates | `templates/`, `templates/stories/`                             |
+| **Guidelines Architecture** | Distribute guidelines | `guidelines/` (all subdirs)                                  |
+| **Automation**              | Scripting and helpers | `scripts/bash/`                                                |
+| **Documentation**           | Framework guides and examples | `README.md`, `ARCUS_INTEGRATION_GUIDE.md`, `docs/`, `registry/` |
 
 ## Notable Patterns
 
 ### Hybrid Distribution Strategy
 
-- **Symlinks** for read-only templates, scripts, instructions (instant updates)
+- **Symlinks** for read-only templates, scripts, guidelines (instant updates)
 - **Copied files** for agents/prompts (IntelliJ agent discovery limitation)
 - **Editable `.arcus-ignore`** allows per-project customization (copied once, never overwritten)
 - **File permissions** enforce immutability (`chmod 444` on copies; `chmod a-w` on central sources)
@@ -300,17 +308,17 @@ Skills like `repository-context-builder` and `flow-and-scope-discovery` follow s
 
 ## Scan Coverage
 
-| Aspect | Status | Notes |
-|--------|--------|-------|
-| Language | ✅ Detected | Bash/zsh, Markdown, Python |
-| Build System | ✅ Detected | Bash scripts + Git |
-| Entry Points | ✅ Detected | Integration scripts, CLI command |
-| Components | ✅ Detected | Agents, skills, templates, instructions |
-| Configuration | ✅ Detected | VERSION, .arcus-ignore, .arcus-metadata.json |
+| Aspect | Status | Notes                                                      |
+|--------|--------|------------------------------------------------------------|
+| Language | ✅ Detected | Bash/zsh, Markdown, Python                                 |
+| Build System | ✅ Detected | Bash scripts + Git                                         |
+| Entry Points | ✅ Detected | Integration scripts, CLI command                           |
+| Components | ✅ Detected | Agents, skills, templates, guidelines                      |
+| Configuration | ✅ Detected | VERSION, .arcus-ignore, .arcus-metadata.json               |
 | Tests | ❌ Not found | No unit test framework; validation via skill quality gates |
-| APIs | ❌ Not found | CLI-based, not networked; no HTTP/gRPC |
-| Databases | ❌ Not found | Stateless; manifests + git history only |
-| Events | ❌ Not found | No event producers/consumers |
+| APIs | ❌ Not found | CLI-based, not networked; no HTTP/gRPC                     |
+| Databases | ❌ Not found | Stateless; manifests + git history only                    |
+| Events | ❌ Not found | No event producers/consumers                               |
 
 ---
 
@@ -360,7 +368,7 @@ By category:
 
 ### Guidelines
 
-- [Engineering](../instructions/engineering/engineering-guidelines.md) · [Architecture](../instructions/architecture/architecture-guidelines.md) · [Languages](../instructions/languages/language-guidelines.md) · [Infrastructure](../instructions/infra/infrastructure-guidelines.md) · [Testing](../instructions/testing/testing-guidelines.md)
+- [Engineering](../guidelines/engineering/engineering-guidelines.md) · [Architecture](../guidelines/architecture/architecture-guidelines.md) · [Languages](../guidelines/languages/language-guidelines.md) · [Infrastructure](../guidelines/infra/infrastructure-guidelines.md) · [Testing](../guidelines/testing/testing-guidelines.md)
 
 ---
 
@@ -374,7 +382,7 @@ By category:
 | `/prompts/core` | Prompts for core agents | 6     |
 | `/prompts/extensions` | Prompts for extension agents | 4     |
 | `/templates` | Artifact templates and scaffolds | 11    |
-| `/instructions` | Engineering, architecture, language, infra, testing guidelines | 5     |
+| `/guidelines` | Engineering, architecture, language, infra, security, testing guidelines (6 domains, 9 files) | 9     |
 | `/scripts/bash` | Integration and automation scripts | 5     |
 | `/registry` | Agent registry and skill registry | 2     |
 | `/examples` | Example specs and output guide | 2     |

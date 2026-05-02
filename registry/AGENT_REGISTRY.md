@@ -196,7 +196,7 @@ This file maintains a registry of all available agents, their capabilities, and 
   - Amendment tracking with semantic versioning
   - Dependent file synchronization (ensures updates propagate)
   - Governance compliance checking
-- **Guardrails**: Respects `.github/copilot-instructions.md` as canonical. Validates against `.arcus/instructions/` baseline.
+- **Guardrails**: Respects `.github/copilot-instructions.md` as canonical. Validates against `.arcus/guidelines/` baseline.
 
 ### sdd.close
 

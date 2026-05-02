@@ -13,7 +13,7 @@
 
 ### Phase 0.5: Cleanup (Sync Only)
 - If `--sync` flag: Remove existing symlinks and copied agent/prompt files
-- Preserve `.arcus/instructions/` (may be referenced in repo)
+- Preserve `.arcus/guidelines/` (may be referenced in repo)
 - Preserve `.arcus/` folder itself (custom local artifacts may exist)
 - Do NOT overwrite `.arcus-ignore` (user-edited)
 
@@ -21,7 +21,7 @@
 - Create `.arcus/` directory (if missing)
 - Create symlink `.arcus/templates` → central `templates/`
 - Create symlink `.arcus/scripts` → central `scripts/`
-- Create symlink `.arcus/instructions` → central `instructions/`
+- Create symlink `.arcus/instructions` → central `guidelines/`
 - Use relative paths for portability (symlinks work after repo moves)
 
 ### Phase 2: Copy Agent & Prompt Files
@@ -54,14 +54,14 @@
 
 ## Data Touchpoints
 
-| Data | Type | Direction | Purpose |
-|------|------|-----------|---------|
-| Central framework files | Files (R/O) | Central → Target | Templates, scripts, instructions |
-| Agent definitions | Markdown | Central → Target | Copied to `.github/agents/` |
-| Prompt definitions | Markdown | Central → Target | Copied to `.github/prompts/` |
+| Data | Type | Direction | Purpose                        |
+|------|------|-----------|--------------------------------|
+| Central framework files | Files (R/O) | Central → Target | Templates, scripts, guidelines |
+| Agent definitions | Markdown | Central → Target | Copied to `.github/agents/`    |
+| Prompt definitions | Markdown | Central → Target | Copied to `.github/prompts/`   |
 | Skill definitions | Markdown | Central → Target | Symlinked in `.github/skills/` |
 | `.arcus-ignore` | Config | Central → Target | Copied once; never overwritten |
-| `.arcus-metadata.json` | Metadata | Target (written) | Records integration state |
+| `.arcus-metadata.json` | Metadata | Target (written) | Records integration state      |
 
 ## Integrations
 
@@ -76,7 +76,7 @@
 |-------|-------|
 | **Central Framework Location** | Root of bigfin_arcus-central |
 | **Integration Script** | `integrate.sh`, `install-cli.sh`, `uninstall.sh` |
-| **Framework Components** | All in `agents/`, `prompts/`, `skills/`, `templates/`, `instructions/`, `scripts/`, `registry/` |
+| **Framework Components** | All in `agents/`, `prompts/`, `skills/`, `templates/`, `guidelines/`, `scripts/`, `registry/` |
 | **Target Repo Structure** | `.arcus/`, `.github/agents/`, `.github/prompts/`, `.github/skills/`, `.arcus-ignore`, `.arcus-metadata.json` |
 | **Ignore Patterns** | `.arcus-ignore` (applied during repository analysis by agents) |
 
