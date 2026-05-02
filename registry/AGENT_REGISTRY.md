@@ -2,7 +2,7 @@
 
 This file maintains a registry of all available agents, their capabilities, and usage information.
 
-**Quick Start**: Scroll to [Agent Workflow](#agent-workflow) to see the recommended SDD process sequence. Then find your starting agent in the [Core Agents](#core-agents-6) or [Extension Agents](#extension-agents-3) sections.
+**Quick Start**: Scroll to [Agent Workflow](#agent-workflow) to see the recommended SDD process sequence. Then find your starting agent in the [Core Agents](#core-agents-6) or [Extension Agents](#extension-agents-4) sections.
 
 **For Developers**: Use this registry to discover agents, understand their roles, and see which skills each agent uses.
 
@@ -142,11 +142,12 @@ This file maintains a registry of all available agents, their capabilities, and 
 
 ---
 
-## Extension Agents (3)
+## Extension Agents (4)
 
 ### sdd.context-builder
 
 - **File**: `agents/extensions/sdd.context-builder.agent.md`
+- **Prompt**: `prompts/extensions/sdd.context-builder.prompt.md`
 - **Command**: `/sdd.context-builder`
 - **Purpose**: Initialize or reset ARCUS shared repository context by generating `.context/repo_scope.md`, `.context/repo_map.md`, `.context/flows/`, and `.context/testing-patterns.md`
 - **Role**: Context Bootstrapper
@@ -197,6 +198,26 @@ This file maintains a registry of all available agents, their capabilities, and 
   - Governance compliance checking
 - **Guardrails**: Respects `.github/copilot-instructions.md` as canonical. Validates against `.arcus/instructions/` baseline.
 
+### sdd.close
+
+- **File**: `agents/extensions/sdd.close.agent.md`
+- **Prompt**: `prompts/extensions/sdd.close.prompt.md`
+- **Command**: `/sdd.close`
+- **Purpose**: Close a completed story by generating a completion summary, refreshing shared context, and archiving story artifacts
+- **Role**: Story Completion Steward
+- **Key Capabilities**:
+  - Story completion summary generation
+  - Story-scoped context refresh and drift detection
+  - Artifact archival and housekeeping
+  - Completion reporting with deferred items tracking
+- **Skill Chain**:
+  1. `core/session-bootstrap` - Resolve story ID and paths
+  2. `context/context-sync` - Refresh impacted `.context/` artifacts (story-scoped)
+  3. `artifact/markdown-generation` - Format completion summary
+  4. `artifact/markdown-validation` - Validate summary structure
+  5. `core/report-renderer` - Report closure and completion status
+- **Guardrails**: Does NOT implement any code. Closure is optional; skipping does not break the pipeline. Context refresh failure does not prevent story archival.
+
 ---
 
 ## Agent Workflow
@@ -225,6 +246,8 @@ The typical SDD workflow follows this sequence:
 /sdd.implement           →  code + progress (execute tasks)
         ↓
 /sdd.analyze             →  analysis report (post-implementation verification)
+        ↓
+/sdd.close               →  completion summary + archived story (optional)
 ```
 
 
@@ -235,11 +258,11 @@ The typical SDD workflow follows this sequence:
 | Category | Count |
 |----------|-------|
 | Core agents | 6 |
-| Extension agents | 3 |
-| **Total agents** | **9** |
+| Extension agents | 4 |
+| **Total agents** | **10** |
 | Reusable skills | 22 (see [SKILLS_REGISTRY.md](./SKILLS_REGISTRY.md)) |
 | Templates | 11 |
-| Prompts | 8 |
+| Prompts | 10 |
 
 ---
 

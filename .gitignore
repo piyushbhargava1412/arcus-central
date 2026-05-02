@@ -17,5 +17,9 @@ out/
 .gradle/
 .mvn/
 
-.specify
-.github/
+
+### ARCUS Integration ###
+.arcus*
+.github/agents
+.github/prompts
+.github/skills

@@ -1,18 +1,18 @@
 # ARCUS SDD Framework — Workflow Diagram
 
-**Framework**: 9 agents (6 core + 3 extensions), 22 reusable skills, 11 templates  
+**Framework**: 10 agents (6 core + 4 extensions), 22 reusable skills, 11 templates  
 **Goal**: Reduce hallucinations, optimize token utilization, improve selective context loading
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
-│                      ARCUS SDD AGENTS (9 total)                         │
+│                      ARCUS SDD AGENTS (10 total)                        │
 │                                                                         │
-│  Core Agents (6):        Extensions (3):                               │
+│  Core Agents (6):        Extensions (4):                               │
 │  ┌─────────────┐         ┌──────────────────┐                          │
 │  │ specify     │         │ context-builder  │ ← Bootstraps context     │
 │  │ clarify     │         │ groom            │ ← Story grooming         │
 │  │ plan        │         │ instructions     │ ← Governance             │
-│  │ tasks       │                                                       │
+│  │ tasks       │         │ close            │ ← Story closure, archival│
 │  │ analyze     │                                                       │
 │  │ implement   │                                                       │
 │  └─────────────┘         └──────────────────┘                          │
@@ -23,17 +23,21 @@
 ┌─────────────────────────────────────────────────────────────────────────┐
 │              SKILLS SYSTEM (22 reusable, capability-based)              │
 │                                                                         │
-│  🟢 Core (3):           🟦 Artifact (4):      🟨 Multi-Use (5):        │
-│  • session-bootstrap    • artifact-modeling   • feature-context-pack   │
-│  • quality-gates        • artifact-patcher    • question-orchestration │
-│  • report-renderer      • markdown-gen        • context-drift-reconcile│
-│                         • markdown-validation • format-enforcer        │
+│  🟢 Core (3):           🟦 Artifact (4):      🟨 Reasoning (4):        │
+│  • session-bootstrap    • artifact-modeling   • design-synthesis       │
+│  • quality-gates        • artifact-patcher    • work-decomposition     │
+│  • report-renderer      • markdown-gen        • dependency-analysis    │
+│                         • markdown-validation • coverage-analysis      │
 │                                                                         │
-│  🟦 Reasoning (4):      🟦 Foundation (2):   🟪 Specialized (8):       │
-│  • design-synthesis     • repo-context-build  • spec-authoring         │
-│  • work-decomposition   • flow-discovery      • ambiguity-detection    │
-│  • dependency-analysis  • test-pattern-disc   • task-execution-control │
-│  • coverage-analysis                          • + interaction, maint   │
+│  🟦 Foundation (2):     🟩 Discovery (1):    🟪 Context (2):          │
+│  • repo-context-build   • flow-and-scope     • feature-context-pack   │
+│  • test-pattern-disc                         • context-refresh        │
+│                                                                         │
+│  🟦 Specialized (3):    🟦 Interaction (1):  🟨 Formatting (1):       │
+│  • spec-authoring       • question-orch      • format-enforcer        │
+│  • ambiguity-detect                                                   │
+│  • task-exec-control    🟪 Maintenance (1):                           │
+│                         • context-drift-rec                           │
 │                                                                         │
 │  Loaded on-demand by agents, NOT shipped to target repos               │
 └─────────────────────────────────────────────────────────────────────────┘
@@ -305,25 +309,28 @@
  SKILL DELEGATION MAP (Which Skills Each Agent Uses)
 ═════════════════════════════════════════════════════════════════════════════
 
-| Agent              | Core | Artifact | Reasoning | Context | Interaction | Formatting | Specialized |
-|--------------------|:----:|:--------:|:---------:|:-------:|:-----------:|:---------:|:-----------:|
-| context-builder    |  2   |    1     |     -     |    2    |      -      |     -     |      -      |
-| instructions       |  2   |    1     |     -     |    -    |      1      |     1     |      -      |
-| groom              |  2   |    2     |     -     |    -    |      1      |     1     |      -      |
-| specify            |  3   |    1     |     -     |    1    |      -      |     1     |      1      |
-| clarify            |  3   |    2     |     -     |    1    |      1      |     1     |      1      |
-| plan               |  3   |    1     |     1     |    -    |      -      |     1     |      -      |
-| tasks              |  3   |    1     |     3     |    -    |      -      |     1     |      -      |
-| analyze            |  3   |    1     |     2     |    -    |      -      |     1     |      -      |
-| implement          |  3   |    -     |     3     |    -    |      -      |     -     |      1      |
+| Agent              | Core | Artifact | Reasoning | Discovery | Context | Interaction | Formatting | Specialized |
+|--------------------|:----:|:--------:|:---------:|:---------:|:-------:|:-----------:|:---------:|:-----------:|
+| context-builder    |  2   |    1     |     -     |    2      |    -    |      -      |     -     |      -      |
+| instructions       |  2   |    1     |     -     |    1      |    -    |      1      |     1     |      -      |
+| groom              |  2   |    2     |     -     |    1      |    -    |      1      |     1     |      -      |
+| specify            |  3   |    1     |     -     |    1      |    1    |      -      |     1     |      1      |
+| clarify            |  3   |    2     |     -     |    1      |    1    |      1      |     1     |      1      |
+| plan               |  3   |    1     |     1     |    -      |    -    |      -      |     1     |      -      |
+| tasks              |  3   |    1     |     3     |    -      |    -    |      -      |     1     |      -      |
+| analyze            |  3   |    1     |     2     |    -      |    -    |      -      |     1     |      -      |
+| implement          |  3   |    -     |     3     |    -      |    -    |      -      |     -     |      1      |
 
-Legend:
+Legend (10 domains, 22 total skills):
 - Core (3): session-bootstrap, quality-gates, report-renderer
-- Artifact (4): artifact-modeling, artifact-patcher, markdown-gen, markdown-validation
+- Artifact (4): artifact-modeling, artifact-patcher, markdown-generation, markdown-validation
 - Reasoning (4): design-synthesis, work-decomposition, dependency-analysis, coverage-analysis
-- Context (2): feature-context-pack-builder, context-drift-and-reconcile
+- Discovery (1): flow-and-scope-discovery
+- Context (2): feature-context-pack-builder, context-refresh-from-implementation
 - Interaction (1): question-orchestration
 - Formatting (1): format-enforcer
-- Specialized (8): repo-context-builder, flow-discovery, test-pattern-discovery, spec-authoring, ambiguity-detection, task-execution-controller, + others
+- Specialized (3): spec-authoring, ambiguity-detection, task-execution-controller
+- Foundation (2): repository-context-builder, test-pattern-discovery *(not shown in table)*
+- Maintenance (1): context-drift-and-reconcile *(not shown in table)*
 ```
 
