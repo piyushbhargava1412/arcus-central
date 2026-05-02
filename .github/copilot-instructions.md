@@ -10,7 +10,7 @@
 ## Project Context
 
 ARCUS Central is the authoritative distribution hub for the Spec Driven Development (SDD) methodology. It provides:
-- **9 Agents** that guide specification, planning, analysis, and implementation workflows
+- **10 Agents** that guide specification, planning, analysis, and implementation workflows
 - **22 Reusable Skills** that agents delegate to for focused capabilities
 - **11 Document Templates** for specs, plans, tasks, and context artifacts
 - **Instruction Architecture** (guidelines for engineering, architecture, languages, infrastructure, testing)
