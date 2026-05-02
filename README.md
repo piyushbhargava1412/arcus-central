@@ -134,5 +134,6 @@ The central repo has integrated ARCUS on itself. The `.context/` folder you see 
 ## Further Reading
 
 - [Integration Guide](ARCUS_INTEGRATION_GUIDE.md) — Full setup and usage
+- [SDD Workflow](docs/SDD-Flow-Diagram.md) - ARCUS SDD Framework Workflow Diagram
 - [Agent Registry](registry/AGENT_REGISTRY.md) — All agents and workflow
 - [Skill Registry](registry/SKILLS_REGISTRY.md) — All skills and domains 
