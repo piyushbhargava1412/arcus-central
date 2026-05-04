@@ -25,17 +25,32 @@ Standardize completion summaries across agents so users get consistent, low-nois
 
 ## Processing Rules
 
-1. Render a compact status summary with critical details first.
-2. Include only stage-relevant artifact paths and readiness guidance.
-3. Preserve deterministic ordering for reproducible outputs.
-4. Keep wording concise and action-oriented.
+**For analyze stage**: Include severity breakdown of findings (one summary per severity level).
+  - Format: "✓ Analysis: N issues (M CRITICAL, X MEDIUM, Y LOW) | Ready to [proceed / remediate]"
+  - List each CRITICAL finding inline
+  - Group MEDIUM/LOW findings: "2 MEDIUM issues found (see tasks.md for details)"
+
+**For all other stages**: Use ultra-concise one-liner.
+  - Format: "✓ <stage-action>: <key-metric> | Ready for /<next-stage>"
+  - Examples:
+    - Specify: "✓ Spec generated: 5 stories, 12 requirements | Ready for /sdd.clarify"
+    - Plan: "✓ Design approved: 4 components, 7 decisions | Ready for /sdd.tasks"
+    - Implement: "✓ 23/23 tasks done | Ready to review or /sdd.close"
+
+1. Preserve deterministic ordering for reproducible outputs.
+2. Keep wording concise and action-oriented.
+3. Always include the next recommended action.
 
 ## Output Contract
 
 - Must return:
-  - one concise markdown report suitable for chat
+  - **For analyze**: 4-6 lines max (severity counts + CRITICAL issues + next action)
+  - **For all other stages**: 1-2 lines max (stage result + next action)
+  - Markdown formatted, suitable for chat
 - Must not return:
-  - extra files, long narratives, or duplicate status blocks
+  - extra files, long narratives, redundant blocks, or summary artifacts
+  - implementation code, detailed logs, or full artifact listings
+  - multi-line progress bars or phase breakdowns (those belong in progress-tracker)
 
 ## Validation Gates
 

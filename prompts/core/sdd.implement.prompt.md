@@ -18,5 +18,7 @@ Hard boundaries:
 - Do not perform broad repository scanning when context-pack is sufficient.
 - Respect task order and dependencies.
 - Mark completed tasks in `tasks.md` with `[X]`.
-- Report progress and next task after each batch.
-- Do not create summaries or comprehensive documentation at the completion of the task.
+- Report progress and next task after each batch via chat only.
+- **NEVER create any .md files** during implementation (no `*_SUMMARY.md`, no `*_CHANGES.md`, no `*_REPORT.md`).
+- Do not create summaries or comprehensive documentation artifacts. All reporting goes to chat via `core/report-renderer`.
+- Do not create completion summaries — those belong to `/sdd.close` if needed.

@@ -25,20 +25,21 @@ Maintain a clear, up-to-date view of implementation progress and guide the next 
 1. Count total tasks, completed tasks, failed tasks, pending tasks.
 2. Compute completion percentage per phase and overall.
 3. Identify the next pending task by phase order.
-4. Render a status report showing:
-   - Phase completion (Setup: 100%, Foundational: 60%, Story US1: 0%, ...)
-   - Overall progress bar (X/Y tasks completed)
-   - Next actionable task
-   - Failed tasks needing attention
+4. Render a single-line status report:
+  - Format: "✓ X/Y (Z%) | Phase: <name> | Next: <task-id> | Status: <health>"
+  - Example: "✓ 12/15 (80%) | Phase: Stories [US1] | Next: T008 | Status: on-track"
+  - Only list failed tasks if count > 0: "| Failed: 2"
 
 ## Output Contract
 
 - Must return:
-  - progress report with phase breakdown
-  - next actionable task with context
-  - health status (on-track, behind, blocked)
+  - single-line progress report (one-liner, max 120 chars)
+  - format exactly: `✓/⚠/✗ X/Y (Z%) | Phase: <name> | Next: <task-id> | Status: <health>` (+ `| Failed: N` if failures exist)
+  - health status: `on-track` (normal), `behind` (>50% of phase delayed), `blocked` (critical failures)
 - Must not return:
   - implementation code or guidance
+  - multi-line reports, phase breakdowns, or progress bars
+  - detailed task context (task ID only, no descriptions)
 
 ## Validation Gates
 
