@@ -40,7 +40,7 @@ bigfin_arcus-central/
 │   │   └── flow-and-scope-discovery/      # Maps business flows
 │   ├── context/
 │   │   ├── feature-context-pack-builder/  # Builds story-local context
-│   │   └── context-refresh-from-implementation/
+│   │   └── context-sync/                  # Detects and reconciles code/context drift
 │   ├── artifact/
 │   │   ├── artifact-modeling/
 │   │   ├── artifact-patcher/
@@ -50,6 +50,8 @@ bigfin_arcus-central/
 │   │   ├── session-bootstrap/
 │   │   ├── quality-gates/
 │   │   └── report-renderer/
+│   ├── session/
+│   │   └── checkpoint-manager/            # Creates lightweight session checkpoints for resumption
 │   ├── reasoning/
 │   │   ├── coverage-analysis/
 │   │   ├── dependency-analysis/
@@ -59,12 +61,11 @@ bigfin_arcus-central/
 │   │   ├── spec/
 │   │   │   ├── spec-authoring/
 │   │   │   └── ambiguity-detection/
-│   │   ├── execution/
-│   │   │   └── task-execution-controller/
+│   │   └── execution/
+│   │       ├── task-execution-controller/
+│   │       └── progress-tracker/
 │   ├── formatting/
 │   │   └── format-enforcer/
-│   ├── maintenance/
-│   │   └── context-drift-and-reconcile/
 │   └── interaction/
 │       └── question-orchestration/
 │
@@ -351,13 +352,13 @@ Skills like `repository-context-builder` and `flow-and-scope-discovery` follow s
 By category:
 - **Foundation**: [repository-context-builder](../skills/foundation/repository-context-builder/SKILL.md), [test-pattern-discovery](../skills/foundation/test-pattern-discovery/SKILL.md)
 - **Discovery**: [flow-and-scope-discovery](../skills/discovery/flow-and-scope-discovery/SKILL.md)
-- **Context**: [feature-context-pack-builder](../skills/context/feature-context-pack-builder/SKILL.md), [context-refresh-from-implementation](../skills/context/context-refresh-from-implementation/SKILL.md)
+- **Context**: [feature-context-pack-builder](../skills/context/feature-context-pack-builder/SKILL.md), [context-sync](../skills/context/context-sync/SKILL.md)
 - **Artifact**: [artifact-modeling](../skills/artifact/artifact-modeling/SKILL.md), [artifact-patcher](../skills/artifact/artifact-patcher/SKILL.md), [markdown-generation](../skills/artifact/markdown-generation/SKILL.md), [markdown-validation](../skills/artifact/markdown-validation/SKILL.md)
 - **Core**: [session-bootstrap](../skills/core/session-bootstrap/SKILL.md), [quality-gates](../skills/core/quality-gates/SKILL.md), [report-renderer](../skills/core/report-renderer/SKILL.md)
+- **Session**: [checkpoint-manager](../skills/session/checkpoint-manager/SKILL.md)
 - **Reasoning**: [coverage-analysis](../skills/reasoning/coverage-analysis/SKILL.md), [dependency-analysis](../skills/reasoning/dependency-analysis/SKILL.md), [design-synthesis](../skills/reasoning/design-synthesis/SKILL.md), [work-decomposition](../skills/reasoning/work-decomposition/SKILL.md)
-- **Specialized**: [spec-authoring](../skills/specialized/spec/spec-authoring/SKILL.md), [ambiguity-detection](../skills/specialized/spec/ambiguity-detection/SKILL.md), [task-execution-controller](../skills/specialized/execution/task-execution-controller/SKILL.md)
+- **Specialized**: [spec-authoring](../skills/specialized/spec/spec-authoring/SKILL.md), [ambiguity-detection](../skills/specialized/spec/ambiguity-detection/SKILL.md), [task-execution-controller](../skills/specialized/execution/task-execution-controller/SKILL.md), [progress-tracker](../skills/specialized/execution/progress-tracker/SKILL.md)
 - **Formatting**: [format-enforcer](../skills/formatting/format-enforcer/SKILL.md)
-- **Maintenance**: [context-drift-and-reconcile](../skills/maintenance/context-drift-and-reconcile/SKILL.md)
 - **Interaction**: [question-orchestration](../skills/interaction/question-orchestration/SKILL.md)
 
 ### Templates (11 total)
@@ -378,7 +379,7 @@ By category:
 |-----------|----------|-------|
 | `/agents/core` | Core SDD agents (specify, clarify, plan, tasks, analyze, implement) | 6     |
 | `/agents/extensions` | Extension agents (context-builder, groom, instructions, close) | 4     |
-| `/skills` | 22 reusable skills organized by capability domain | 22    |
+| `/skills` | 22 reusable skills organized by capability domain (includes new session/checkpoint-manager) | 22    |
 | `/prompts/core` | Prompts for core agents | 6     |
 | `/prompts/extensions` | Prompts for extension agents | 4     |
 | `/templates` | Artifact templates and scaffolds | 11    |

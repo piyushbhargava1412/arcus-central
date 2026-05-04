@@ -94,7 +94,22 @@ Resolve template paths from `.arcus/templates/` (symlinked to central):
 
 If a required template is missing → return `MISSING_TEMPLATE` with the specific path.
 
-### Rule 5 — Deterministic Output
+### Rule 5 — Load Session Checkpoint
+
+After resolving story ID and paths:
+
+1. Check if `SESSION_CHECKPOINT.md` exists at: `.arcus/specs/<story_id>/SESSION_CHECKPOINT.md`
+2. If it exists:
+  - Read and parse the checkpoint file
+  - Extract metadata: `stage`, `generated-at` timestamp
+  - Return checkpoint content to calling agent for display
+3. If it does NOT exist:
+  - Return null/empty checkpoint indicator
+  - Agent continues normally
+
+This enables agents to resume from previous sessions without full context reload.
+
+### Rule 6 — Deterministic Output
 
 All returned paths must be:
 - Absolute (prefixed with `repository_root`)
@@ -108,6 +123,9 @@ All returned paths must be:
   - `feature_dir` — absolute path to `.arcus/specs/<story_id>/`
   - `artifact_paths` — map of artifact name → absolute path (stage-relevant only)
   - `template_paths` — map of template name → absolute path
+  - `checkpoint_content` — Content of SESSION_CHECKPOINT.md if it exists; null otherwise
+  - `checkpoint_stage` — Stage field from checkpoint metadata (if checkpoint exists)
+  - `checkpoint_timestamp` — Generated-at timestamp from checkpoint (if checkpoint exists)
 - Must not return:
   - inferred implementation choices
   - paths outside `.arcus/specs/` or `.arcus/templates/`

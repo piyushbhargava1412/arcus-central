@@ -30,15 +30,19 @@ You are a Requirements Clarification Specialist.
 
 ## Outline
 
-1. Validate feature context exists; fail fast if missing spec.
-2. Use `core/session-bootstrap` to resolve paths.
-3. Load `context-pack.md` (if present) and use it as primary story context.
-4. Load spec.md and run `spec/ambiguity-detection` to identify top 5 ambiguities.
-5. If no ambiguities found, report spec is sufficiently clear and readiness for `/sdd.plan`.
-6. If ambiguities exist, run `spec/clarification-orchestration` to conduct bounded questioning (max 5 questions).
-7. For each accepted answer, apply via `spec/spec-patcher` and validate with `markdown-validation`.
-8. After all clarifications processed, run final validation and report completion.
-9. Report updated spec.md path, clarifications applied, and readiness for `/sdd.plan`.
+1. Load session checkpoint (if resuming mid-clarification):
+   - If SESSION_CHECKPOINT.md exists with stage=clarify: Display to user: "✓ Resuming clarification: N/M ambiguities resolved"
+   - Show which clarifications remain unresolved
+   - If no checkpoint: Display: "Starting clarification session"
+2. Validate feature context exists; fail fast if missing spec.
+3. Use `core/session-bootstrap` to resolve paths.
+4. Load `context-pack.md` (if present) and use it as primary story context.
+5. Load spec.md and run `spec/ambiguity-detection` to identify top 5 ambiguities.
+6. If no ambiguities found, report spec is sufficiently clear and readiness for `/sdd.plan`.
+7. If ambiguities exist, run `spec/clarification-orchestration` to conduct bounded questioning (max 5 questions).
+8. For each accepted answer, apply via `spec/spec-patcher` and validate with `markdown-validation`.
+9. After all clarifications processed, run final validation and report completion.
+10. Report updated spec.md path, clarifications applied, and readiness for `/sdd.plan`.
 
 ## Error Handling
 
@@ -128,7 +132,15 @@ You are a Requirements Clarification Specialist.
 
 5. Write the updated spec back to `FEATURE_SPEC`.
 
-6. Report completion via chat output only (no separate files):
+6. Create session checkpoint:
+   - Call `session/checkpoint-manager` with:
+     * story_id: <STORY-ID>
+     * current_stage: `clarify`
+     * execution_summary: "Resolved N ambiguities from M total. Spec iteration updated."
+     * blockers: [list any remaining unresolved questions from the original queue, if any]
+   - Checkpoint is written to `.arcus/specs/<STORY-ID>/SESSION_CHECKPOINT.md`
+
+7. Report completion via chat output only (no separate files):
     - Output a concise summary to the user in the chat, including:
         - Number of questions asked & answered.
         - Path to updated spec.md.

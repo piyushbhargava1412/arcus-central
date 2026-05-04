@@ -16,12 +16,12 @@ This file maintains a registry of all available reusable skills, organized by ca
 
 ## Overview
 
-The SDD framework provides **21 reusable skills** organized by capability domain. Skills are stage-agnostic, meaning they can be used by multiple agents across the SDD lifecycle.
+The SDD framework provides **22 reusable skills** organized by capability domain. Skills are stage-agnostic, meaning they can be used by multiple agents across the SDD lifecycle.
 
 **Reusability Levels**:
 - 🟢 **Core** (3 skills): Used by all or most agents
 - 🟦 **Shared** (8 skills): Used by 2-4 agents
-- 🟨 **Multi-Use** (4 skills): Used by 2-3 agents
+- 🟨 **Multi-Use** (5 skills): Used by 2-3 agents
 - 🟪 **Specialized** (6 skills): Used by 1-2 agents (narrow context)
 
 ---
@@ -289,6 +289,28 @@ These skills establish baseline repository context for all downstream operations
 
 ---
 
+## Session Management Skills (🟨)
+
+These skills manage session state and context persistence across multiple work sessions.
+
+### `session/checkpoint-manager`
+
+- **File**: `skills/session/checkpoint-manager/SKILL.md`
+- **Purpose**: Create lightweight session checkpoints to resume work across multiple sessions at any SDD stage without reloading full context
+- **Inputs**: `story_id`, `current_stage`, `tasks_file_path` (optional), `execution_summary`, `last_completed_task_id` (optional), `blockers`, `last_commit_hash` (optional)
+- **Outputs**: `checkpoint_file_path`, `token_estimate`, `stage_for_recovery`
+- **Used By**: All core agents (`specify`, `clarify`, `plan`, `tasks`, `implement`, `analyze`, `close`)
+- **Reusability**: ⭐⭐⭐⭐⭐ (7/7 agents)
+- **Key Responsibilities**:
+  - Create stage-aware lightweight session checkpoints (< 500 tokens)
+  - Capture current position, progress, blockers, and next steps
+  - Support resumption at ANY SDD stage
+  - Enable ~300-token context reload vs ~8K full artifact reload
+  - Provide deterministic, human-readable checkpoint content
+  - Integrate with session-bootstrap for checkpoint loading at session start
+
+---
+
 ## Context Skills (🟨)
 
 These skills manage feature-specific context and keep shared context aligned with code.
@@ -405,6 +427,7 @@ These skills are context-specific or narrow in scope, used by 1-2 agents.
 | Reasoning | 4 | 2-3 agents | ⭐⭐⭐ |
 | Foundation | 2 | 1 agent (foundational) | ⭐⭐ |
 | Discovery | 1 | 1 agent (foundational) | ⭐⭐ |
+| Session | 1 | 7 agents (checkpoint recovery) | ⭐⭐⭐⭐⭐ |
 | Context | 2 | 1-3 agents | ⭐⭐⭐ |
 | Interaction | 1 | 2+ agents | ⭐⭐⭐ |
 | Formatting | 1 | 2-3 agents | ⭐⭐⭐ |
@@ -412,27 +435,28 @@ These skills are context-specific or narrow in scope, used by 1-2 agents.
 
 ### By Agent
 
-| Agent | Core | Artifact | Reasoning | Context | Interaction | Formatting | Specialized |
-|-------|:----:|:--------:|:---------:|:-------:|:-----------:|:----------:|:-----------:|
-| context-builder | 2 | 1 | - | 1 | - | - | 2 (foundation) |
-| specify | 3 | - | - | 2 | - | - | 2 |
-| clarify | 3 | 2 | - | - | 1 | - | 1 |
-| plan | 3 | 1 | 1 | - | - | - | - |
-| tasks | 3 | 1 | 3 | - | - | 1 | - |
-| analyze | 3 | 1 | 2 | 1 | - | 1 | - |
-| implement | 3 | - | 3 | - | - | - | 2 |
-| groom | 2 | 2 | - | - | - | - | 1 |
-| instructions | 2 | 2 | - | - | 1 | 1 | - |
-| close | 3 | 2 | - | 1 | - | - | - |
+| Agent | Core | Artifact | Reasoning | Session | Context | Interaction | Formatting | Specialized |
+|-------|:----:|:--------:|:---------:|:-------:|:-------:|:-----------:|:----------:|:-----------:|
+| context-builder | 2 | 1 | - | - | 1 | - | - | 2 (foundation) |
+| specify | 3 | - | - | 1 | 2 | - | - | 2 |
+| clarify | 3 | 2 | - | 1 | - | 1 | - | 1 |
+| plan | 3 | 1 | 1 | 1 | - | - | - | - |
+| tasks | 3 | 1 | 3 | 1 | - | - | 1 | - |
+| analyze | 3 | 1 | 2 | 1 | 1 | - | 1 | - |
+| implement | 3 | - | 3 | 1 | - | - | - | 2 |
+| groom | 2 | 2 | - | - | - | - | - | 1 |
+| instructions | 2 | 2 | - | - | - | 1 | 1 | - |
+| close | 3 | 2 | - | 1 | 1 | - | - | - |
 
 ---
 
 ## Skills by Usage Level
 
-### 🟢 Used by All Agents (3)
+### 🟢 Used by All/Most Agents (4)
 - `core/session-bootstrap` (all 10 agents)
 - `core/report-renderer` (all 10 agents)
 - `core/quality-gates` (3 core agents — spec, plan, tasks)
+- `session/checkpoint-manager` (7 core agents)
 
 ### 🟦 Widely Reusable (8)
 - `artifact/artifact-modeling` (3 agents)
@@ -465,10 +489,10 @@ These skills are context-specific or narrow in scope, used by 1-2 agents.
 
 | Metric | Value |
 |--------|-------|
-| **Total Skills** | 21 |
-| **Reusable (used by 2+ agents)** | 15 (71%) |
-| **Specialized/Domain-Specific** | 6 (29%) |
-| **Skills by domain** | 9 domains |
+| **Total Skills** | 22 |
+| **Reusable (used by 2+ agents)** | 16 (73%) |
+| **Specialized/Domain-Specific** | 6 (27%) |
+| **Skills by domain** | 10 domains |
 | **Agents covered** | 10 (6 core + 4 extensions) |
 
 ---
@@ -477,6 +501,9 @@ These skills are context-specific or narrow in scope, used by 1-2 agents.
 
 | Version | Change |
 |---------|--------|
+| Current | Added `session/checkpoint-manager` skill and Session Management domain to enable lightweight session checkpoint creation and resumption across any SDD stage (~300 tokens vs ~8K full reload) |
+| Current | Updated all 7 core agents (specify, clarify, plan, tasks, implement, analyze, close) to integrate checkpoint-manager for session persistence |
+| Current | Enhanced `core/session-bootstrap` with Rule 5 to load SESSION_CHECKPOINT.md at session start for automatic resumption |
 | Current | Merged `context-drift-and-reconcile` + `context-refresh-from-implementation` → `context/context-sync` (two-mode unified skill) |
 | Current | Removed `specialized/repository-analysis` (stale, unused) |
 | Current | Added `sdd.close` agent to registry |

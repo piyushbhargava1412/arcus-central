@@ -160,6 +160,16 @@ Before writing `spec.md` and `requirements.md`, populate the `arcus-artifact-met
 
 All files written to `FEATURE_DIR`. Create the directory if it does not exist.
 
+### 11.5. Create Session Checkpoint
+
+After successful spec validation and before reporting:
+- Call `session/checkpoint-manager` with:
+  * story_id: <STORY-ID>
+  * current_stage: `specify`
+  * execution_summary: "Specification created with X user stories and Y functional requirements"
+  * blockers: [any remaining ambiguities or assumptions that may need clarification]
+- Checkpoint is written to `.arcus/specs/<STORY-ID>/SESSION_CHECKPOINT.md`
+
 ### 12. Report
 
 Return a concise completion report via `core/report-renderer` including:

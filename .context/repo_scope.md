@@ -97,17 +97,17 @@ Stages flow sequentially; each stage's output feeds next stage's input. **No sta
 
 ### Skills System (22 reusable skills)
 
-Organized by category:
+Organized by capability domain:
 
 - **Foundation** (2): `repository-context-builder`, `test-pattern-discovery`
 - **Discovery** (1): `flow-and-scope-discovery`
-- **Context** (2): `feature-context-pack-builder`, `context-refresh-from-implementation`
+- **Context** (2): `feature-context-pack-builder`, `context-sync` (unified repo-wide and story-scoped modes)
 - **Artifact** (4): `artifact-modeling`, `artifact-patcher`, `markdown-generation`, `markdown-validation`
 - **Core** (3): `session-bootstrap`, `quality-gates`, `report-renderer`
+- **Session** (1): `checkpoint-manager` — Enables lightweight session checkpoint creation and resumption across any SDD stage (~300 tokens vs ~8K full reload)
 - **Reasoning** (4): `coverage-analysis`, `dependency-analysis`, `design-synthesis`, `work-decomposition`
-- **Specialized** (3): `spec-authoring`, `ambiguity-detection`, `task-execution-controller`
+- **Specialized** (5): `spec-authoring`, `ambiguity-detection`, `task-execution-controller`, `progress-tracker`
 - **Formatting** (1): `format-enforcer`
-- **Maintenance** (1): `context-drift-and-reconcile`
 - **Interaction** (1): `question-orchestration`
 
 ### Template Library (11 templates)

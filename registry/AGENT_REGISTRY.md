@@ -26,6 +26,7 @@ This file maintains a registry of all available agents, their capabilities, and 
   - Specification creation using `spec-template.md`
   - Quality validation checklist generation
   - Bounded clarification questions (max 3)
+  - Session checkpoint lookup/creation/update for resumption across sessions
 - **Skill Chain**:
   1. `core/session-bootstrap` - Initialize context
   2. `specialized/spec/spec-authoring` - Generate specification
@@ -46,6 +47,7 @@ This file maintains a registry of all available agents, their capabilities, and 
   - One-question-at-a-time interactive loop
   - Safe specification patching with conflict detection
   - Bounded clarification (max 5 questions per session)
+  - Session checkpoint lookup/creation/update for resumption across sessions
 - **Skill Chain**:
   1. `core/session-bootstrap` - Initialize context
   2. `specialized/spec/ambiguity-detection` - Identify high-impact decisions
@@ -67,6 +69,7 @@ This file maintains a registry of all available agents, their capabilities, and 
   - Design synthesis with trade-offs and decisions
   - Technology-agnostic architecture planning
   - Component-level responsibility mapping
+  - Session checkpoint lookup/creation/update for resumption across sessions
 - **Skill Chain**:
   1. `core/session-bootstrap` - Initialize context
   2. `artifact/artifact-modeling` - Build semantic model (reusable)
@@ -110,12 +113,14 @@ This file maintains a registry of all available agents, their capabilities, and 
   - Coverage gap identification
   - Duplication and ambiguity detection
   - Severity-based finding classification (CRITICAL / HIGH / MEDIUM / LOW)
+  - Session checkpoint lookup/creation/update for resumption across sessions
 - **Skill Chain**:
-  1. `core/session-bootstrap` - Initialize context
-  2. `artifact/artifact-modeling` - Build semantic models (reusable)
-  3. `reasoning/coverage-analysis` - Analyze traceability (reusable)
-  4. `formatting/format-enforcer` - Validate format (reusable)
-  5. `core/report-renderer` - Report findings
+   1. `core/session-bootstrap` - Initialize context (load existing checkpoint if present)
+   2. `artifact/artifact-modeling` - Build semantic models (reusable)
+   3. `reasoning/coverage-analysis` - Analyze traceability (reusable)
+   4. `formatting/format-enforcer` - Validate format (reusable)
+   5. `session/checkpoint-manager` - Create session checkpoint for analysis resumption
+   6. `core/report-renderer` - Report findings
 - **Guardrails**: Respects `.github/copilot-instructions.md` if present
 
 ### sdd.implement
@@ -130,6 +135,7 @@ This file maintains a registry of all available agents, their capabilities, and 
   - Phase-by-phase progression
   - Progress tracking with completion metrics
   - Pre-implementation readiness gating
+  - Session checkpoint lookup/creation/update for resumption across sessions
 - **Skill Chain**:
   1. `core/session-bootstrap` - Initialize context
   2. `reasoning/coverage-analysis` - Check readiness (reusable)
@@ -260,7 +266,7 @@ The typical SDD workflow follows this sequence:
 | Core agents | 6 |
 | Extension agents | 4 |
 | **Total agents** | **10** |
-| Reusable skills | 22 (see [SKILLS_REGISTRY.md](./SKILLS_REGISTRY.md)) |
+| Reusable skills | 22 (see [SKILLS_REGISTRY.md](./SKILLS_REGISTRY.md)) — now includes session checkpoint management |
 | Templates | 11 |
 | Prompts | 10 |
 
@@ -268,4 +274,4 @@ The typical SDD workflow follows this sequence:
 
 ## See Also
 
-- [SKILLS_REGISTRY.md](./SKILLS_REGISTRY.md) — Registry of all 23 reusable skills, organized by capability domain with reusability matrices
+- [SKILLS_REGISTRY.md](./SKILLS_REGISTRY.md) — Registry of all 22 reusable skills, organized by capability domain with reusability matrices. Now includes session checkpoint management for multi-session resumption.

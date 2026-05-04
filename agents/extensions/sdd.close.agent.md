@@ -109,19 +109,29 @@ Run `artifact/markdown-validation` on `completion-summary.md`:
 
 If validation fails → fix inline and re-validate before proceeding.
 
-### 6. Archive Story
+### 6. Create Final Session Checkpoint
+
+Before moving to archival:
+- Call `session/checkpoint-manager` with:
+  * story_id: <STORY-ID>
+  * current_stage: `close`
+  * execution_summary: "Story archival: X/Y tasks completed, context refreshed, ready for archive"
+  * blockers: [any deferred items or incomplete tasks]
+- Checkpoint is written to `.arcus/specs/<STORY-ID>/SESSION_CHECKPOINT.md`
+
+### 7. Archive Story
 
 Move the entire `FEATURE_DIR` to `.arcus/archive/<STORY-ID>/`:
 
 - Create `.arcus/archive/` if it does not exist
 - Move `FEATURE_DIR` → `.arcus/archive/<STORY-ID>/`
-- The `completion-summary.md` travels with the archive — it is the first file a reader encounters
+- The `completion-summary.md` and `SESSION_CHECKPOINT.md` travel with the archive
 
 After archiving:
 - `.arcus/specs/<STORY-ID>/` must no longer exist
-- `.arcus/archive/<STORY-ID>/` must contain all story artifacts
+- `.arcus/archive/<STORY-ID>/` must contain all story artifacts including checkpoint
 
-### 7. Report
+### 8. Report
 
 Use `core/report-renderer` to return a concise closure report to chat:
 

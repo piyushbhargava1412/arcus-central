@@ -36,6 +36,8 @@ You are a Senior Software Architect.
 
 1. Validate feature context exists; fail fast if missing spec or requirements.
 2. Use `core/session-bootstrap` to resolve paths.
+   - If SESSION_CHECKPOINT.md exists with stage=plan: Display to user: "✓ Resuming planning: M design decisions made, N components defined"
+   - If no checkpoint: Display: "Starting design planning"
 3. Load context-pack.md (if present) and use it as primary story context.
 4. Load spec.md and requirements.md.
 5. Generate plan via `reasoning/design-synthesis` with design sections matching plan-template.md.
@@ -44,7 +46,14 @@ You are a Senior Software Architect.
 8. Validate plan.md syntax via `markdown-validation`.
 9. If quality gates fail, iterate bounded refinements. If still failing, report issues and stop.
 10. Write plan.md.
-11. Report completion with path, design overview, and readiness for `/sdd.tasks`.
+11. Create session checkpoint:
+    - Call `session/checkpoint-manager` with:
+      * story_id: <STORY-ID>
+      * current_stage: `plan`
+      * execution_summary: "Design approved with X components and Y key technical decisions"
+      * blockers: [if any design decisions remain unresolved]
+    - Checkpoint is written to `.arcus/specs/<STORY-ID>/SESSION_CHECKPOINT.md`
+12. Report completion with path, design overview, and readiness for `/sdd.tasks`.
 
 ## Error Handling
 

@@ -60,25 +60,36 @@ If user intent is ambiguous, default to pre-implementation mode.
 
 ## Outline
 
-1. Validate all required story artifacts exist; fail fast if any are missing.
-2. Use `core/session-bootstrap` to resolve paths.
-3. Load `context-pack.md` (if present) and use it as primary story context.
-4. Load spec.md, plan.md, tasks.md.
-5. Build semantic models via `analyze/artifact-modeling`.
-6. Compute coverage gaps via `analyze/coverage-mapper`.
-7. Score findings by severity and render analysis findings.
-8. If in pre-implementation mode:
-  - report findings in chat with next actions (proceed vs. remediate)
-  - do not modify files
-9. If in post-implementation mode:
-  - inspect actual changed files for the story
-  - compare intended story scope from `context-pack.md` with actual implementation footprint
-  - use `context/context-sync` skill (story-scoped mode, with `context_pack`) to update only impacted shared artifacts in:
-    - `.context/repo_scope.md`
-    - `.context/repo_map.md`
-    - `.context/flows/*.md`
-    - `.context/testing-patterns.md`
-  - report findings in chat with next actions and context refresh summary
+1. Load session checkpoint (if resuming mid-analysis):
+   - If SESSION_CHECKPOINT.md exists with stage=analyze: Display to user: "✓ Resuming analysis: N issues identified, M critical. Status: <status>"
+   - Show analysis findings and remediation status
+   - If no checkpoint: Display: "Starting analysis session"
+2. Validate all required story artifacts exist; fail fast if any are missing.
+3. Use `core/session-bootstrap` to resolve paths.
+4. Load `context-pack.md` (if present) and use it as primary story context.
+5. Load spec.md, plan.md, tasks.md.
+6. Build semantic models via `analyze/artifact-modeling`.
+7. Compute coverage gaps via `analyze/coverage-mapper`.
+8. Score findings by severity and render analysis findings.
+9. Create session checkpoint:
+   - Call `session/checkpoint-manager` with:
+     * story_id: <STORY-ID>
+     * current_stage: `analyze`
+     * execution_summary: "Analysis complete: N total issues identified (M critical, X medium, Y low)"
+     * blockers: [list critical findings that block proceeding]
+   - Checkpoint is written to `.arcus/specs/<STORY-ID>/SESSION_CHECKPOINT.md`
+10. If in pre-implementation mode:
+    - report findings in chat with next actions (proceed vs. remediate)
+    - do not modify files
+11. If in post-implementation mode:
+    - inspect actual changed files for the story
+    - compare intended story scope from `context-pack.md` with actual implementation footprint
+    - use `context/context-sync` skill (story-scoped mode, with `context_pack`) to update only impacted shared artifacts in:
+      - `.context/repo_scope.md`
+      - `.context/repo_map.md`
+      - `.context/flows/*.md`
+      - `.context/testing-patterns.md`
+    - report findings in chat with next actions and context refresh summary
 
 ## Error Handling
 

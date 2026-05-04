@@ -25,34 +25,50 @@ You are a Task Execution Conductor.
 
 ## Skill Chain (ordered)
 
-1. `core/session-bootstrap` — Resolve story ID, feature paths, and environment context.
+1. `core/session-bootstrap` — Resolve story ID, feature paths, and environment context. Load SESSION_CHECKPOINT.md if exists.
 2. `reasoning/coverage-analysis` — Gate pre-implementation readiness by comparing requirements ↔ tasks.
 3. `reasoning/work-decomposition` — Re-validate work items and ensure tasks accurately map to requirements.
 4. `reasoning/dependency-analysis` — Compute safe execution order, identify parallel batches and critical path.
 5. `specialized/execution/task-execution-controller` — Execute tasks in phase/dependency order (stage-specific).
 6. `specialized/execution/progress-tracker` — Update and render progress metrics after each batch.
-7. `core/report-renderer` — Render final completion report and recommended next actions.
+7. `session/checkpoint-manager` — Create session checkpoint after batch completion.
+8. `core/report-renderer` — Render final completion report and recommended next actions.
 
 ## Outline
 
 1. Validate preconditions: confirm `tasks.md` exists and appears syntactically correct. Fail fast with a clear instruction if missing.
 2. Bootstrap session via `core/session-bootstrap` to determine canonical locations and environment variables.
+   - Load SESSION_CHECKPOINT.md if it exists (returned by session-bootstrap).
+   - If checkpoint exists with stage=implement: Display to user: "✓ Resuming <STORY>: X/Y tasks (Z%), Phase: <phase>, Next: <task-id>"
+   - If checkpoint exists but is stale (uncommitted changes in checkpoint): Warn: "⚠ Uncommitted changes detected. Review before continuing?"
+   - If no checkpoint: Display: "Starting fresh: <STORY> | X tasks ready for implementation"
 3. Load `context-pack.md` (if present) and use it as primary story context.
 4. Load `tasks.md` and build semantic models via `reasoning/work-decomposition` and `reasoning/dependency-analysis`. Use these to compute execution phases and parallelizable batches.
 5. Run `reasoning/coverage-analysis` as a preflight gate to ensure tasks sufficiently cover the approved requirements within the scoped story context. If gaps exist:
-  - Report all gaps with their severity (CRITICAL / HIGH / MEDIUM / LOW)
-  - **CRITICAL gaps**: halt unconditionally and instruct the user to run `/sdd.tasks` to address them. CRITICAL gaps cannot be overridden — they indicate requirements with zero task coverage that would block baseline functionality.
-  - **HIGH gaps**: halt and present the gaps clearly. To proceed, the user must type the exact token: `OVERRIDE: <reason>` where `<reason>` is a brief justification (minimum 5 words). Vague responses ("ok", "yes", "go ahead", "proceed") are not accepted — re-prompt.
-  - **MEDIUM / LOW gaps only**: warn the user and ask for confirmation to proceed. Any affirmative response is accepted.
-  - On accepted override: append the following note to `tasks.md` under a `## Override Log` section before beginning execution:
-    ```
-    - OVERRIDE [<ISO-timestamp>]: Coverage gate bypassed — <user-provided reason>. HIGH gaps: <list gap IDs>.
-    ```
+   - Report all gaps with their severity (CRITICAL / HIGH / MEDIUM / LOW)
+   - **CRITICAL gaps**: halt unconditionally and instruct the user to run `/sdd.tasks` to address them. CRITICAL gaps cannot be overridden — they indicate requirements with zero task coverage that would block baseline functionality.
+   - **HIGH gaps**: halt and present the gaps clearly. To proceed, the user must type the exact token: `OVERRIDE: <reason>` where `<reason>` is a brief justification (minimum 5 words). Vague responses ("ok", "yes", "go ahead", "proceed") are not accepted — re-prompt.
+   - **MEDIUM / LOW gaps only**: warn the user and ask for confirmation to proceed. Any affirmative response is accepted.
+   - On accepted override: append the following note to `tasks.md` under a `## Override Log` section before beginning execution:
+     ```
+     - OVERRIDE [<ISO-timestamp>]: Coverage gate bypassed — <user-provided reason>. HIGH gaps: <list gap IDs>.
+     ```
 6. If gate passes (or user overrides), orchestrate execution using `specialized/execution/task-execution-controller`:
-  - Execute phase-by-phase (Setup → Foundational → Stories → Polish).
-  - Within a phase, run sequential tasks in order and run `[P]`-marked tasks in parallel batches when safe.
-  - For each completed task, mark it `[X]` in `tasks.md`. Persist progress atomically to avoid race conditions.
-7. After each task or parallel batch completion, update progress via `specialized/execution/progress-tracker` and emit a compact status summary.
+   - Execute phase-by-phase (Setup → Foundational → Stories → Polish).
+   - Within a phase, run sequential tasks in order and run `[P]`-marked tasks in parallel batches when safe.
+   - For each completed task, mark it `[X]` in `tasks.md`. Persist progress atomically to avoid race conditions.
+7. After each task or parallel batch completion:
+   - Update progress via `specialized/execution/progress-tracker` and emit a compact status summary.
+   - Create session checkpoint via `session/checkpoint-manager` with:
+     * story_id: <STORY-ID>
+     * current_stage: `implement`
+     * tasks_file_path: .arcus/specs/<STORY-ID>/tasks.md
+     * execution_summary: [brief summary of completed tasks]
+     * last_completed_task_id: [most recent completed task]
+     * blockers: [if any, else empty]
+     * last_commit_hash: [if code committed, else omit]
+   - Checkpoint is written to .arcus/specs/<STORY-ID>/SESSION_CHECKPOINT.md
+   - Display: "✓ Batch complete | Checkpoint saved"
 8. On completion (or if execution is stopped), render a concise final report via `core/report-renderer` summarizing completed tasks, failures, next actionable tasks, and any unresolved gaps.
 
 ## Error Handling
