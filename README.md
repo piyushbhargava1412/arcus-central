@@ -1,4 +1,4 @@
-# Why ARCUS - Spec Driven Development Distribution Framework
+# Why ARCUS - A "Context Aware" Spec Driven Development Distribution Framework
 
 ## The Problem
 
@@ -10,9 +10,9 @@ LLM-powered coding agents are remarkably capable but share a common failure mode
 - Produce different output each time for the same request, making collaboration difficult
 - Leave no artifact trail — when something goes wrong, there is nothing to audit
 
-The root cause is not model capability. It is the absence of structure. A powerful agent with no process is like a skilled contractor with no brief — the output depends entirely on what they assumed you wanted.
+The root cause is not model capability. It is the absence of structure. A powerful agent with no process is like a skilled contractor with no brief — the output depends entirely on what they assumed you wanted. Additionally, even the default agents of CoPilot / Claude seem weak in absence of a contextual awareness about the repository they are operating on.
 
-ARCUS is the process.
+ARCUS is the process. It solves the bigger problem of "context awareness" and builds on top of what Github Speck-it had offered. This is a work-in-progress framework that we are developing in the open, using ARCUS itself to build ARCUS. The goal is to create a distribution framework that any repository can integrate to get the benefits of Spec Driven Development with LLM agents — without having to build it themselves.
 
 ---
 

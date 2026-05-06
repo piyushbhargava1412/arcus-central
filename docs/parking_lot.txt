@@ -1,8 +1,0 @@
-- Make prompts copying optional and disabled by default
-- refactor the agents that are optimised for reduced token usage
-- add skills
-- remove extension and core subfolders from agents/prompts and think of a better categorisation like tech, business, developer, architect, etc etc
-- introduce cross repository grooming feature
-- add template for repo_scope and repo_map and have an agent that generates a repo scope and repo map
-  - the instruction agent should check if repo scope and map exist and then can refer to those instead of having full text in the generated copilot-instructions.md file
-
