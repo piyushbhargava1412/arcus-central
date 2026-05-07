@@ -363,13 +363,13 @@ By category:
 
 ### Templates (11 total)
 
-- [spec-template.md](../templates/spec-template.md) · [plan-template.md](../templates/plan-template.md) · [tasks-template.md](../templates/tasks-template.md) · [checklist-template.md](../templates/checklist-template.md)
-- [user-story.template.md](../templates/user-story.template.md) · [software-design-document.template.md](../templates/software-design-document.template.md) · [agent-file-template.md](../templates/agent-file-template.md)
-- [instruction-template.md](../templates/instruction-template.md) · [repo_scope.template.md](../templates/repo_scope.template.md) · [repo_map.template.md](../templates/repo_map.template.md) · [stories/groom-story-template.md](../templates/stories/groom-story-template.md)
+- [spec-template.md](../.arcus/templates/spec-template.md) · [plan-template.md](../.arcus/templates/plan-template.md) · [tasks-template.md](../.arcus/templates/tasks-template.md) · [checklist-template.md](../.arcus/templates/checklist-template.md)
+- [user-story.template.md](../templates/user-story.template.md) · [software-design-document.template.md](../templates/software-design-document.template.md) · [agent-file-template.md](../.arcus/templates/agent-file-template.md)
+- [instruction-template.md](../.arcus/templates/instruction-template.md) · [repo_scope.template.md](../.arcus/templates/repo_scope.template.md) · [repo_map.template.md](../.arcus/templates/repo_map.template.md) · [stories/groom-story-template.md](../templates/stories/groom-story-template.md)
 
 ### Guidelines
 
-- [Engineering](../guidelines/engineering/engineering-guidelines.md) · [Architecture](../guidelines/architecture/architecture-guidelines.md) · [Languages](../guidelines/languages/language-guidelines.md) · [Infrastructure](../guidelines/infra/infrastructure-guidelines.md) · [Testing](../guidelines/testing/testing-guidelines.md)
+- [Engineering](../.arcus/guidelines/engineering/engineering-guidelines.md) · [Architecture](../.arcus/guidelines/architecture/architecture-guidelines.md) · [Languages](../.arcus/guidelines/languages/language-guidelines.md) · [Infrastructure](../.arcus/guidelines/infra/infrastructure-guidelines.md) · [Testing](../.arcus/guidelines/testing/testing-guidelines.md)
 
 ---
 

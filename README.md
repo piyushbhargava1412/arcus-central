@@ -1,139 +1,147 @@
-# Why ARCUS - A "Context Aware" Spec Driven Development Distribution Framework
+# ARCUS: Context-Aware Spec Driven Development for LLM Agents
 
-## The Problem
+![License](https://img.shields.io/badge/license-MIT-green)
+![Status](https://img.shields.io/badge/status-incubating-orange)
+![Workflow](https://img.shields.io/badge/workflow-Specification%20Driven-blue)
+![Engineering](https://img.shields.io/badge/architecture-context--aware-purple)
 
-LLM-powered coding agents are remarkably capable but share a common failure mode: they produce confident, plausible output that drifts from what was actually intended. Left unconstrained, an agent will:
+**ARCUS** (**A**ny **R**epository **C**an **U**se **S**DD) is a framework for building with LLM agents reliably.
 
-- Make architectural decisions that belong in a design review
-- Implement what it infers rather than what was specified
-- Scan the entire codebase on every invocation, consuming tokens on irrelevant context
-- Produce different output each time for the same request, making collaboration difficult
-- Leave no artifact trail — when something goes wrong, there is nothing to audit
-
-The root cause is not model capability. It is the absence of structure. A powerful agent with no process is like a skilled contractor with no brief — the output depends entirely on what they assumed you wanted. Additionally, even the default agents of CoPilot / Claude seem weak in absence of a contextual awareness about the repository they are operating on.
-
-ARCUS is the process. It solves the bigger problem of "context awareness" and builds on top of what Github Speck-it had offered. This is a work-in-progress framework that we are developing in the open, using ARCUS itself to build ARCUS. The goal is to create a distribution framework that any repository can integrate to get the benefits of Spec Driven Development with LLM agents — without having to build it themselves.
-
----
-
-## What ARCUS Does
-
-ARCUS (**A**ny **R**epository **C**an **U**se **S**DD) implements **Spec Driven Development** — a methodology that gates implementation behind a structured sequence of artifacts:
-
+It gates implementation behind a structured pipeline of verified artifacts:
 ```
-Feature description
-    → spec.md          (WHAT and WHY — requirements, user stories, acceptance criteria)
-    → plan.md          (HOW — architecture, design decisions, component responsibilities)
-    → tasks.md         (WHO does WHAT, in WHAT ORDER — dependency-ordered task breakdown)
-    → implementation   (code, guided by tasks, constrained by spec and plan)
+Feature description → spec.md → plan.md → tasks.md → implementation
 ```
 
-Each artifact is produced by a dedicated agent, validated by quality gates, and used as input to the next stage. No stage begins without the previous one being complete.
-
-The result is a traceable chain from business requirement to working code — with every decision recorded.
+Each stage validates its output. No stage proceeds until the previous one passes. The result is traceable, auditable, and hallucination-resistant.
 
 ---
 
-## Key Design Decisions
+## Quick Start
 
-### 1. Context hierarchy over full repo scans
+### For the impatient:
 
-The most expensive thing an LLM can do is read an entire codebase to answer a question that a small, focused document could answer in one read.
+See [Integration Guide](ARCUS_INTEGRATION_GUIDE.md) for setup, CLI commands, and integration workflow.
 
-ARCUS builds a two-level context hierarchy:
+### For context, read:
 
-- **Shared context** (`.context/`) — repo-level intelligence built once: business scope, technical topology, business flows, testing patterns. Updated incrementally via git diff, not full rescans.
-- **Story context** (`context-pack.md`) — a minimal, story-scoped extract from shared context. Each agent loads only what is relevant to the current feature.
-
-An agent specifying a payment flow does not need to read the email service code. It reads the payment flow file and the relevant sections of the repo map. This keeps token usage proportional to task scope, not codebase size.
-
-### 2. Skills over monolithic agents
-
-Each agent in ARCUS delegates to a set of reusable skills — small, single-purpose capabilities with explicit input/output contracts. `sdd.specify` does not contain the logic for detecting ambiguities; it calls `specialized/spec/ambiguity-detection`. `sdd.tasks` does not contain dependency graph logic; it calls `reasoning/dependency-analysis`.
-
-This has two benefits: skills can be improved without touching agents, and the same skill can be used by multiple agents without duplication. `core/quality-gates` validates spec, plan, and tasks artifacts using the same mechanism with different gate profiles.
-
-### 3. Distribution by integration, not by forking
-
-ARCUS ships to target repositories via a single CLI command (`arcus-integrate`). Agents and skills are copied as read-only files; templates, guidelines, and scripts are symlinked to the central repo.
-
-This means:
-- Updates to agents and skills propagate to all repos with `arcus-integrate --sync`
-- Each repo keeps its own `.arcus-ignore` and generated `.context/` — customisable per project
-- The central repo evolves independently of any target repo
-
-No forking. No copy-paste maintenance. No version drift between repos.
-
-### 4. Verification commits for drift detection
-
-Every `.context/` artifact stores the git commit hash at which it was last updated. When `context/context-sync` runs at the start of a new story, it computes `git diff <verification-commit>..HEAD` to identify exactly which files changed — and updates only the context artifacts that were actually affected.
-
-This makes context refresh proportional to what changed, not to the size of the repo. A story that touches three files refreshes at most three flow files and possibly `repo_map.md`. It does not rebuild everything.
-
-### 5. Quality gates as first-class citizens
-
-Every pipeline stage ends with a quality gate before its artifact is written. Gates are defined as named profiles (`spec-gates`, `plan-gates`, `tasks-gates`) with concrete, checkable rules — not vague checklists.
-
-A spec that passes `spec-gates` guarantees: all user stories have acceptance criteria in Given/When/Then format, all requirements use normative language (MUST/SHOULD/MAY), no implementation details have leaked into requirements, and success criteria are measurable. An LLM cannot accidentally produce a spec that violates these — the gate catches it before the artifact is persisted.
-
-### 6. Artifact versioning
-
-Every generated artifact embeds an `arcus-artifact-meta` block recording which template it was generated from, which ARCUS version generated it, and when. This makes it possible to detect when an artifact was generated from an older template version — and flag it for regeneration rather than silently running outdated gates against it.
+- **[Philosophy](docs/philosophy.md)** — Why process beats prompting (5 min read)
+- **[Architecture](docs/architecture.md)** — How ARCUS works (10 min read)
 
 ---
 
-## Observed Benefits
+## Why ARCUS Matters
 
-These are not theoretical — they reflect the problems ARCUS was built to solve:
+LLM-powered coding agents are remarkably capable — but without structure, they tend to:
 
-**Reduced hallucination in implementation** — agents implement from `tasks.md`, which was derived from `plan.md`, which was derived from `spec.md`. The chain is traceable. An agent cannot implement something that was never specified, because the task would not exist.
+- **Infer requirements** instead of following specifications
+- **Make architectural decisions** without design review
+- **Load excessive context**, wasting tokens and introducing noise
+- **Produce inconsistent output** across runs and team members
+- **Leave no decision trail** for auditability
+- **Drift from intent** as repositories evolve
 
-**Token efficiency** — context-pack loading means agents read hundreds of tokens of focused context rather than thousands of tokens of irrelevant code. For repos with large codebases, this difference is significant at scale.
+The root cause isn't model capability. **It's the absence of process and context awareness.**
 
-**Auditability** — every design decision in `plan.md` has an alternatives-considered entry. Every override of a quality gate is logged in `tasks.md`. Every story is archived with a completion summary. The full history of a feature from requirement to deployment is recoverable.
-
-**Team consistency** — when multiple developers work on the same repo, they all work from the same `.context/` artifacts and the same guideline files. A new team member specifying their first feature gets the same quality gates and the same context as a senior developer.
-
-**Safe evolution** — because every agent delegates to skills, and skills have explicit contracts, the framework can be improved incrementally. Expanding the `spec-authoring` skill to add new generation rules does not require touching `sdd.specify`, `sdd.clarify`, or any other agent.
-
----
-
-## What ARCUS Is Not
-
-**ARCUS is not a replacement for engineering judgment.** Quality gates catch structural problems; they do not catch wrong requirements or bad architectural decisions. An LLM following ARCUS still needs a human to review the spec and plan before implementation begins.
-
-**ARCUS is not prescriptive about technology.** The guideline files under `guidelines/` are generic best practice suggestions. The `.context/` artifacts capture what the repo actually uses. Agents respect existing conventions — they do not impose new ones.
-
-**ARCUS is not a heavyweight process.** For a small, well-understood feature, the pipeline moves quickly: specify in minutes, clarify if needed, plan the design, generate tasks, implement. The artifacts are a by-product of thinking clearly, not bureaucracy for its own sake.
+ARCUS solves this through:
+- Specification-driven gating (what is built is what was specified)
+- Repository context hierarchy (focused, not full-scan)
+- Quality gates (no artifact proceeds without validation)
+- Deterministic workflows (same input → same output → team alignment)
 
 ---
 
-## The Self-Hosting Principle (Beta)
+## Core Concepts
 
-ARCUS is being developed using ARCUS. New features to the framework are developed using the same harness and context awareness that gets generated in any other target repository. This is the strongest test of the framework's validity: if it cannot describe its own development, it is not production-grade.
+ARCUS solves three problems that vague agent prompts cannot:
 
-The central repo has integrated ARCUS on itself. The `.context/` folder you see in this repo is its understanding of itself.
+| Problem | Solution |
+|---------|----------|
+| **Hallucination in implementation** | Agents implement from tasks.md, which is derived from spec → plan. The chain is traceable. |
+| **Context bloat and token waste** | Context hierarchy: shared context (built once) + story-specific context-pack (300-800 tokens). Not full codebase scans. |
+| **No audit trail** | Every artifact has metadata, lineage, and verification commits. Full chain from requirement to code is recoverable. |
 
-## CLI Commands
+---
 
-| Command                    | Description                 |
-|----------------------------|-----------------------------|
-| `arcus-integrate`          | Integrate current directory |
-| `arcus-integrate --sync`   | Re-sync all symlinks        |
-| `arcus-integrate --remove` | Remove all copied files     |
-| `arcus-integrate --yes`    | Non-interactive (CI/CD)     |
+## The Workflow
 
-## Project Structure
+**Phase A: Bootstrap** (once per repository)
+- Analyze your repository
+- Generate `.context/` (business scope, technical topology, flows, testing patterns)
+- Create copilot guardrails
 
-**Agents** → Business logic for SDD workflow  
-**Skills** → Reusable, focused capabilities used by agents. Each Skill implements a small unit of functionality (e.g., path and template resolution, repository analysis, markdown generation/validation, session bootstrap, quality gates, and formatting). Skills are the building blocks agents call to perform specific tasks across repositories.
-**Templates** → Document templates for specs, plans, tasks  
-**Prompts** → Provides purpose and bounds to associated agents   
-**Guidelines** → Engineering and architecture guidelines  
+**Phase B: Feature Development** (repeat per story)
+1. **Specify** (WHAT/WHY) — Generate spec.md with requirements and user stories
+2. **Clarify** (optional) — Resolve ambiguities with targeted questions
+3. **Plan** (HOW) — Generate plan.md with architecture and phases
+4. **Tasks** (WHO/WHAT/WHEN) — Break down into dependency-ordered tasks
+5. **Analyze (pre-impl)** — Quality check before implementation
+6. **Implement** — Execute tasks, guided by spec and plan
+7. **Analyze (post-impl)** — Verify completeness, detect context drift
 
-## Further Reading
+Each stage produces an artifact. Each artifact is validated by quality gates.
 
-- [Integration Guide](ARCUS_INTEGRATION_GUIDE.md) — Full setup and usage
-- [SDD Workflow](docs/SDD-Flow-Diagram.md) - ARCUS SDD Framework Workflow Diagram
-- [Agent Registry](registry/AGENT_REGISTRY.md) — All agents and workflow
-- [Skill Registry](registry/SKILLS_REGISTRY.md) — All skills and domains 
+**Visual workflow:**
+
+```mermaid
+flowchart TD
+    A["Feature Request"] --> B["💭 sdd.specify<br/>(WHAT/WHY)"]
+    B --> C["🔍 sdd.clarify<br/>(Resolve ambiguities)"]
+    C --> D["📐 sdd.plan<br/>(Architecture)"]
+    D --> E["✋ sdd.tasks<br/>(Decomposition)"]
+    E --> F["✔️ sdd.analyze<br/>(Pre-impl check)"]
+    F --> G["💻 sdd.implement<br/>(Build)"]
+    G --> H["✅ sdd.analyze<br/>(Verification)"]
+```
+
+See [SDD Workflow](docs/sdd-workflow.md) for full pipeline details and architecture diagrams.
+
+---
+
+## Documentation
+
+| Document | Purpose |
+|----------|---------|
+| **[Philosophy](docs/philosophy.md)** | Why ARCUS exists: vibe coding problems, why SDD matters |
+| **[Context System](docs/context-system.md)** | How context engineering works (ARCUS's differentiator) |
+| **[Architecture](docs/architecture.md)** | Design decisions: agents, skills, gates, verification commits |
+| **[Skills and Agents](docs/skills-and-agents.md)** | How to extend ARCUS, add skills, customize |
+| **[Quality Gates](docs/quality-gates.md)** | How structural validation works, gate profiles |
+| **[SDD Workflow](docs/sdd-workflow.md)** | Full pipeline diagram and stage descriptions |
+| **[Glossary](docs/glossary.md)** | Definitions of ARCUS terminology |
+
+---
+
+## The Self-Hosting Principle
+
+ARCUS is now using ARCUS to evolve. New features to the framework are developed with the same context awareness framework that target repositories use. This is the strongest test of validity: if ARCUS cannot describe its own development, it is not production-grade. However, this is a WIP and the framework is still evolving. With agents, you can never be 100% sure ;)
+
+---
+
+
+## Reference
+
+- [Integration Guide](ARCUS_INTEGRATION_GUIDE.md) — Setup, CLI usage, and integration workflow
+- [Agent Registry](registry/AGENT_REGISTRY.md) — Complete agent catalog
+- [Skill Registry](registry/SKILLS_REGISTRY.md) — Complete skill catalog
+- [Engineering Guidelines](guidelines/engineering/engineering-guidelines.md) — Code quality standards
+- [Architecture Guidelines](guidelines/architecture/architecture-guidelines.md) — System design principles
+- [Testing Standards](guidelines/testing/testing-guidelines.md) — Testing best practices
+
+---
+
+## License
+
+ARCUS is licensed under the MIT License. See [LICENSE](LICENSE) for details.
+
+ARCUS extends and builds upon the Spec Driven Development methodology pioneered by [GitHub Spec-Kit](https://github.com/github/spec-kit), also under MIT license.
+
+---
+
+## Contributing
+
+This repository has restricted collaboration (no public PRs). For inquiries or feedback, please reach out via GitHub Discussions.
+
+---
+
+Last updated: 2026-05-07  
+ARCUS Version: 0.8.0 (beta)
