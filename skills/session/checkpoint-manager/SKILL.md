@@ -1,19 +1,20 @@
-```skill
+---
 name: checkpoint-manager
 description: Create lightweight session checkpoints to resume work across multiple sessions at any SDD stage without reloading full context.
-inputs:
-  - story_id
-  - current_stage
-  - tasks_file_path
-  - execution_summary
-  - last_completed_task_id
-  - blockers
-  - last_commit_hash (optional)
-outputs:
-  - checkpoint_file_path
-  - token_estimate
-  - stage_for_recovery
-```
+metadata:
+  inputs:
+    - story_id
+    - current_stage
+    - tasks_file_path (optional)
+    - execution_summary
+    - last_completed_task_id (optional)
+    - blockers
+    - last_commit_hash (optional)
+  outputs:
+    - checkpoint_file_path
+    - checkpoint_token_estimate
+    - checkpoint_stage
+---
 
 # Session Checkpoint Manager
 

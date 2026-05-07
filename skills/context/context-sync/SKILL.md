@@ -1,12 +1,13 @@
 ---
 name: context-sync
 description: Detect drift between current code and shared .context artifacts using verification commits and git diff, then update only impacted artifacts. Operates in repo-wide mode (story start) or story-scoped mode (post-implementation) depending on whether a context_pack is provided.
-inputs:
-  - repository_root
-  - story_id (optional — required for story-scoped mode)
-  - context_pack (optional — triggers story-scoped mode when provided)
-outputs:
-  - updated_context
+metadata:
+  inputs:
+    - repository_root
+    - story_id (optional — required for story-scoped mode)
+    - context_pack (optional — triggers story-scoped mode when provided)
+  outputs:
+    - updated_context
 ---
 
 # Context Sync

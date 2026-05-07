@@ -1,15 +1,16 @@
-```skill
+---
 name: coverage-analysis
 description: Analyze traceability between work items and requirements; identify gaps, overlaps, and coverage metrics.
-inputs:
-  - artifacts_models
-  - severity_profile
-outputs:
-  - coverage_matrix
-  - gap_list
-  - overlap_list
-  - metrics
-```
+metadata:
+  inputs:
+    - artifacts_models
+    - severity_profile
+  outputs:
+    - coverage_matrix
+    - gap_list
+    - overlap_list
+    - metrics
+---
 
 # Coverage Analysis
 

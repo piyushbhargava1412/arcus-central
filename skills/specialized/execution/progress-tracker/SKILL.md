@@ -1,13 +1,13 @@
-```skill
+---
 name: progress-tracker
 description: Update and render task progress status with completion metrics and next-step guidance.
-inputs:
-  - tasks_file
-  - execution_log
-outputs:
-  - progress_report
-  - completion_metrics
-```
+metadata:
+  inputs:
+    - tasks_file
+    - execution_log
+  outputs:
+    - progress_report
+---
 
 # Progress Tracker
 

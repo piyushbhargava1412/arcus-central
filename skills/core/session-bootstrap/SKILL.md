@@ -1,15 +1,19 @@
-```skill
+---
 name: session-bootstrap
 description: Resolve feature identity and canonical artifact/template paths for the current SDD stage.
-inputs:
-  - user_input
-  - repository_root
-outputs:
-  - story_id
-  - feature_dir
-  - artifact_paths
-  - template_paths
-```
+metadata: 
+  inputs:
+    - user_input
+    - repository_root
+  outputs:
+    - story_id
+    - feature_dir
+    - artifact_paths
+    - template_paths
+    - checkpoint_content
+    - checkpoint_stage
+    - checkpoint_timestamp
+---
 
 # Session Bootstrap
 

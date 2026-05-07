@@ -1,11 +1,12 @@
 ---
 name: flow-and-scope-discovery
 description: Identify business flows and persist each flow as a separate file in .context/flows using repo_scope and repo_map as primary inputs.
-inputs:
-  - repo_scope
-  - repo_map
-outputs:
-  - flows
+metadata: 
+  inputs:
+    - repo_scope
+    - repo_map
+  outputs:
+    - flow_files in .context/flows/
 ---
 
 # Flow and Scope Discovery

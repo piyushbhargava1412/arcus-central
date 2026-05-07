@@ -1,14 +1,15 @@
-```skill
+---
 name: format-enforcer
 description: Validate artifact format against schema and normalize output for consistency.
-inputs:
-  - artifact
-  - format_schema
-  - normalization_rules
-outputs:
-  - normalized_artifact
-  - format_violations
-```
+metadata:
+  inputs:
+    - artifact
+    - format_schema
+    - normalization_rules
+  outputs:
+    - normalized_artifact
+    - violations_report
+---
 
 # Format Enforcer
 

@@ -1,13 +1,14 @@
-```skill
+---
 name: artifact-modeling
 description: Build semantic models of artifacts for consistent analysis and traceability.
-inputs:
-  - artifacts
-  - artifact_types
-outputs:
-  - semantic_models
-  - traceability_mappings
-```
+metadata:
+  inputs:
+    - artifacts
+    - artifact_types
+  outputs:
+    - semantic_models
+    - traceability_mappings
+---
 
 # Artifact Modeling
 

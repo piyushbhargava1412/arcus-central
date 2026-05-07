@@ -11,7 +11,7 @@
 
 ARCUS Central is the authoritative distribution hub for the Spec Driven Development (SDD) methodology. It provides:
 - **10 Agents** that guide specification, planning, analysis, and implementation workflows
-- **22 Reusable Skills** that agents delegate to for focused capabilities
+- **23 Reusable Skills** that agents delegate to for focused capabilities
 - **11 Document Templates** for specs, plans, tasks, and context artifacts
 - **Instruction Architecture** (guidelines for engineering, architecture, languages, infrastructure, testing)
 - **Integration Automation** (Bash scripts that distribute framework to target repositories)
@@ -106,6 +106,26 @@ The following instruction files define reusable guidelines that target repositor
 
 ---
 
+## Repository Scope & Configuration
+
+### Respecting `.arcus-ignore`
+
+- **ALWAYS** check `.arcus-ignore` file before analyzing repository structure
+- **ALWAYS** exclude paths matching `.arcus-ignore` patterns from analysis
+- **NEVER** mention ignored paths in any artifacts, documentation, or instructions
+- **TREAT** ignored paths as if they don't exist (especially `.arcus/`, `.github/agents/`, `.github/prompts/`, `.github/skills/`)
+
+**Rationale**: `.arcus-ignore` defines framework components that are distributed infrastructure, not application code. Ignoring these prevents pollution of generated context artifacts and keeps analysis focused on actual application logic.
+
+### Documentation Scope
+
+- **Document:** Application code, business logic, actual features in non-ignored paths
+- **Document:** Project-specific configuration, constraints, custom patterns
+- **DO NOT Document:** Framework components (agents, skills, templates, scripts)
+- **DO NOT Document:** Ignored paths or framework tooling
+
+---
+
 ## Implementation Constraints
 
 - **No business logic in this repository** — Framework components only (agents, skills, templates, guidelines)
@@ -114,6 +134,24 @@ The following instruction files define reusable guidelines that target repositor
 - **Symlink-first distribution** — For templates, scripts, instructions (instant updates to integrated repos)
 - **Copy-only for agents/prompts** — Due to IntelliJ agent discovery limitations
 - **Read-only enforcement** — Central sources as `chmod a-w`; copies as `chmod 444`
+
+---
+
+## Agent Behavioral Rules
+
+### Repository Analysis
+
+1. **ALWAYS** check `.arcus-ignore` before analyzing repository structure
+2. **ALWAYS** exclude paths matching `.arcus-ignore` patterns from all analysis
+3. **NEVER** mention ignored paths in any artifacts or documentation
+4. **ONLY** document application code found in non-ignored paths
+
+### Framework Context Management
+
+1. **ALWAYS** refresh `.context/` after structural changes using `sdd.context-builder`
+2. **ALWAYS** validate artifacts generated are in scope for target repositories
+3. **NEVER** generate or assume content beyond evidence from actual codebase
+4. **ONLY** reference `.context/` as authoritative repository intelligence
 
 ---
 
@@ -134,6 +172,7 @@ Before merging changes to this repository:
 
 | Version | Date | Type | Summary |
 |---------|------|------|---------|
+| 1.0.1 | 2026-05-07 | MINOR | Added "Repository Scope & Configuration" and "Agent Behavioral Rules" sections. Explicitly documented `.arcus-ignore` patterns, repository analysis constraints, and framework context management rules per instruction-template.md. |
 | 1.0.0 | 2026-04-29 | INIT | Initial copilot instructions created for ARCUS Central framework hub. Established agent governance (P1), skill governance (P2), documentation strategy (P3), and context refresh (P4) as mandatory principles. |
 
 ---

@@ -1,14 +1,16 @@
-```skill
+---
 name: design-synthesis
 description: Decompose requirements into comprehensive design/architecture with decisions and trade-offs.
-inputs:
-  - requirements_context
-  - constraints
-  - guardrails
-outputs:
-  - design_sections
-  - design_decisions
-```
+metadata:
+  inputs:
+    - requirements_context
+    - constraints
+    - guardrails
+  outputs:
+    - design_sections
+    - design_decisions
+    - open_questions
+---
 
 # Design Synthesis
 

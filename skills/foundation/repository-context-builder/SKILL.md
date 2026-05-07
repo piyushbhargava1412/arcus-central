@@ -1,11 +1,12 @@
 ---
 name: repository-context-builder
 description: Build or refresh baseline repository context by analyzing repository structure and generating repo_scope and repo_map artifacts in .context using only code evidence.
-inputs:
-  - repository_root
-outputs:
-  - repo_scope
-  - repo_map
+metadata: 
+  inputs:
+    - repository_root
+  outputs:
+    - repo_scope in .context/repo_scope.md
+    - repo_map in .context/repo_map.md
 ---
 
 # Repository Context Builder

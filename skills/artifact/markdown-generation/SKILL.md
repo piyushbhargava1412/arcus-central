@@ -1,13 +1,14 @@
-```skill
+---
 name: markdown-generation
 description: Generate well-formatted markdown documents with correct structure, syntax, and readability. Applies formatting rules appropriate to the target artifact type.
-inputs:
-  - content
-  - format_style
-  - artifact_type (optional)
-outputs:
-  - formatted_markdown
-```
+metadata:
+  inputs:
+    - content
+    - format_style
+    - artifact_type (optional)
+  outputs:
+    - markdown_output
+---
 
 # Markdown Generation
 

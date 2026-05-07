@@ -1,14 +1,15 @@
-```skill
+---
 name: artifact-patcher
 description: Apply accepted answers or changes into artifact sections with conflict detection and audit trail.
-inputs:
-  - artifact_draft
-  - patches
-  - patch_mappings
-outputs:
-  - patched_artifact
-  - change_log
-```
+metadata:
+  inputs:
+    - artifact_draft
+    - patches
+    - patch_mappings
+  outputs:
+    - updated_artifact
+    - change_log
+---
 
 # Artifact Patcher
 

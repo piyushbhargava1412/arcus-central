@@ -266,7 +266,7 @@ The typical SDD workflow follows this sequence:
 | Core agents | 6 |
 | Extension agents | 4 |
 | **Total agents** | **10** |
-| Reusable skills | 22 (see [SKILLS_REGISTRY.md](./SKILLS_REGISTRY.md)) — now includes session checkpoint management |
+| Reusable skills | 23 (see [SKILLS_REGISTRY.md](./SKILLS_REGISTRY.md)) — now includes session checkpoint management |
 | Templates | 11 |
 | Prompts | 10 |
 
@@ -274,4 +274,4 @@ The typical SDD workflow follows this sequence:
 
 ## See Also
 
-- [SKILLS_REGISTRY.md](./SKILLS_REGISTRY.md) — Registry of all 22 reusable skills, organized by capability domain with reusability matrices. Now includes session checkpoint management for multi-session resumption.
+- [SKILLS_REGISTRY.md](./SKILLS_REGISTRY.md) — Registry of all 23 reusable skills, organized by capability domain with reusability matrices. Now includes session checkpoint management for multi-session resumption.

@@ -1,11 +1,12 @@
 ---
 name: feature-context-pack-builder
 description: Build a minimal, story-specific context pack from shared .context artifacts and persist it to .arcus/specs/<STORY-ID>/context-pack.md without scanning the full repository.
-inputs:
-  - story_description
-  - story_id
-outputs:
-  - context_pack
+metadata:
+    inputs:
+      - story_description
+      - story_id
+    outputs:
+      - context_pack
 ---
 
 # Feature Context Pack Builder

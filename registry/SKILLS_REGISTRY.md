@@ -16,7 +16,7 @@ This file maintains a registry of all available reusable skills, organized by ca
 
 ## Overview
 
-The SDD framework provides **22 reusable skills** organized by capability domain. Skills are stage-agnostic, meaning they can be used by multiple agents across the SDD lifecycle.
+The SDD framework provides **23 reusable skills** organized by capability domain. Skills are stage-agnostic, meaning they can be used by multiple agents across the SDD lifecycle.
 
 **Reusability Levels**:
 - 🟢 **Core** (3 skills): Used by all or most agents
@@ -489,7 +489,7 @@ These skills are context-specific or narrow in scope, used by 1-2 agents.
 
 | Metric | Value |
 |--------|-------|
-| **Total Skills** | 22 |
+| **Total Skills** | 23 |
 | **Reusable (used by 2+ agents)** | 16 (73%) |
 | **Specialized/Domain-Specific** | 6 (27%) |
 | **Skills by domain** | 10 domains |

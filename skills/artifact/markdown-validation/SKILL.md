@@ -1,14 +1,15 @@
-```skill
+---
 name: markdown-validation
 description: Validate markdown documents for structural integrity, syntax correctness, link validity, placeholder resolution, and formatting consistency. Parameterizable by artifact type via validation_rules.
-inputs:
-  - artifact
-  - validation_rules
-  - artifact_type (optional)
-outputs:
-  - validation_results
-  - violations
-```
+metadata:
+  inputs:
+    - artifact
+    - validation_rules
+    - artifact_type (optional)
+  outputs:
+    - validation_results
+    - violations
+---
 
 # Markdown Validation
 

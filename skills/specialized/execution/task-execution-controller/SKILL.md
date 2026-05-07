@@ -1,16 +1,17 @@
-```skill
+---
 name: task-execution-controller
 description: Execute tasks in phase order while respecting dependencies, applying execution policy, and persisting progress atomically.
-inputs:
-  - tasks_list
-  - dependency_graph
-  - execution_policy
-  - context_pack (optional)
-outputs:
-  - completed_tasks
-  - execution_log
-  - errors
-```
+metadata:
+  inputs:
+    - tasks_list
+    - dependency_graph
+    - execution_policy
+    - context_pack (optional)
+  outputs:
+    - updated_tasks_file
+    - execution_log
+    - error_list
+---
 
 # Task Execution Controller
 

@@ -1,6 +1,6 @@
 # ARCUS SDD Workflow
 
-**Framework**: 10 agents (6 core + 4 extensions), 22 reusable skills, 11 templates  
+**Framework**: 10 agents (6 core + 4 extensions), 23 reusable skills, 11 templates  
 **Goal**: Reduce hallucinations, optimize token utilization, improve selective context loading
 
 ```
@@ -17,11 +17,11 @@
 │  │ implement   │                                                       │
 │  └─────────────┘         └──────────────────┘                          │
 │                                                                         │
-│  All agents delegate to reusable skills (22 total) across 10 domains   │
+│  All agents delegate to reusable skills (23 total) across 10 domains   │
 └─────────────────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────────────────┐
-│              SKILLS SYSTEM (22 reusable, capability-based)              │
+│              SKILLS SYSTEM (23 reusable, capability-based)              │
 │                                                                         │
 │  🟢 Core (3):           🟦 Artifact (4):      🟨 Reasoning (4):        │
 │  • session-bootstrap    • artifact-modeling   • design-synthesis       │
@@ -31,13 +31,13 @@
 │                                                                         │
 │  🟦 Foundation (2):     🟩 Discovery (1):    🟪 Context (2):          │
 │  • repo-context-build   • flow-and-scope     • feature-context-pack   │
-│  • test-pattern-disc                         • context-refresh        │
+│  • test-pattern-disc                         • context-sync           │
 │                                                                         │
-│  🟦 Specialized (3):    🟦 Interaction (1):  🟨 Formatting (1):       │
+│  🟦 Specialized (4):    🟦 Interaction (1):  🟨 Formatting (1):       │
 │  • spec-authoring       • question-orch      • format-enforcer        │
 │  • ambiguity-detect                                                   │
-│  • task-exec-control    🟪 Maintenance (1):                           │
-│                         • context-drift-rec                           │
+│  • task-exec-control    🟪 Session (1):                               │
+│  • progress-tracker     • checkpoint-manager                           │
 │                                                                         │
 │  Loaded on-demand by agents, NOT shipped to target repos               │
 └─────────────────────────────────────────────────────────────────────────┘
@@ -321,17 +321,17 @@
 | analyze            |  3   |    1     |     2     |    -      |    -    |      -      |     1     |      -      |
 | implement          |  3   |    -     |     3     |    -      |    -    |      -      |     -     |      1      |
 
-| Legend (10 domains, 22 total skills):
+| Legend (10 domains, 23 total skills):
 | - Core (3): session-bootstrap, quality-gates, report-renderer
 | - Artifact (4): artifact-modeling, artifact-patcher, markdown-generation, markdown-validation
 | - Reasoning (4): design-synthesis, work-decomposition, dependency-analysis, coverage-analysis
 | - Discovery (1): flow-and-scope-discovery
-| - Context (2): feature-context-pack-builder, context-refresh-from-implementation
+| - Context (2): feature-context-pack-builder, context-sync
 | - Interaction (1): question-orchestration
 | - Formatting (1): format-enforcer
-| - Specialized (3): spec-authoring, ambiguity-detection, task-execution-controller
-| - Foundation (2): repository-context-builder, test-pattern-discovery *(not shown in table)*
-| - Maintenance (1): context-drift-and-reconcile *(not shown in table)*
+| - Foundation (2): repository-context-builder, test-pattern-discovery
+| - Session (1): checkpoint-manager
+| - Specialized (4): spec-authoring, ambiguity-detection, task-execution-controller, progress-tracker
 ```
 
 ---

@@ -1,12 +1,13 @@
 ---
 name: test-pattern-discovery
 description: Analyze existing tests and persist shared repository test-writing conventions in .context/testing-patterns.md for downstream story and implementation work.
-inputs:
-  - repository_root
-  - repo_scope
-  - repo_map
-outputs:
-  - testing_patterns
+metadata: 
+  inputs:
+    - repository_root
+    - repo_scope
+    - repo_map
+  outputs:
+    - testing_patterns in .context/testing-patterns.md
 ---
 
 # Test Pattern Discovery

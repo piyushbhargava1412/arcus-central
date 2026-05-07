@@ -95,7 +95,7 @@ Stages flow sequentially; each stage's output feeds next stage's input. **No sta
 
 ---
 
-### Skills System (22 reusable skills)
+### Skills System (23 reusable skills)
 
 Organized by capability domain:
 

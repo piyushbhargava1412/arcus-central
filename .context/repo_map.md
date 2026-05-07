@@ -32,7 +32,7 @@ bigfin_arcus-central/
 │       ├── sdd.instructions.agent.md      # Instruction architecture
 │       └── sdd.close.agent.md             # Story closure, context refresh, archiving
 │
-├── skills/                                # Skill implementations (22 skills)
+├── skills/                                # Skill implementations (23 skills)
 │   ├── foundation/
 │   │   ├── repository-context-builder/    # Builds repo_scope.md + repo_map.md
 │   │   └── test-pattern-discovery/        # Discovers testing patterns
@@ -347,7 +347,7 @@ Skills like `repository-context-builder` and `flow-and-scope-discovery` follow s
 - [sdd.instructions](../agents/extensions/sdd.instructions.agent.md) — Instruction architecture
 - [sdd.close](../agents/extensions/sdd.close.agent.md) — Story closure, context refresh, archiving
 
-### Skills (22 total)
+### Skills (23 total)
 
 By category:
 - **Foundation**: [repository-context-builder](../skills/foundation/repository-context-builder/SKILL.md), [test-pattern-discovery](../skills/foundation/test-pattern-discovery/SKILL.md)
@@ -379,7 +379,7 @@ By category:
 |-----------|----------|-------|
 | `/agents/core` | Core SDD agents (specify, clarify, plan, tasks, analyze, implement) | 6     |
 | `/agents/extensions` | Extension agents (context-builder, groom, instructions, close) | 4     |
-| `/skills` | 22 reusable skills organized by capability domain (includes new session/checkpoint-manager) | 22    |
+| `/skills` | 23 reusable skills organized by capability domain (includes new session/checkpoint-manager) | 23    |
 | `/prompts/core` | Prompts for core agents | 6     |
 | `/prompts/extensions` | Prompts for extension agents | 4     |
 | `/templates` | Artifact templates and scaffolds | 11    |

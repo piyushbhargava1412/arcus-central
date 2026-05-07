@@ -1,15 +1,17 @@
-```skill
+---
 name: work-decomposition
 description: Break down requirements/design into concrete work items (tasks, stories, components) organized by phase/priority.
-inputs:
-  - requirements
-  - design_context
-  - organization_model
-  - guardrails
-outputs:
-  - work_items
-  - organization_structure
-```
+metadata: 
+  inputs:
+    - requirements
+    - design_context
+    - organization_model
+    - guardrails
+  outputs:
+    - work_items
+    - organization_structure
+    - parallelization_opportunities
+---
 
 # Work Decomposition
 

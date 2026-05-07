@@ -1,14 +1,16 @@
-```skill
+---
 name: dependency-analysis
 description: Analyze work item relationships and compute execution order while identifying parallelizable work.
-inputs:
-  - work_items
-  - dependency_relationships
-outputs:
-  - dependency_graph
-  - execution_phases
-  - parallel_opportunities
-```
+metadata:
+  inputs:
+    - work_items
+    - dependency_relationships
+  outputs:
+    - dependency_matrix
+    - phase_groupings
+    - parallel_execution_bundles
+    - critical_path_identification
+---
 
 # Dependency Analysis
 

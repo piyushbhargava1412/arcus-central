@@ -94,7 +94,7 @@ zsh: permission denied
 | `.arcus/instructions`          | Dir symlink          | `central/guidelines`                  | Engineering guidelines |
 | `.github/agents/*.agent.md`   | Read-only copies (chmod 444) | `central/agents/` (core + extensions)  | 10 SDD agents |
 | `.github/prompts/*.prompt.md` | Read-only copies (chmod 444) | `central/prompts/` (core + extensions) | 10 SDD prompts |
-| `.github/skills/`             | Dir symlink          | `central/skills`                        | 22 reusable skills (10 domains) |
+| `.github/skills/`             | Dir symlink          | `central/skills`                        | 23 reusable skills (10 domains) |
 | `.arcus-ignore`                | Copied once        | `central/.arcus-ignore`                  | Editable (user-owned) |
 
 All source files are read-only. All symlinks use relative paths.
@@ -133,7 +133,7 @@ All source files are read-only. All symlinks use relative paths.
 │   │   ├── sdd.plan.prompt.md
 │   │   ├── sdd.specify.prompt.md
 │   │   └── sdd.tasks.prompt.md
-│   ├── skills/                                  ← Directory symlink (22 reusable skills)
+│   ├── skills/                                  ← Directory symlink (23 reusable skills)
 │   ├── copilot-instructions.md                  ← Generated during bootstrap (Stage 2)
 │   ├── pull_request_template.md                 ← Existing (untouched)
 │   └── workflows/                               ← Existing (untouched)
@@ -186,7 +186,7 @@ The `.arcus/` symlinks and `.github/skills/` symlink provide **read-only access*
 - **Templates** (11): Specification, plan, tasks, checklist, and other artifact templates
 - **Guidelines** (5): Engineering, architecture, language, infrastructure, and testing guidelines
 - **Scripts**: Bash automation scripts for common tasks
-- **Skills** (22): Reusable capability-based skills organized across 10 domains (core, artifact, reasoning, discovery, context, interaction, formatting, maintenance, foundation, specialized)
+- **Skills** (23): Reusable capability-based skills organized across 10 domains (core, artifact, reasoning, discovery, context, interaction, formatting, maintenance, foundation, specialized)
 
 All skills are available for agents to delegate to during analysis and implementation phases.
 

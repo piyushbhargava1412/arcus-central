@@ -1,14 +1,15 @@
-```skill
+---
 name: report-renderer
 description: Render concise, deterministic stage completion reports for chat output.
-inputs:
-  - stage_name
-  - output_paths
-  - status
-  - warnings
-outputs:
-  - chat_report
-```
+metadata: 
+  inputs:
+    - stage_name
+    - output_paths
+    - status
+    - warnings
+  outputs:
+    - chat_report
+---
 
 # Report Renderer
 

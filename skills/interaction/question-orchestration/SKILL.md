@@ -1,14 +1,15 @@
-```skill
+---
 name: question-orchestration
 description: Conduct interactive questioning with recommendations, answer capture, and iteration limits.
-inputs:
-  - question_queue
-  - max_questions
-  - user_interaction_mode
-outputs:
-  - answered_questions
-  - response_mappings
-```
+metadata:
+  inputs:
+    - question_queue
+    - max_questions
+    - user_interaction_mode
+  outputs:
+    - question_answer_log
+    - answer_mapping
+---
 
 # Question Orchestration
 

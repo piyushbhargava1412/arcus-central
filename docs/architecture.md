@@ -24,7 +24,7 @@ sdd.specify
 - Agents remain focused on orchestration, not implementation details
 - New capabilities can be added by creating new skills, not by modifying existing agents
 
-**Scalability benefit:** With 10 agents and 22 skills, you have exponential composition power. A new agent can be built by combining existing skills rather than starting from scratch.
+**Scalability benefit:** With 10 agents and 23 skills, you have exponential composition power. A new agent can be built by combining existing skills rather than starting from scratch.
 
 ### 2. Context Hierarchy: Shared → Story → Task
 
@@ -158,7 +158,7 @@ This enables:
                        │ delegates to
                        ▼
 ┌─────────────────────────────────────────────────────────────┐
-│             Skills (22 reusable capabilities)               │
+│             Skills (23 reusable capabilities)               │
 │                                                             │
 │  Core (3)          Artifact (4)      Reasoning (4)          │
 │  ├─ session        ├─ artifact       ├─ design             │

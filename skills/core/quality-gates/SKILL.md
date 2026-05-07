@@ -1,16 +1,17 @@
-```skill
+---
 name: quality-gates
-description: Apply deterministic quality checks to stage artifacts and return pass/fail results with actionable fixes.
-inputs:
-  - artifact
-  - checklist_template
-  - gate_profile
-  - guardrails (optional)
-outputs:
-  - checklist
-  - gate_results
-  - remediation_items
-```
+description: Apply deterministic quality checks to stage artifacts with pass/fail results.
+metadata:
+  inputs:
+    - artifact
+    - checklist_template
+    - gate_profile
+    - guardrails (optional)
+  outputs:
+    - checklist
+    - gate_results
+    - remediation_items
+---
 
 # Quality Gates
 

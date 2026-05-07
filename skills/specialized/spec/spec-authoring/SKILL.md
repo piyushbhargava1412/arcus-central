@@ -1,16 +1,17 @@
-```skill
+---
 name: spec-authoring
 description: Convert natural language feature intent into structured, technology-agnostic specification content.
-inputs:
-  - feature_description
-  - spec_template
-  - context_pack (optional)
-  - guardrails (optional)
-outputs:
-  - spec_sections
-  - requirements_list
-  - assumptions
-```
+metadata:
+  inputs:
+    - feature_description
+    - spec_template
+    - context_pack (optional)
+    - guardrails (optional)
+  outputs:
+    - spec_file
+    - requirements_file
+    - assumptions
+---
 
 # Spec Authoring
 

@@ -1,14 +1,15 @@
-```skill
+---
 name: ambiguity-detection
 description: Identify and prioritize unresolved requirement ambiguities and produce a bounded clarification queue.
-inputs:
-  - spec_draft
-  - assumptions
-  - guardrails
-outputs:
-  - clarification_markers
-  - prioritized_questions
-```
+metadata:
+  inputs:
+    - spec_draft
+    - assumptions
+    - guardrails (optional)
+  outputs:
+    - clarification_markers
+    - clarification_questions
+---
 
 # Ambiguity Detection
 
