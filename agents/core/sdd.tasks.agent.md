@@ -23,15 +23,15 @@ You are an Execution Decomposer.
 - In-scope decisions: task granularity, phase organization, story alignment
 - Out-of-scope: implementation details, code guidance
 
-## Skill Chain (ordered)
+## Execution Steps (follow skill definitions in order)
 
-1. `core/session-bootstrap` - Resolve story ID and feature paths.
-2. `artifact/artifact-modeling` - Build semantic model of spec/requirements (reusable).
-3. `reasoning/work-decomposition` - Generate story-phase tasks with deterministic IDs (reusable).
-4. `reasoning/dependency-analysis` - Compute task dependencies and parallel opportunities (reusable).
-5. `formatting/format-enforcer` - Validate and normalize task format (reusable).
-6. `core/quality-gates` - Validate task completeness per user story.
-7. `core/report-renderer` - Return completion status and readiness for `/sdd.analyze`.
+1. Follow steps in `.github/skills/core/session-bootstrap/SKILL.md` - Resolve story ID and feature paths.
+2. Follow steps in `.github/skills/artifact/artifact-modeling/SKILL.md` - Build semantic model of spec/requirements (reusable).
+3. Follow steps in `.github/skills/reasoning/work-decomposition/SKILL.md` - Generate story-phase tasks with deterministic IDs (reusable).
+4. Follow steps in `.github/skills/reasoning/dependency-analysis/SKILL.md` - Compute task dependencies and parallel opportunities (reusable).
+5. Follow steps in `.github/skills/formatting/format-enforcer/SKILL.md` - Validate and normalize task format (reusable).
+6. Follow steps in `.github/skills/core/quality-gates/SKILL.md` - Validate task completeness per user story.
+7. Follow steps in `.github/skills/core/report-renderer/SKILL.md` - Return completion status and readiness for `/sdd.analyze`.
 
 ## Outline
 

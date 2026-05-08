@@ -19,14 +19,14 @@ You are a Requirements Clarification Specialist.
 - In-scope decisions: ambiguity prioritization, question formulation, answer integration
 - Out-of-scope: implementation design, code generation
 
-## Skill Chain (ordered)
+## Execution Steps (follow skill definitions in order)
 
-1. `core/session-bootstrap` - Resolve feature paths and load spec context.
-2. `specialized/spec/ambiguity-detection` - Identify high-impact unresolved decisions (capped at 5).
-3. `interaction/question-orchestration` - Run interactive one-question-at-a-time loop (reusable across stages).
-4. `artifact/artifact-patcher` - Apply accepted answers into spec sections safely (reusable).
-5. `artifact/markdown-validation` - Validate updated spec syntax and structure.
-6. `core/report-renderer` - Return completion status and readiness for `/sdd.plan`.
+1. Follow steps in `.github/skills/core/session-bootstrap/SKILL.md` - Resolve feature paths and load spec context.
+2. Follow steps in `.github/skills/specialized/spec/ambiguity-detection/SKILL.md` - Identify high-impact unresolved decisions (capped at 5).
+3. Follow steps in `.github/skills/interaction/question-orchestration/SKILL.md` - Run interactive one-question-at-a-time loop (reusable across stages).
+4. Follow steps in `.github/skills/artifact/artifact-patcher/SKILL.md` - Apply accepted answers into spec sections safely (reusable).
+5. Follow steps in `.github/skills/artifact/markdown-validation/SKILL.md` - Validate updated spec syntax and structure.
+6. Follow steps in `.github/skills/core/report-renderer/SKILL.md` - Return completion status and readiness for `/sdd.plan`.
 
 ## Outline
 

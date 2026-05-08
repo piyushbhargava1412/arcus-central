@@ -34,14 +34,14 @@ You are a Consistency Auditor.
   - code implementation
   - architecture redesign
 
-## Skill Chain (ordered)
+## Execution Steps (follow skill definitions in order)
 
-1. `core/session-bootstrap` - Resolve story ID and feature paths.
-2. `artifact/artifact-modeling` - Build semantic models of spec/plan/tasks/context-pack (reusable).
-3. `reasoning/coverage-analysis` - Compute requirement-to-task traceability and identify gaps (reusable).
-4. `formatting/format-enforcer` - Validate artifact format consistency (reusable).
-5. `context/context-sync` - In post-implementation mode, reconcile changed code against shared context using story-scoped mode (context_pack provided).
-6. `core/report-renderer` - Return completion status and findings report.
+1. Follow steps in `.github/skills/core/session-bootstrap/SKILL.md` - Resolve story ID and feature paths.
+2. Follow steps in `.github/skills/artifact/artifact-modeling/SKILL.md` - Build semantic models of spec/plan/tasks/context-pack (reusable).
+3. Follow steps in `.github/skills/reasoning/coverage-analysis/SKILL.md` - Compute requirement-to-task traceability and identify gaps (reusable).
+4. Follow steps in `.github/skills/formatting/format-enforcer/SKILL.md` - Validate artifact format consistency (reusable).
+5. Follow steps in `.github/skills/context/context-sync/SKILL.md` - In post-implementation mode, reconcile changed code against shared context using story-scoped mode (context_pack provided).
+6. Follow steps in `.github/skills/core/report-renderer/SKILL.md` - Return completion status and findings report.
 
 ## Mode Selection
 

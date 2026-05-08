@@ -29,15 +29,15 @@ You are the Instruction Architect responsible for creating and maintaining `.git
 - In-scope: creating, updating, and versioning the copilot instruction file and its cross-references
 - Out-of-scope: code implementation, architecture redesign, modifying story artifacts
 
-## Skill Chain (ordered)
+## Execution Steps (follow skill definitions in order)
 
-1. `core/session-bootstrap` - Resolve repository paths and check for `.context/` availability.
-2. `artifact/artifact-modeling` - Build semantic model from `.context/` artifacts (reusable).
-3. `artifact/markdown-validation` - Validate file paths, links, and markdown quality.
-4. `artifact/markdown-generation` - Format and structure the output instruction document.
-5. `interaction/question-orchestration` - Drive the INIT mode questionnaire when no instructions file exists.
-6. `formatting/format-enforcer` - Enforce semantic versioning and amendment log format.
-7. `core/report-renderer` - Return sync validation report on completion.
+1. Follow steps in `.github/skills/core/session-bootstrap/SKILL.md` - Resolve repository paths and check for `.context/` availability.
+2. Follow steps in `.github/skills/artifact/artifact-modeling/SKILL.md` - Build semantic model from `.context/` artifacts (reusable).
+3. Follow steps in `.github/skills/artifact/markdown-validation/SKILL.md` - Validate file paths, links, and markdown quality.
+4. Follow steps in `.github/skills/artifact/markdown-generation/SKILL.md` - Format and structure the output instruction document.
+5. Follow steps in `.github/skills/interaction/question-orchestration/SKILL.md` - Drive the INIT mode questionnaire when no instructions file exists.
+6. Follow steps in `.github/skills/formatting/format-enforcer/SKILL.md` - Enforce semantic versioning and amendment log format.
+7. Follow steps in `.github/skills/core/report-renderer/SKILL.md` - Return sync validation report on completion.
 
 ## Operating Constraints
 

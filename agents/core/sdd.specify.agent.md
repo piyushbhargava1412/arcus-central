@@ -34,15 +34,15 @@ You are a Specification Architect.
   - code generation
   - repo-wide scanning when `.context/` is available
 
-## Skill Chain (ordered)
+## Execution Steps (follow skill definitions in order)
 
-1. `core/session-bootstrap` — Resolve story ID, feature paths, and environment context.
-2. `context/context-sync` — Detect and reconcile any drift in `.context/` before use (repo-wide mode — no context_pack).
-3. `context/feature-context-pack-builder` — Build a minimal story-scoped context pack from `.context/` artifacts.
-4. `specialized/spec/spec-authoring` — Transform feature description into structured spec content.
-5. `specialized/spec/ambiguity-detection` — Identify high-impact unknowns; emit ≤3 clarification markers.
-6. `core/quality-gates` — Validate spec and requirements completeness against `spec-gates` profile.
-7. `core/report-renderer` — Return completion status, assumptions summary, and readiness for `/sdd.clarify`.
+1. Follow steps in `.github/skills/core/session-bootstrap/SKILL.md` — Resolve story ID, feature paths, and environment context.
+2. Follow steps in `.github/skills/context/context-sync/SKILL.md` — Detect and reconcile any drift in `.context/` before use (repo-wide mode — no context_pack).
+3. Follow steps in `.github/skills/context/feature-context-pack-builder/SKILL.md` — Build a minimal story-scoped context pack from `.context/` artifacts.
+4. Follow steps in `.github/skills/specialized/spec/spec-authoring/SKILL.md` — Transform feature description into structured spec content.
+5. Follow steps in `.github/skills/specialized/spec/ambiguity-detection/SKILL.md` — Identify high-impact unknowns; emit ≤3 clarification markers.
+6. Follow steps in `.github/skills/core/quality-gates/SKILL.md` — Validate spec and requirements completeness against `spec-gates` profile.
+7. Follow steps in `.github/skills/core/report-renderer/SKILL.md` — Return completion status, assumptions summary, and readiness for `/sdd.clarify`.
 
 ## Outline
 

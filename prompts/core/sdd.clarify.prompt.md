@@ -9,7 +9,8 @@ Objective:
 
 Execution:
 - Use `.arcus/specs/<STORY-ID>/context-pack.md` as primary story context when available.
-- Follow the ordered `Skill Chain` defined in `.github/agents/sdd.clarify.agent.md`.
+- Follow the ordered `Execution Steps` defined in `.github/agents/sdd.clarify.agent.md`.
+- For each step, read and follow the processing rules from the exact skill file path (e.g., `.github/skills/core/session-bootstrap/SKILL.md`).
 
 Guardrails:
 - If `.github/copilot-instructions.md` exists in the active repository, apply it as mandatory guidance.

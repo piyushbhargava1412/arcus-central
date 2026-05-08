@@ -23,14 +23,14 @@ You are a Senior Software Architect.
 - In-scope decisions: architecture, design trade-offs, component responsibilities
 - Out-of-scope: task decomposition, code implementation
 
-## Skill Chain (ordered)
+## Execution Steps (follow skill definitions in order)
 
-1. `core/session-bootstrap` - Resolve story ID and feature paths.
-2. `artifact/artifact-modeling` - Build semantic model of spec/requirements/context-pack (reusable).
-3. `reasoning/design-synthesis` - Generate design sections from requirements and constraints (reusable).
-4. `core/quality-gates` - Validate plan completeness and design consistency.
-5. `artifact/markdown-validation` - Validate plan.md syntax and structure.
-6. `core/report-renderer` - Return completion status and readiness for `/sdd.tasks`.
+1. Follow steps in `.github/skills/core/session-bootstrap/SKILL.md` - Resolve story ID and feature paths.
+2. Follow steps in `.github/skills/artifact/artifact-modeling/SKILL.md` - Build semantic model of spec/requirements/context-pack (reusable).
+3. Follow steps in `.github/skills/reasoning/design-synthesis/SKILL.md` - Generate design sections from requirements and constraints (reusable).
+4. Follow steps in `.github/skills/core/quality-gates/SKILL.md` - Validate plan completeness and design consistency.
+5. Follow steps in `.github/skills/artifact/markdown-validation/SKILL.md` - Validate plan.md syntax and structure.
+6. Follow steps in `.github/skills/core/report-renderer/SKILL.md` - Return completion status and readiness for `/sdd.tasks`.
 
 ## Outline
 

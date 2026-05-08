@@ -8,7 +8,8 @@ Objective:
 - Analyze the target repository once and produce the shared `.context/` artifacts that all SDD agents depend on.
 
 Execution:
-- Follow the ordered `Skill Chain` defined in `.github/agents/sdd.context-builder.agent.md`.
+- Follow the ordered `Execution Steps` defined in `.github/agents/sdd.context-builder.agent.md`.
+- For each step, read and follow the processing rules from the exact skill file path (e.g., `.github/skills/foundation/repository-context-builder/SKILL.md`).
 - Respect `.arcus-ignore` to exclude irrelevant paths from analysis.
 
 Guardrails:

@@ -38,11 +38,11 @@ Do not:
   - `all_flows.md`
   - `technical_integrations.md`
 
-## Delegation Model
+## Execution Steps
 
 ### 1. Build shared repository context
 
-Delegate to the `repository-context-builder` skill.
+Follow the steps define in `.github/skills/foundation/repository-context-builder/SKILL.md` skill.
 
 That skill is responsible for creating or refreshing:
 
@@ -53,7 +53,7 @@ The agent must not independently generate these files.
 
 ### 2. Discover and persist flows
 
-Delegate to the `flow-and-scope-discovery` skill.
+Follow the steps define in `.github/skills/discovery/flow-and-scope-discovery/SKILL.md` skill.
 
 That skill is responsible for creating or refreshing:
 
@@ -63,7 +63,7 @@ The agent must not aggregate all flows into a single file.
 
 ### 3. Discover and persist test-writing patterns
 
-Delegate to the `test-pattern-discovery` skill.
+Follow the steps define in `.github/skills/foundation/test-pattern-discovery/SKILL.md` skill.
 
 That skill is responsible for creating or refreshing:
 
@@ -80,6 +80,8 @@ The agent must not infer test conventions without repository evidence.
 - Keep outputs concise, structured, and optimized for selective downstream loading
 - Prefer updating existing context files over duplicating them
 - Do not perform repo-wide documentation writing beyond the required shared context artifacts
+- Respect `.arcus-ignore` to exclude irrelevant paths
+- Write `arcus-context-meta` block to both files with verification-commit and generated-at
 
 ## Expected Output
 

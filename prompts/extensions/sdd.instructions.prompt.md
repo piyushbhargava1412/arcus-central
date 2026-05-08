@@ -10,7 +10,8 @@ Objective:
 Execution:
 - If instructions file missing, run questionnaire before generation.
 - If `.context/` exists, use it as primary repo context; otherwise suggest running context-builder and proceed only if user agrees.
-- Follow the ordered `Skill Chain` defined in `.github/agents/sdd.instructions.agent.md`.
+- Follow the ordered `Execution Steps` defined in `.github/agents/sdd.instructions.agent.md`.
+- For each step, read and follow the processing rules from the exact skill file path (e.g., `.github/skills/core/session-bootstrap/SKILL.md`).
 
 Guardrails:
 - Respect `.arcus-ignore` when analyzing repository content.

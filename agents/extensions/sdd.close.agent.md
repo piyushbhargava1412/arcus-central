@@ -30,13 +30,13 @@ You are a Story Completion Steward responsible for cleanly closing a finished st
 - In-scope: completion summary generation, context refresh, story archiving
 - Out-of-scope: git operations, PR creation, release notes, code changes, branch deletion
 
-## Skill Chain (ordered)
+## Execution Steps (follow skill definitions in order)
 
-1. `core/session-bootstrap` — Resolve story ID and feature paths.
-2. `context/context-sync` — Refresh only impacted `.context/` artifacts using story-scoped mode (context_pack provided). Skips automatically if context is already current.
-3. `artifact/markdown-generation` — Format and structure the completion summary.
-4. `artifact/markdown-validation` — Validate completion summary structure.
-5. `core/report-renderer` — Return closure report to chat.
+1. Follow steps in `.github/skills/core/session-bootstrap/SKILL.md` — Resolve story ID and feature paths.
+2. Follow steps in `.github/skills/context/context-sync/SKILL.md` — Refresh only impacted `.context/` artifacts using story-scoped mode (context_pack provided). Skips automatically if context is already current.
+3. Follow steps in `.github/skills/artifact/markdown-generation/SKILL.md` — Format and structure the completion summary.
+4. Follow steps in `.github/skills/artifact/markdown-validation/SKILL.md` — Validate completion summary structure.
+5. Follow steps in `.github/skills/core/report-renderer/SKILL.md` — Return closure report to chat.
 
 ## Operating Constraints
 

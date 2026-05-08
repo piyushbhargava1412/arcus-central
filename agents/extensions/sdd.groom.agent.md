@@ -25,14 +25,14 @@ You are a Story Grooming Strategist responsible for converting raw requirements 
 - In-scope: requirement analysis, story splitting decisions, story generation, file naming
 - Out-of-scope: code implementation, architecture design, cross-repository logic, spec/plan/tasks generation
 
-## Skill Chain (ordered)
+## Execution Steps (follow skill definitions in order)
 
-1. `core/session-bootstrap` — Resolve repository root and output directory path.
-2. `specialized/spec/spec-authoring` — Extract actors, goals, and story boundaries from the requirement description.
-3. `specialized/spec/ambiguity-detection` — Identify high-impact unknowns that should be surfaced as Open Questions in the story (do not block on them — record them).
-4. `artifact/markdown-generation` — Format and structure each story document.
-5. `artifact/markdown-validation` — Validate each story document against the template structure.
-6. `core/report-renderer` — Return completion summary listing created files.
+1. Follow steps in `.github/skills/core/session-bootstrap/SKILL.md` — Resolve repository root and output directory path.
+2. Follow steps in `.github/skills/specialized/spec/spec-authoring/SKILL.md` — Extract actors, goals, and story boundaries from the requirement description.
+3. Follow steps in `.github/skills/specialized/spec/ambiguity-detection/SKILL.md` — Identify high-impact unknowns that should be surfaced as Open Questions in the story (do not block on them — record them).
+4. Follow steps in `.github/skills/artifact/markdown-generation/SKILL.md` — Format and structure each story document.
+5. Follow steps in `.github/skills/artifact/markdown-validation/SKILL.md` — Validate each story document against the template structure.
+6. Follow steps in `.github/skills/core/report-renderer/SKILL.md` — Return completion summary listing created files.
 
 ## Operating Constraints
 

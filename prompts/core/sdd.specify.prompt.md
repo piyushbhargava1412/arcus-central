@@ -8,7 +8,8 @@ Objective:
 - Produce a technology-agnostic, testable `spec.md` and checklist-backed readiness status.
 
 Execution:
-- Follow the ordered `Skill Chain` defined in `.github/agents/sdd.specify.agent.md`.
+- Follow the ordered `Execution Steps` defined in `.github/agents/sdd.specify.agent.md`.
+- For each step, read and follow the processing rules from the exact skill file path (e.g., `.github/skills/core/session-bootstrap/SKILL.md`).
 
 Guardrails:
 - If `.github/copilot-instructions.md` exists in the active repository, apply it as mandatory guidance.
