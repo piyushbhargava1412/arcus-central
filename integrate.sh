@@ -297,10 +297,17 @@ main() {
         prompt_removals=$(remove_md_files "$TARGET_REPO/.github/prompts" "*.prompt.md" "prompt")
         ((removal_count += prompt_removals))
 
-        # Remove .github/skills/ SKILL.md files
-        local skill_removals
-        skill_removals=$(remove_md_files "$TARGET_REPO/.github/skills" "SKILL.md" "skill")
-        ((removal_count += skill_removals))
+         # Remove .github/skills/ files (SKILL.md files and registry)
+         local skill_removals
+         skill_removals=$(remove_md_files "$TARGET_REPO/.github/skills" "SKILL.md" "skill")
+         ((removal_count += skill_removals))
+
+         # Also remove SKILLS_REGISTRY.md
+         if [[ -f "$TARGET_REPO/.github/skills/SKILLS_REGISTRY.md" ]]; then
+             rm -f "$TARGET_REPO/.github/skills/SKILLS_REGISTRY.md"
+             ((removal_count++))
+             success "Removed: .github/skills/SKILLS_REGISTRY.md"
+         fi
 
         # Remove .arcus-ignore
         if [[ -f "$TARGET_REPO/.arcus-ignore" ]]; then
@@ -429,6 +436,16 @@ main() {
         fi
     done < <(find "$CENTRAL_REPO/prompts" -name "*.prompt.md" -type f -print0 2>/dev/null)
     info "$prompt_count prompt files copied to .github/prompts/"
+
+    # Skills registry: copy SKILLS_REGISTRY.md (single source of truth for runtime skill discovery)
+    mkdir -p "$TARGET_REPO/.github/skills"
+    if [[ -f "$CENTRAL_REPO/skills/SKILLS_REGISTRY.md" ]]; then
+        if copy_file_readonly "$CENTRAL_REPO/skills/SKILLS_REGISTRY.md" "$TARGET_REPO/.github/skills/SKILLS_REGISTRY.md"; then
+            success "Skills registry copied to .github/skills/"
+        fi
+    else
+        warning "SKILLS_REGISTRY.md not found in central — skipping"
+    fi
 
     # Skills: copy SKILL.md files preserving capability folder structure
     mkdir -p "$TARGET_REPO/.github/skills"

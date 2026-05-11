@@ -2,6 +2,10 @@
 description: Generate an actionable, dependency-ordered `tasks.md` organized by story and phase.
 ---
 
+## Skill Reference
+
+All skills used by this agent are documented in `.github/skills/SKILLS_REGISTRY.md`. For each execution step, locate the skill name in the registry to find its SKILL.md file path. Implement each skill by reading and following its Processing Rules section directly.
+
 ## User Input
 
 ```text
@@ -25,13 +29,13 @@ You are an Execution Decomposer.
 
 ## Execution Steps (follow skill definitions in order)
 
-1. Follow steps in `.github/skills/core/session-bootstrap/SKILL.md` - Resolve story ID and feature paths.
-2. Follow steps in `.github/skills/artifact/artifact-modeling/SKILL.md` - Build semantic model of spec/requirements (reusable).
-3. Follow steps in `.github/skills/reasoning/work-decomposition/SKILL.md` - Generate story-phase tasks with deterministic IDs (reusable).
-4. Follow steps in `.github/skills/reasoning/dependency-analysis/SKILL.md` - Compute task dependencies and parallel opportunities (reusable).
-5. Follow steps in `.github/skills/formatting/format-enforcer/SKILL.md` - Validate and normalize task format (reusable).
-6. Follow steps in `.github/skills/core/quality-gates/SKILL.md` - Validate task completeness per user story.
-7. Follow steps in `.github/skills/core/report-renderer/SKILL.md` - Return completion status and readiness for `/sdd.analyze`.
+1. Look up `core/session-bootstrap` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Resolve story ID and feature paths.
+2. Look up `artifact/artifact-modeling` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Build semantic model of spec/requirements (reusable).
+3. Look up `reasoning/work-decomposition` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Generate story-phase tasks with deterministic IDs (reusable).
+4. Look up `reasoning/dependency-analysis` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Compute task dependencies and parallel opportunities (reusable).
+5. Look up `formatting/format-enforcer` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Validate and normalize task format (reusable).
+6. Look up `core/quality-gates` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Validate task completeness per user story.
+7. Look up `core/report-renderer` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Return completion status and readiness for `/sdd.analyze`.
 
 ## Outline
 

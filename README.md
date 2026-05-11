@@ -122,7 +122,7 @@ ARCUS is now using ARCUS to evolve. New features to the framework are developed 
 
 - [Integration Guide](ARCUS_INTEGRATION_GUIDE.md) — Setup, CLI usage, and integration workflow
 - [Agent Registry](registry/AGENT_REGISTRY.md) — Complete agent catalog
-- [Skill Registry](registry/SKILLS_REGISTRY.md) — Complete skill catalog
+- [Skill Registry](skills/SKILLS_REGISTRY.md) — Complete skill catalog
 - [Engineering Guidelines](guidelines/engineering/engineering-guidelines.md) — Code quality standards
 - [Architecture Guidelines](guidelines/architecture/architecture-guidelines.md) — System design principles
 - [Testing Standards](guidelines/testing/testing-guidelines.md) — Testing best practices

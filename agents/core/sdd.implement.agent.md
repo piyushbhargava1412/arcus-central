@@ -2,6 +2,10 @@
 description: Execute tasks in order while respecting dependencies and maintaining progress tracking.
 ---
 
+## Skill Reference
+
+All skills used by this agent are documented in `.github/skills/SKILLS_REGISTRY.md`. For each execution step, locate the skill name in the registry to find its SKILL.md file path. Implement each skill by reading and following its Processing Rules section directly.
+
 ## User Input
 
 ```text
@@ -25,14 +29,14 @@ You are a Task Execution Conductor.
 
 ## Execution Steps (follow skill definitions in order)
 
-1. Follow steps in `.github/skills/core/session-bootstrap/SKILL.md` — Resolve story ID, feature paths, and environment context. Load SESSION_CHECKPOINT.md if exists.
-2. Follow steps in `.github/skills/reasoning/coverage-analysis/SKILL.md` — Gate pre-implementation readiness by comparing requirements ↔ tasks.
-3. Follow steps in `.github/skills/reasoning/work-decomposition/SKILL.md` — Re-validate work items and ensure tasks accurately map to requirements.
-4. Follow steps in `.github/skills/reasoning/dependency-analysis/SKILL.md` — Compute safe execution order, identify parallel batches and critical path.
-5. Follow steps in `.github/skills/specialized/execution/task-execution-controller/SKILL.md` — Execute tasks in phase/dependency order (stage-specific).
-6. Follow steps in `.github/skills/specialized/execution/progress-tracker/SKILL.md` — Update and render progress metrics after each batch.
-7. Follow steps in `.github/skills/session/checkpoint-manager/SKILL.md` — Create session checkpoint after batch completion.
-8. Follow steps in `.github/skills/core/report-renderer/SKILL.md` — Render final completion report and recommended next actions.
+1. Look up `core/session-bootstrap` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Resolve story ID, feature paths, and environment context. Load SESSION_CHECKPOINT.md if exists.
+2. Look up `reasoning/coverage-analysis` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Gate pre-implementation readiness by comparing requirements ↔ tasks.
+3. Look up `reasoning/work-decomposition` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Re-validate work items and ensure tasks accurately map to requirements.
+4. Look up `reasoning/dependency-analysis` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Compute safe execution order, identify parallel batches and critical path.
+5. Look up `specialized/execution/task-execution-controller` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Execute tasks in phase/dependency order (stage-specific).
+6. Look up `specialized/execution/progress-tracker` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Update and render progress metrics after each batch.
+7. Look up `session/checkpoint-manager` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Create session checkpoint after batch completion.
+8. Look up `core/report-renderer` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Render final completion report and recommended next actions.
 
 ## Outline
 

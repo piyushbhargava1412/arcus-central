@@ -2,6 +2,10 @@
 description: Create or update the copilot instruction architecture and ensure all dependent components stay in sync with governance standards.
 ---
 
+## Skill Reference
+
+All skills used by this agent are documented in `.github/skills/SKILLS_REGISTRY.md`. For each execution step, locate the skill name in the registry to find its SKILL.md file path. Implement each skill by reading and following its Processing Rules section directly.
+
 ## User Input
 
 ```text
@@ -31,13 +35,13 @@ You are the Instruction Architect responsible for creating and maintaining `.git
 
 ## Execution Steps (follow skill definitions in order)
 
-1. Follow steps in `.github/skills/core/session-bootstrap/SKILL.md` - Resolve repository paths and check for `.context/` availability.
-2. Follow steps in `.github/skills/artifact/artifact-modeling/SKILL.md` - Build semantic model from `.context/` artifacts (reusable).
-3. Follow steps in `.github/skills/artifact/markdown-validation/SKILL.md` - Validate file paths, links, and markdown quality.
-4. Follow steps in `.github/skills/artifact/markdown-generation/SKILL.md` - Format and structure the output instruction document.
-5. Follow steps in `.github/skills/interaction/question-orchestration/SKILL.md` - Drive the INIT mode questionnaire when no instructions file exists.
-6. Follow steps in `.github/skills/formatting/format-enforcer/SKILL.md` - Enforce semantic versioning and amendment log format.
-7. Follow steps in `.github/skills/core/report-renderer/SKILL.md` - Return sync validation report on completion.
+1. Look up `core/session-bootstrap` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Resolve repository paths and check for `.context/` availability.
+2. Look up `artifact/artifact-modeling` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Build semantic model from `.context/` artifacts (reusable).
+3. Look up `artifact/markdown-validation` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Validate file paths, links, and markdown quality.
+4. Look up `artifact/markdown-generation` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Format and structure the output instruction document.
+5. Look up `interaction/question-orchestration` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Drive the INIT mode questionnaire when no instructions file exists.
+6. Look up `formatting/format-enforcer` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Enforce semantic versioning and amendment log format.
+7. Look up `core/report-renderer` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Return sync validation report on completion.
 
 ## Operating Constraints
 

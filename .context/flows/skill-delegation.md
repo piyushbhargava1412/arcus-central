@@ -3,7 +3,7 @@
 ## Entry Points
 
 - **Agent Call**: Agent (orchestrator) invokes a skill with defined inputs
-- **Skill Registry Lookup**: Agent consults `registry/SKILLS_REGISTRY.md` to find appropriate skill for task
+- **Skill Registry Lookup**: Agent consults `.github/skills/SKILLS_REGISTRY.md` to find appropriate skill for task
 
 ## Core Path
 
@@ -104,7 +104,7 @@
 
 Evidence:
 - 20+ skill definitions in `skills/` with explicit inputs, outputs, processing rules
-- Skill registry in `registry/SKILLS_REGISTRY.md` documents all skills
+- Skill registry in `skills/SKILLS_REGISTRY.md` documents all skills
 - Agent definitions show explicit delegation models (e.g., `sdd.specify.agent.md` lists 7 skill calls)
 - Each skill has SKILL.md with processing rules, validation gates, failure modes
 - Examples: `repository-context-builder`, `flow-and-scope-discovery`, `spec-authoring` show mature definitions

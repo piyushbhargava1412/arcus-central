@@ -112,7 +112,7 @@
 
 Evidence:
 - Agent definitions in `agents/core/` and `agents/extensions/` with explicit role, scope, delegation
-- Skill registry in `registry/SKILLS_REGISTRY.md` documents all available skills
+- Skill registry in `skills/SKILLS_REGISTRY.md` documents all available skills
 - `sdd.specify.agent.md` shows complete delegation model (7 steps)
 - Templates in `templates/` match output structures
 - Integration guide documents how IntelliJ discovers agents

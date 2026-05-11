@@ -179,7 +179,7 @@ Example: sdd.specify → feature-context-pack-builder → analyze repo state →
 
 - **CLI Command**: `arcus-integrate` (shell command — installs to `/usr/local/bin/`)
 - **Copilot Agent Picker**: Discovers agents from `.github/agents/*.agent.md` in integrated repos
-- **Skill Registry**: Central `registry/SKILLS_REGISTRY.md` documents all available skills
+- **Skill Registry**: Central `skills/SKILLS_REGISTRY.md` documents all available skills
 - **Agent Registry**: Central `registry/AGENT_REGISTRY.md` documents all agents and their capabilities
 - **Documentation**: README, ARCUS_INTEGRATION_GUIDE, STRUCTURE guide users through setup
 

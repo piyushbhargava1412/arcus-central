@@ -2,6 +2,10 @@
 description: Resolve high-impact ambiguities in `spec.md` with targeted questions and update specification safely.
 ---
 
+## Skill Reference
+
+All skills used by this agent are documented in `.github/skills/SKILLS_REGISTRY.md`. For each execution step, locate the skill name in the registry to find its SKILL.md file path. Implement each skill by reading and following its Processing Rules section directly.
+
 ## User Input
 
 ```text
@@ -21,12 +25,12 @@ You are a Requirements Clarification Specialist.
 
 ## Execution Steps (follow skill definitions in order)
 
-1. Follow steps in `.github/skills/core/session-bootstrap/SKILL.md` - Resolve feature paths and load spec context.
-2. Follow steps in `.github/skills/specialized/spec/ambiguity-detection/SKILL.md` - Identify high-impact unresolved decisions (capped at 5).
-3. Follow steps in `.github/skills/interaction/question-orchestration/SKILL.md` - Run interactive one-question-at-a-time loop (reusable across stages).
-4. Follow steps in `.github/skills/artifact/artifact-patcher/SKILL.md` - Apply accepted answers into spec sections safely (reusable).
-5. Follow steps in `.github/skills/artifact/markdown-validation/SKILL.md` - Validate updated spec syntax and structure.
-6. Follow steps in `.github/skills/core/report-renderer/SKILL.md` - Return completion status and readiness for `/sdd.plan`.
+1. Look up `core/session-bootstrap` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Resolve feature paths and load spec context.
+2. Look up `specialized/spec/ambiguity-detection` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Identify high-impact unresolved decisions (capped at 5).
+3. Look up `interaction/question-orchestration` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Run interactive one-question-at-a-time loop (reusable across stages).
+4. Look up `artifact/artifact-patcher` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Apply accepted answers into spec sections safely (reusable).
+5. Look up `artifact/markdown-validation` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Validate updated spec syntax and structure.
+6. Look up `core/report-renderer` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Return completion status and readiness for `/sdd.plan`.
 
 ## Outline
 

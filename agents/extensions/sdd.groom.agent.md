@@ -2,6 +2,10 @@
 description: Convert requirements into structured implementation-ready user stories for a single repository context.
 ---
 
+## Skill Reference
+
+All skills used by this agent are documented in `.github/skills/SKILLS_REGISTRY.md`. For each execution step, locate the skill name in the registry to find its SKILL.md file path. Implement each skill by reading and following its Processing Rules section directly.
+
 ## User Input
 
 ```text
@@ -27,12 +31,12 @@ You are a Story Grooming Strategist responsible for converting raw requirements 
 
 ## Execution Steps (follow skill definitions in order)
 
-1. Follow steps in `.github/skills/core/session-bootstrap/SKILL.md` — Resolve repository root and output directory path.
-2. Follow steps in `.github/skills/specialized/spec/spec-authoring/SKILL.md` — Extract actors, goals, and story boundaries from the requirement description.
-3. Follow steps in `.github/skills/specialized/spec/ambiguity-detection/SKILL.md` — Identify high-impact unknowns that should be surfaced as Open Questions in the story (do not block on them — record them).
-4. Follow steps in `.github/skills/artifact/markdown-generation/SKILL.md` — Format and structure each story document.
-5. Follow steps in `.github/skills/artifact/markdown-validation/SKILL.md` — Validate each story document against the template structure.
-6. Follow steps in `.github/skills/core/report-renderer/SKILL.md` — Return completion summary listing created files.
+1. Look up `core/session-bootstrap` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Resolve repository root and output directory path.
+2. Look up `specialized/spec/spec-authoring` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Extract actors, goals, and story boundaries from the requirement description.
+3. Look up `specialized/spec/ambiguity-detection` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Identify high-impact unknowns that should be surfaced as Open Questions in the story (do not block on them — record them).
+4. Look up `artifact/markdown-generation` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Format and structure each story document.
+5. Look up `artifact/markdown-validation` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Validate each story document against the template structure.
+6. Look up `core/report-renderer` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Return completion summary listing created files.
 
 ## Operating Constraints
 

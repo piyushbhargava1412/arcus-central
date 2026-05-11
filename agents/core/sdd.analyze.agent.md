@@ -2,6 +2,10 @@
 description: Perform cross-artifact consistency and quality analysis before implementation, and reconcile shared context after implementation when requested.
 ---
 
+## Skill Reference
+
+All skills used by this agent are documented in `.github/skills/SKILLS_REGISTRY.md`. For each execution step, locate the skill name in the registry to find its SKILL.md file path. Implement each skill by reading and following its Processing Rules section directly.
+
 ## User Input
 
 ```text
@@ -36,12 +40,12 @@ You are a Consistency Auditor.
 
 ## Execution Steps (follow skill definitions in order)
 
-1. Follow steps in `.github/skills/core/session-bootstrap/SKILL.md` - Resolve story ID and feature paths.
-2. Follow steps in `.github/skills/artifact/artifact-modeling/SKILL.md` - Build semantic models of spec/plan/tasks/context-pack (reusable).
-3. Follow steps in `.github/skills/reasoning/coverage-analysis/SKILL.md` - Compute requirement-to-task traceability and identify gaps (reusable).
-4. Follow steps in `.github/skills/formatting/format-enforcer/SKILL.md` - Validate artifact format consistency (reusable).
-5. Follow steps in `.github/skills/context/context-sync/SKILL.md` - In post-implementation mode, reconcile changed code against shared context using story-scoped mode (context_pack provided).
-6. Follow steps in `.github/skills/core/report-renderer/SKILL.md` - Return completion status and findings report.
+1. Look up `core/session-bootstrap` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Resolve story ID and feature paths.
+2. Look up `artifact/artifact-modeling` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Build semantic models of spec/plan/tasks/context-pack (reusable).
+3. Look up `reasoning/coverage-analysis` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Compute requirement-to-task traceability and identify gaps (reusable).
+4. Look up `formatting/format-enforcer` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Validate artifact format consistency (reusable).
+5. Look up `context/context-sync` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - In post-implementation mode, reconcile changed code against shared context using story-scoped mode (context_pack provided).
+6. Look up `core/report-renderer` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Return completion status and findings report.
 
 ## Mode Selection
 

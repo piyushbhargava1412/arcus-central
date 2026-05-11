@@ -2,6 +2,10 @@
 description: Initialize or reset ARCUS shared repository context by generating `.context/repo_scope.md`, `.context/repo_map.md`, `.context/flows/*.md`, and `.context/testing-patterns.md`.
 ---
 
+## Skill Reference
+
+All skills used by this agent are documented in `.github/skills/SKILLS_REGISTRY.md`. For each execution step, locate the skill name in the registry to find its SKILL.md file path. Implement each skill by reading and following its Processing Rules section directly.
+
 ## Purpose
 
 Bootstrap the shared ARCUS context for a repository.
@@ -42,9 +46,9 @@ Do not:
 
 ### 1. Build shared repository context
 
-Follow the steps define in `.github/skills/foundation/repository-context-builder/SKILL.md` skill.
+Look up skill `repository-context-builder` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules.
 
-That skill is responsible for creating or refreshing:
+This skill is responsible for creating or refreshing:
 
 - `.context/repo_scope.md`
 - `.context/repo_map.md`
@@ -52,20 +56,18 @@ That skill is responsible for creating or refreshing:
 The agent must not independently generate these files.
 
 ### 2. Discover and persist flows
+Look up skill `flow-and-scope-discovery` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules.
 
-Follow the steps define in `.github/skills/discovery/flow-and-scope-discovery/SKILL.md` skill.
-
-That skill is responsible for creating or refreshing:
+This skill is responsible for creating or refreshing:
 
 - one file per flow under `.context/flows/`
 
 The agent must not aggregate all flows into a single file.
 
 ### 3. Discover and persist test-writing patterns
+Look up skill `test-pattern-discovery` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules.
 
-Follow the steps define in `.github/skills/foundation/test-pattern-discovery/SKILL.md` skill.
-
-That skill is responsible for creating or refreshing:
+This skill is responsible for creating or refreshing:
 
 - `.context/testing-patterns.md`
 

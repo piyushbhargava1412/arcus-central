@@ -42,7 +42,7 @@ When **creating or modifying agents**:
 When **creating or modifying skills**:
 - **MUST** follow structure defined in `skills/[category]/SKILL.md` (metadata + implementation details)
 - **MUST** include: input contract, output contract, processing rules, dependencies, error handling
-- **MUST** update `registry/SKILLS_REGISTRY.md` with skill metadata (name, domain, inputs, outputs, reusability notes)
+- **MUST** update `skills/SKILLS_REGISTRY.md` with skill metadata (name, domain, inputs, outputs, reusability notes)
 - **MUST** refresh `.context/` after skill changes using `sdd.context-builder` agent
 - **SHOULD** organize skills by capability domain (foundation, discovery, context, artifact, core, reasoning, specialized, formatting, maintenance, interaction)
 
@@ -61,7 +61,7 @@ When **maintaining documentation**, follow this priority:
    - `README.md` — Project overview and quick start
    - `ARCUS_INTEGRATION_GUIDE.md` — Integration guide and CLI reference
    - `registry/AGENT_REGISTRY.md` — All agents and their capabilities
-   - `registry/SKILLS_REGISTRY.md` — All skills and domains
+   - `skills/SKILLS_REGISTRY.md` — All skills and domains
    - `docs/SDD-Flow-Diagram.md` — Visual workflow representation
 
 3. **AVOID** creating additional how-to guides, tutorials, or comprehensive documentation unless explicitly requested
@@ -182,7 +182,7 @@ Before merging changes to this repository:
 - [Repository Scope](../.context/repo_scope.md) — Business capabilities, component architecture
 - [Repository Map](../.context/repo_map.md) — Technical topology, directory structure
 - [Agent Registry](../registry/AGENT_REGISTRY.md) — All agents and their capabilities
-- [Skill Registry](../registry/SKILLS_REGISTRY.md) — All skills and domains
+- [Skill Registry](../skills/SKILLS_REGISTRY.md) — All skills and domains
 - [Integration Guide](../ARCUS_INTEGRATION_GUIDE.md) — CLI usage and integration workflow
 
 

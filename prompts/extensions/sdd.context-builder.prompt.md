@@ -9,7 +9,9 @@ Objective:
 
 Execution:
 - Follow the ordered `Execution Steps` defined in `.github/agents/sdd.context-builder.agent.md`.
-- For each step, read and follow the processing rules from the exact skill file path (e.g., `.github/skills/foundation/repository-context-builder/SKILL.md`).
+- For each step, look up the skill name in `.github/skills/SKILLS_REGISTRY.md` to find the SKILL.md file path.
+- Read and follow the Processing Rules section of the located SKILL.md file.
+- Implement each skill's Processing Rules step-by-step directly (do not invoke as an agent or tool).
 - Respect `.arcus-ignore` to exclude irrelevant paths from analysis.
 
 Guardrails:

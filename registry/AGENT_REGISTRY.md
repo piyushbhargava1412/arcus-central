@@ -8,7 +8,7 @@ This file maintains a registry of all available agents, their capabilities, and 
 
 **For Tools/Scripts**: This registry is machine-readable. Extract agent file paths from the "File" field and skill chains from the delegation models.
 
-**Related**: See [SKILLS_REGISTRY.md](./SKILLS_REGISTRY.md) for available reusable skills and reusability analysis.
+**Related**: See [SKILLS_REGISTRY.md](../skills/SKILLS_REGISTRY.md) for available reusable skills and reusability analysis.
 
 ---
 
@@ -261,17 +261,17 @@ The typical SDD workflow follows this sequence:
 
 ## Registry Statistics
 
-| Category | Count |
-|----------|-------|
-| Core agents | 6 |
-| Extension agents | 4 |
-| **Total agents** | **10** |
-| Reusable skills | 23 (see [SKILLS_REGISTRY.md](./SKILLS_REGISTRY.md)) — now includes session checkpoint management |
-| Templates | 11 |
-| Prompts | 10 |
+| Category | Count                                                                                                    |
+|----------|----------------------------------------------------------------------------------------------------------|
+| Core agents | 6                                                                                                        |
+| Extension agents | 4                                                                                                        |
+| **Total agents** | **10**                                                                                                   |
+| Reusable skills | 23 (see [SKILLS_REGISTRY.md](../skills/SKILLS_REGISTRY.md)) — now includes session checkpoint management |
+| Templates | 11                                                                                                       |
+| Prompts | 10                                                                                                       |
 
 ---
 
 ## See Also
 
-- [SKILLS_REGISTRY.md](./SKILLS_REGISTRY.md) — Registry of all 23 reusable skills, organized by capability domain with reusability matrices. Now includes session checkpoint management for multi-session resumption.
+- [SKILLS_REGISTRY.md](../skills/SKILLS_REGISTRY.md) — Registry of all 23 reusable skills, organized by capability domain with reusability matrices. Now includes session checkpoint management for multi-session resumption.

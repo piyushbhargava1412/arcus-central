@@ -256,7 +256,7 @@ Analyze code for a specific pattern (e.g., security issues, performance problems
 - If analyzer crashes: Catch and report with context
 ```
 
-**Step 2:** Register in `registry/SKILLS_REGISTRY.md`
+**Step 2:** Register in `skills/SKILLS_REGISTRY.md`
 
 ```markdown
 | Custom Analysis | specialized | code-files, analysis-type | findings, summary | Detects pattern violations in code |
@@ -415,5 +415,5 @@ Test categories:
 - [Architecture](architecture.md) — Overall design principles
 - [Quality Gates](quality-gates.md) — How gates validate artifacts
 - [Agent Registry](../registry/AGENT_REGISTRY.md) — All agents and their specifications
-- [Skill Registry](../registry/SKILLS_REGISTRY.md) — All skills and their contracts
+- [Skill Registry](../skills/SKILLS_REGISTRY.md) — All skills and their contracts
 

@@ -66,8 +66,9 @@ bigfin_arcus-central/
 │   │       └── progress-tracker/
 │   ├── formatting/
 │   │   └── format-enforcer/
-│   └── interaction/
-│       └── question-orchestration/
+│   ├── interaction/
+│   │    └── question-orchestration/
+│   └── SKILLS_REGISTRY.md                 # Skill definitions index
 │
 ├── prompts/                               # Agent prompts (9 files)
 │   ├── core/                              # Core prompts (6)
@@ -124,7 +125,6 @@ bigfin_arcus-central/
 │
 ├── registry/                              # Component registries
 │   ├── AGENT_REGISTRY.md                  # Agent capabilities index
-│   └── SKILLS_REGISTRY.md                 # Skill definitions index
 │
 ├── docs/                                  # Supporting documentation
 │   ├── parking_lot.txt
@@ -191,10 +191,10 @@ bigfin_arcus-central/
 
 ### Skill System
 
-| Component | Type | File Path | Purpose |
-|-----------|------|-----------|---------|
-| Skill Metadata | Markdown | `skills/**/SKILL.md` | Defines skill name, inputs, outputs, processing rules, contract |
-| Skill Registry | Markdown | `registry/SKILLS_REGISTRY.md` | Index of all available skills |
+| Component | Type | File Path                   | Purpose |
+|-----------|------|-----------------------------|---------|
+| Skill Metadata | Markdown | `skills/**/SKILL.md`        | Defines skill name, inputs, outputs, processing rules, contract |
+| Skill Registry | Markdown | `skills/SKILLS_REGISTRY.md` | Index of all available skills |
 
 ### Template Library
 
@@ -253,14 +253,14 @@ bigfin_arcus-central/
 
 ## Module / Package Map
 
-| Module                      | Purpose | Key Files                                                      |
-|-----------------------------|---------|----------------------------------------------------------------|
-| **Integration**             | Distribute framework to target repos | `integrate.sh`, `install-cli.sh`, `.arcus-metadata.json`       |
-| **Agent System**            | Define and coordinate SDD agents | `agents/`, `prompts/`, `registry/AGENT_REGISTRY.md`            |
-| **Skill System**            | Implement reusable capabilities | `skills/`, `registry/SKILLS_REGISTRY.md`                       |
-| **Template Library**        | Provide artifact templates | `templates/`, `templates/stories/`                             |
-| **Guidelines Architecture** | Distribute guidelines | `guidelines/` (all subdirs)                                  |
-| **Automation**              | Scripting and helpers | `scripts/bash/`                                                |
+| Module                      | Purpose | Key Files                                                       |
+|-----------------------------|---------|-----------------------------------------------------------------|
+| **Integration**             | Distribute framework to target repos | `integrate.sh`, `install-cli.sh`, `.arcus-metadata.json`        |
+| **Agent System**            | Define and coordinate SDD agents | `agents/`, `prompts/`, `registry/AGENT_REGISTRY.md`             |
+| **Skill System**            | Implement reusable capabilities | `skills/`, `skills/SKILLS_REGISTRY.md`                          |
+| **Template Library**        | Provide artifact templates | `templates/`, `templates/stories/`                              |
+| **Guidelines Architecture** | Distribute guidelines | `guidelines/` (all subdirs)                                     |
+| **Automation**              | Scripting and helpers | `scripts/bash/`                                                 |
 | **Documentation**           | Framework guides and examples | `README.md`, `ARCUS_INTEGRATION_GUIDE.md`, `docs/`, `registry/` |
 
 ## Notable Patterns
@@ -390,15 +390,15 @@ By category:
 
 ## Key Files
 
-| File | Purpose |
-|------|---------|
-| `integrate.sh` | Distributes framework to target repos (symlinks for `.arcus/`, read-only copies for agents/prompts) |
-| `install-cli.sh` | Installs `arcus-integrate` CLI command globally |
-| `uninstall.sh` | Removes `arcus-integrate` CLI command from `/usr/local/bin/` |
-| `.arcus-ignore` | Ignore patterns for agent analysis—copied to target repos on first integration |
+| File                         | Purpose |
+|------------------------------|---------|
+| `integrate.sh`               | Distributes framework to target repos (symlinks for `.arcus/`, read-only copies for agents/prompts) |
+| `install-cli.sh`             | Installs `arcus-integrate` CLI command globally |
+| `uninstall.sh`               | Removes `arcus-integrate` CLI command from `/usr/local/bin/` |
+| `.arcus-ignore`              | Ignore patterns for agent analysis—copied to target repos on first integration |
 | `ARCUS_INTEGRATION_GUIDE.md` | Full integration guide and CLI reference |
 | `registry/AGENT_REGISTRY.md` | All agents, capabilities, and workflow |
-| `registry/SKILLS_REGISTRY.md` | All skills, domains, and reusability analysis |
+| `skills/SKILLS_REGISTRY.md`  | All skills, domains, and reusability analysis |
 
 ---
 

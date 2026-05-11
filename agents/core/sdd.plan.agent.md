@@ -2,6 +2,10 @@
 description: Generate a comprehensive implementation plan from approved specification and requirements artifacts.
 ---
 
+## Skill Reference
+
+All skills used by this agent are documented in `.github/skills/SKILLS_REGISTRY.md`. For each execution step, locate the skill name in the registry to find its SKILL.md file path. Implement each skill by reading and following its Processing Rules section directly.
+
 ## User Input
 
 ```text
@@ -25,12 +29,12 @@ You are a Senior Software Architect.
 
 ## Execution Steps (follow skill definitions in order)
 
-1. Follow steps in `.github/skills/core/session-bootstrap/SKILL.md` - Resolve story ID and feature paths.
-2. Follow steps in `.github/skills/artifact/artifact-modeling/SKILL.md` - Build semantic model of spec/requirements/context-pack (reusable).
-3. Follow steps in `.github/skills/reasoning/design-synthesis/SKILL.md` - Generate design sections from requirements and constraints (reusable).
-4. Follow steps in `.github/skills/core/quality-gates/SKILL.md` - Validate plan completeness and design consistency.
-5. Follow steps in `.github/skills/artifact/markdown-validation/SKILL.md` - Validate plan.md syntax and structure.
-6. Follow steps in `.github/skills/core/report-renderer/SKILL.md` - Return completion status and readiness for `/sdd.tasks`.
+1. Look up `core/session-bootstrap` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Resolve story ID and feature paths.
+2. Look up `artifact/artifact-modeling` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Build semantic model of spec/requirements/context-pack (reusable).
+3. Look up `reasoning/design-synthesis` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Generate design sections from requirements and constraints (reusable).
+4. Look up `core/quality-gates` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Validate plan completeness and design consistency.
+5. Look up `artifact/markdown-validation` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Validate plan.md syntax and structure.
+6. Look up `core/report-renderer` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Return completion status and readiness for `/sdd.tasks`.
 
 ## Outline
 

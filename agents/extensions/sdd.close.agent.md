@@ -69,7 +69,7 @@ Check readiness:
 
 ### 3. Refresh Shared Context
 
-Run `context/context-sync` in story-scoped mode with:
+Look up `context/context-sync` in `.github/skills/SKILLS_REGISTRY.md` and implement its Processing Rules in story-scoped mode with:
 - `repository_root`
 - `story_id`
 - `context_pack`: loaded from `FEATURE_DIR/context-pack.md`
@@ -82,7 +82,7 @@ If `.context/` does not exist → skip context sync entirely and note it in the 
 
 ### 4. Generate Completion Summary
 
-Using `artifact/markdown-generation`, produce `completion-summary.md` by reading existing artifacts — do not ask the user for information that can be derived from `tasks.md` and `spec.md`.
+Look up `artifact/markdown-generation` in `.github/skills/SKILLS_REGISTRY.md` and implement its Processing Rules to produce `completion-summary.md` by reading existing artifacts — do not ask the user for information that can be derived from `tasks.md` and `spec.md`.
 
 The summary MUST be concise and structured. Derive each section as follows:
 
@@ -102,7 +102,7 @@ Write to `FEATURE_DIR/completion-summary.md`.
 
 ### 5. Validate Summary
 
-Run `artifact/markdown-validation` on `completion-summary.md`:
+Look up `artifact/markdown-validation` in `.github/skills/SKILLS_REGISTRY.md` and implement its Processing Rules on `completion-summary.md`:
 - All required sections present
 - No unresolved placeholder tokens
 - Valid markdown syntax
@@ -111,13 +111,13 @@ If validation fails → fix inline and re-validate before proceeding.
 
 ### 6. Create Final Session Checkpoint
 
-Before moving to archival:
-- Call `session/checkpoint-manager` with:
+Look up `session/checkpoint-manager` in `.github/skills/SKILLS_REGISTRY.md` and implement its Processing Rules with:
   * story_id: <STORY-ID>
   * current_stage: `close`
   * execution_summary: "Story archival: X/Y tasks completed, context refreshed, ready for archive"
   * blockers: [any deferred items or incomplete tasks]
-- Checkpoint is written to `.arcus/specs/<STORY-ID>/SESSION_CHECKPOINT.md`
+
+Checkpoint is written to `.arcus/specs/<STORY-ID>/SESSION_CHECKPOINT.md`
 
 ### 7. Archive Story
 
@@ -133,7 +133,7 @@ After archiving:
 
 ### 8. Report
 
-Use `core/report-renderer` to return a concise closure report to chat:
+Look up `core/report-renderer` in `.github/skills/SKILLS_REGISTRY.md` and implement its Processing Rules to return a concise closure report to chat:
 
 ```
 ## Story Closed: <STORY-ID>

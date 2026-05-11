@@ -2,6 +2,10 @@
 description: Create or update `spec.md` from a natural language feature description using refreshed ARCUS repository context and validate readiness for planning.
 ---
 
+## Skill Reference
+
+All skills used by this agent are documented in `.github/skills/SKILLS_REGISTRY.md`. For each execution step, locate the skill name in the registry to find its SKILL.md file path. Implement each skill by reading and following its Processing Rules section directly.
+
 ## User Input
 
 ```text
@@ -36,13 +40,13 @@ You are a Specification Architect.
 
 ## Execution Steps (follow skill definitions in order)
 
-1. Follow steps in `.github/skills/core/session-bootstrap/SKILL.md` — Resolve story ID, feature paths, and environment context.
-2. Follow steps in `.github/skills/context/context-sync/SKILL.md` — Detect and reconcile any drift in `.context/` before use (repo-wide mode — no context_pack).
-3. Follow steps in `.github/skills/context/feature-context-pack-builder/SKILL.md` — Build a minimal story-scoped context pack from `.context/` artifacts.
-4. Follow steps in `.github/skills/specialized/spec/spec-authoring/SKILL.md` — Transform feature description into structured spec content.
-5. Follow steps in `.github/skills/specialized/spec/ambiguity-detection/SKILL.md` — Identify high-impact unknowns; emit ≤3 clarification markers.
-6. Follow steps in `.github/skills/core/quality-gates/SKILL.md` — Validate spec and requirements completeness against `spec-gates` profile.
-7. Follow steps in `.github/skills/core/report-renderer/SKILL.md` — Return completion status, assumptions summary, and readiness for `/sdd.clarify`.
+1. Look up `core/session-bootstrap` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Resolve story ID, feature paths, and environment context.
+2. Look up `context/context-sync` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Detect and reconcile any drift in `.context/` before use (repo-wide mode — no context_pack).
+3. Look up `context/feature-context-pack-builder` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Build a minimal story-scoped context pack from `.context/` artifacts.
+4. Look up `specialized/spec/spec-authoring` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Transform feature description into structured spec content.
+5. Look up `specialized/spec/ambiguity-detection` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Identify high-impact unknowns; emit ≤3 clarification markers.
+6. Look up `core/quality-gates` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Validate spec and requirements completeness against `spec-gates` profile.
+7. Look up `core/report-renderer` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Return completion status, assumptions summary, and readiness for `/sdd.clarify`.
 
 ## Outline
 
