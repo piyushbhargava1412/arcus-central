@@ -148,7 +148,29 @@ This file maintains a registry of all available agents, their capabilities, and 
 
 ---
 
-## Extension Agents (4)
+## Extension Agents (5)
+
+### sdd.afk
+
+- **File**: `agents/extensions/sdd.afk.agent.md`
+- **Prompt**: `prompts/extensions/sdd.afk.prompt.md`
+- **Command**: `/sdd.afk <story_description_or_file>`
+- **Purpose**: Execute feature stories autonomously through three stages (Architect → Test → Code) without human review gates, producing working tested code with minimal token consumption
+- **Role**: Autonomous SDD Orchestrator
+- **Key Capabilities**:
+  - Autonomous three-stage orchestration (no human gating between stages)
+  - Scope-driven task decomposition (no artificial task limits)
+  - Explicit assumption resolution (no clarifying questions)
+  - Dual test plan generation (developer + QA with full traceability)
+  - Test-driven code generation (Ralph loop per task: plan → execute → verify)
+  - Silent execution (zero console output; all status in checkpoint)
+  - Token optimization (≤30% of 9-stage SDD cost)
+  - Checkpoint-centric resumption (mid-stage recovery without context reload)
+- **Skill Chain**:
+  - **Architect Stage**: spec-authoring → ambiguity-detection → work-decomposition → design-synthesis → quality-gates → checkpoint-manager (9 skills, ~2100 tokens)
+  - **Test Gen Stage**: work-decomposition → design-synthesis → dependency-analysis → coverage-analysis → artifact-patcher → markdown-generation → checkpoint-manager (8 skills, ~1800 tokens)
+  - **Code Stage**: task-execution-controller (Ralph loop per task) → progress-tracker → format-enforcer → artifact-markdown-validation → context-sync → checkpoint-manager (7 skills, ~4700 tokens)
+- **Guardrails**: Enforces `.github/copilot-instructions.md` guidelines during code generation. Respects `.context/` artifacts for selective context loading. Code generated in target repo source directories (src/, app/, etc.), NOT in .arcus/specs/
 
 ### sdd.context-builder
 
@@ -264,11 +286,11 @@ The typical SDD workflow follows this sequence:
 | Category | Count                                                                                                    |
 |----------|----------------------------------------------------------------------------------------------------------|
 | Core agents | 6                                                                                                        |
-| Extension agents | 4                                                                                                        |
-| **Total agents** | **10**                                                                                                   |
-| Reusable skills | 23 (see [SKILLS_REGISTRY.md](../skills/SKILLS_REGISTRY.md)) — now includes session checkpoint management |
+| Extension agents | 5                                                                                                        |
+| **Total agents** | **11**                                                                                                   |
+| Reusable skills | 23 (see [SKILLS_REGISTRY.md](../skills/SKILLS_REGISTRY.md)) — used by AFK agent (16 skills, zero new) |
 | Templates | 11                                                                                                       |
-| Prompts | 10                                                                                                       |
+| Prompts | 11                                                                                                       |
 
 ---
 

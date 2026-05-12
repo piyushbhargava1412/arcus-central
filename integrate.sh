@@ -337,17 +337,7 @@ main() {
         echo ""
         success "Removal complete."
         exit 0
-    fi
-    log "Phase 0: Setting central source files read-only..."
-    local readonly_count=0
-    for dir in agents prompts skills templates scripts guidelines; do
-        find "$CENTRAL_REPO/$dir" -type f -exec chmod a-w {} \;
-        local cnt
-        cnt=$(find "$CENTRAL_REPO/$dir" -type f | wc -l | tr -d ' ')
-        readonly_count=$((readonly_count + cnt))
-    done
-    success "Phase 0 done: $readonly_count files set read-only in central"
-    echo ""
+     fi
 
     # ══════════════════════════════════════════════════════════════
     # PHASE 0.5: Cleanup existing integration (if sync mode)
