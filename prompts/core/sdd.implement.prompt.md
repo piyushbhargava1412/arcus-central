@@ -22,5 +22,5 @@ Hard boundaries:
 - Mark completed tasks in `tasks.md` with `[X]`.
 - Report progress and next task after each batch via chat only.
 - **NEVER create any .md files** during implementation (no `*_SUMMARY.md`, no `*_CHANGES.md`, no `*_REPORT.md`).
-- Do not create summaries or comprehensive documentation artifacts. All reporting goes to chat via `core/report-renderer`.
+- Do not create summaries or comprehensive documentation artifacts. All reporting goes to chat via `report-renderer`.
 - Do not create completion summaries — those belong to `/sdd.close` if needed.

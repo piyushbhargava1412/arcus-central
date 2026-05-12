@@ -15,10 +15,10 @@ Outputs:
 - Updated `spec.md` with clarifications recorded
 
 Primary skills used:
-- `specialized/spec/ambiguity-detection`  
-- `interaction/question-orchestration`  
-- `artifact/artifact-patcher`  
-- `artifact/markdown-validation`  
+- `ambiguity-detection`
+- `question-orchestration`
+- `artifact-patcher`
+- `markdown-validation`  
 
 Entry criteria: `spec.md` exists and contains ambiguous items.  
 Exit criteria: All high-impact ambiguities resolved or explicitly deferred.

@@ -14,10 +14,10 @@ Outputs:
 - Implementation progress artifacts (task status updates, reports) and source artifacts in target repository
 
 Primary skills used:
-- `specialized/execution/task-execution-controller`  
-- `reasoning/work-decomposition`  
-- `reasoning/dependency-analysis`  
-- `core/report-renderer`
+- `task-execution-controller`
+- `work-decomposition`
+- `dependency-analysis`
+- `report-renderer`
 
 Entry criteria: Pre-implementation analysis passed and execution environment ready.  
 Exit criteria: Phases completed and tasks marked done; readiness for post-implementation analysis.

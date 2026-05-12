@@ -17,11 +17,11 @@ Outputs:
 - `.arcus/specs/<ID>/context-pack.md`
 
 Primary skills used:
-- `core/session-bootstrap`  
-- `context/feature-context-pack-builder`  
-- `specialized/spec/spec-authoring`  
-- `specialized/spec/ambiguity-detection`  
-- `core/quality-gates`  
+- `session-bootstrap`
+- `feature-context-pack-builder`
+- `spec-authoring`
+- `ambiguity-detection`
+- `quality-gates`  
 
 Entry criteria: developer supplies feature description.  
 Exit criteria: Spec created; no high-impact ambiguities remain.

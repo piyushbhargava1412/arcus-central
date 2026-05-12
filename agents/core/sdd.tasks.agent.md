@@ -29,24 +29,24 @@ You are an Execution Decomposer.
 
 ## Execution Steps (follow skill definitions in order)
 
-1. Look up `core/session-bootstrap` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Resolve story ID and feature paths.
-2. Look up `artifact/artifact-modeling` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Build semantic model of spec/requirements (reusable).
-3. Look up `reasoning/work-decomposition` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Generate story-phase tasks with deterministic IDs (reusable).
-4. Look up `reasoning/dependency-analysis` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Compute task dependencies and parallel opportunities (reusable).
-5. Look up `formatting/format-enforcer` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Validate and normalize task format (reusable).
-6. Look up `core/quality-gates` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Validate task completeness per user story.
-7. Look up `core/report-renderer` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Return completion status and readiness for `/sdd.analyze`.
+1. Look up `session-bootstrap` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Resolve story ID and feature paths.
+2. Look up `artifact-modeling` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Build semantic model of spec/requirements (reusable).
+3. Look up `work-decomposition` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Generate story-phase tasks with deterministic IDs (reusable).
+4. Look up `dependency-analysis` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Compute task dependencies and parallel opportunities (reusable).
+5. Look up `format-enforcer` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Validate and normalize task format (reusable).
+6. Look up `quality-gates` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Validate task completeness per user story.
+7. Look up `report-renderer` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Return completion status and readiness for `/sdd.analyze`.
 
 ## Outline
 
 1. Validate feature context; fail fast if missing `spec.md` or `plan.md`.
-2. Use `core/session-bootstrap` to resolve story ID and feature paths.
+2. Use `session-bootstrap` to resolve story ID and feature paths.
 3. Load `context-pack.md` (if present) and use it as primary story context.
-4. Load `spec.md` and `plan.md` via `artifact/artifact-modeling`.
-5. Generate tasks via `reasoning/work-decomposition` mapped to stories and phases.
-6. Compute dependencies via `reasoning/dependency-analysis` and identify parallelizable tasks.
-7. Normalize format via `formatting/format-enforcer` using `.arcus/templates/tasks-template.md`.
-8. Validate completeness via `core/quality-gates`.
+4. Load `spec.md` and `plan.md` via `artifact-modeling`.
+5. Generate tasks via `work-decomposition` mapped to stories and phases.
+6. Compute dependencies via `dependency-analysis` and identify parallelizable tasks.
+7. Normalize format via `format-enforcer` using `.arcus/templates/tasks-template.md`.
+8. Validate completeness via `quality-gates`.
 9. If validation fails, iterate bounded refinements; if still failing, report issues and stop.
 10. Write `.arcus/specs/<STORY-ID>/tasks.md`.
 11. Report completion with: file path, task count, dependency graph summary, and readiness status for `/sdd.analyze`.
@@ -97,4 +97,4 @@ You are an Execution Decomposer.
 ## Validation
 
 - After generation run `skills/markdown-validation` to ensure the generated `tasks.md` meets structure and template constraints.
-- `core/quality-gates` must mark the tasks as complete before signaling readiness for `/sdd.analyze`.
+- `quality-gates` must mark the tasks as complete before signaling readiness for `/sdd.analyze`.

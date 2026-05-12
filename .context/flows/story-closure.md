@@ -18,11 +18,11 @@ Outputs:
 - Possibly updated `.context/` artifacts (if drift detected and updated)
 
 Primary skills used:
-- `core/session-bootstrap`  
-- `context/context-sync` (story-scoped)  
-- `artifact/markdown-generation`  
-- `artifact/markdown-validation`  
-- `core/report-renderer`
+- `session-bootstrap`
+- `context-sync` (story-scoped)
+- `markdown-generation`
+- `markdown-validation`
+- `report-renderer`
 
 Entry criteria: Story tasks and spec present; user requests closure.  
 Exit criteria: Summary generated, archive created, `.context/` refreshed if applicable.

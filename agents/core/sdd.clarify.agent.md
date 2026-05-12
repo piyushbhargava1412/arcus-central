@@ -25,12 +25,12 @@ You are a Requirements Clarification Specialist.
 
 ## Execution Steps (follow skill definitions in order)
 
-1. Look up `core/session-bootstrap` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Resolve feature paths and load spec context.
-2. Look up `specialized/spec/ambiguity-detection` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Identify high-impact unresolved decisions (capped at 5).
-3. Look up `interaction/question-orchestration` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Run interactive one-question-at-a-time loop (reusable across stages).
-4. Look up `artifact/artifact-patcher` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Apply accepted answers into spec sections safely (reusable).
-5. Look up `artifact/markdown-validation` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Validate updated spec syntax and structure.
-6. Look up `core/report-renderer` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Return completion status and readiness for `/sdd.plan`.
+1. Look up `session-bootstrap` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Resolve feature paths and load spec context.
+2. Look up `ambiguity-detection` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Identify high-impact unresolved decisions (capped at 5).
+3. Look up `question-orchestration` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Run interactive one-question-at-a-time loop (reusable across stages).
+4. Look up `artifact-patcher` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Apply accepted answers into spec sections safely (reusable).
+5. Look up `markdown-validation` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Validate updated spec syntax and structure.
+6. Look up `report-renderer` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Return completion status and readiness for `/sdd.plan`.
 
 ## Outline
 
@@ -39,7 +39,7 @@ You are a Requirements Clarification Specialist.
    - Show which clarifications remain unresolved
    - If no checkpoint: Display: "Starting clarification session"
 2. Validate feature context exists; fail fast if missing spec.
-3. Use `core/session-bootstrap` to resolve paths.
+3. Use `session-bootstrap` to resolve paths.
 4. Load `context-pack.md` (if present) and use it as primary story context.
 5. Load spec.md and run `spec/ambiguity-detection` to identify top 5 ambiguities.
 6. If no ambiguities found, report spec is sufficiently clear and readiness for `/sdd.plan`.
@@ -137,7 +137,7 @@ You are a Requirements Clarification Specialist.
 5. Write the updated spec back to `FEATURE_SPEC`.
 
 6. Create session checkpoint:
-   - Call `session/checkpoint-manager` with:
+   - Call `checkpoint-manager` with:
      * story_id: <STORY-ID>
      * current_stage: `clarify`
      * execution_summary: "Resolved N ambiguities from M total. Spec iteration updated."

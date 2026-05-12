@@ -15,8 +15,8 @@ Outputs:
 - `.github/copilot-instructions.md` (repository-level copilot instructions)
 
 Primary skills used:
-- `core/session-bootstrap`  
-- `core/report-renderer`  
+- `session-bootstrap`
+- `report-renderer`  
 
 Entry criteria: up-to-date `.context/` artifacts.  
 Exit criteria: Copilot instructions written and reviewed.

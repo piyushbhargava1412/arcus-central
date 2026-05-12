@@ -28,11 +28,11 @@ This file maintains a registry of all available agents, their capabilities, and 
   - Bounded clarification questions (max 3)
   - Session checkpoint lookup/creation/update for resumption across sessions
 - **Skill Chain**:
-  1. `core/session-bootstrap` - Initialize context
-  2. `specialized/spec/spec-authoring` - Generate specification
-  3. `specialized/spec/ambiguity-detection` - Detect unresolved decisions
-  4. `core/quality-gates` - Validate completeness
-  5. `core/report-renderer` - Report completion
+  1. `session-bootstrap` - Initialize context
+  2. `spec-authoring` - Generate specification
+  3. `ambiguity-detection` - Detect unresolved decisions
+  4. `quality-gates` - Validate completeness
+  5. `report-renderer` - Report completion
 - **Guardrails**: Respects `.github/copilot-instructions.md` if present in target repo
 
 ### sdd.clarify
@@ -49,12 +49,12 @@ This file maintains a registry of all available agents, their capabilities, and 
   - Bounded clarification (max 5 questions per session)
   - Session checkpoint lookup/creation/update for resumption across sessions
 - **Skill Chain**:
-  1. `core/session-bootstrap` - Initialize context
-  2. `specialized/spec/ambiguity-detection` - Identify high-impact decisions
-  3. `interaction/question-orchestration` - Interactive Q&A (reusable across agents)
-  4. `artifact/artifact-patcher` - Apply answers to spec (reusable)
-  5. `artifact/markdown-validation` - Validate spec syntax
-  6. `core/report-renderer` - Report completion
+  1. `session-bootstrap` - Initialize context
+  2. `ambiguity-detection` - Identify high-impact decisions
+  3. `question-orchestration` - Interactive Q&A (reusable across agents)
+  4. `artifact-patcher` - Apply answers to spec (reusable)
+  5. `markdown-validation` - Validate spec syntax
+  6. `report-renderer` - Report completion
 - **Guardrails**: Respects `.github/copilot-instructions.md` if present
 
 ### sdd.plan
@@ -71,12 +71,12 @@ This file maintains a registry of all available agents, their capabilities, and 
   - Component-level responsibility mapping
   - Session checkpoint lookup/creation/update for resumption across sessions
 - **Skill Chain**:
-  1. `core/session-bootstrap` - Initialize context
-  2. `artifact/artifact-modeling` - Build semantic model (reusable)
-  3. `reasoning/design-synthesis` - Generate design sections (reusable)
-  4. `core/quality-gates` - Validate plan completeness
-  5. `artifact/markdown-validation` - Validate syntax
-  6. `core/report-renderer` - Report completion
+  1. `session-bootstrap` - Initialize context
+  2. `artifact-modeling` - Build semantic model (reusable)
+  3. `design-synthesis` - Generate design sections (reusable)
+  4. `quality-gates` - Validate plan completeness
+  5. `markdown-validation` - Validate syntax
+  6. `report-renderer` - Report completion
 - **Guardrails**: Respects `.github/copilot-instructions.md` if present
 
 ### sdd.tasks
@@ -92,13 +92,13 @@ This file maintains a registry of all available agents, their capabilities, and 
   - Parallel execution identification
   - Dependency graphing
 - **Skill Chain**:
-  1. `core/session-bootstrap` - Initialize context
-  2. `artifact/artifact-modeling` - Build semantic model (reusable)
-  3. `reasoning/work-decomposition` - Generate tasks (reusable)
-  4. `reasoning/dependency-analysis` - Compute dependencies (reusable)
-  5. `formatting/format-enforcer` - Normalize format (reusable)
-  6. `core/quality-gates` - Validate completeness
-  7. `core/report-renderer` - Report completion
+  1. `session-bootstrap` - Initialize context
+  2. `artifact-modeling` - Build semantic model (reusable)
+  3. `work-decomposition` - Generate tasks (reusable)
+  4. `dependency-analysis` - Compute dependencies (reusable)
+  5. `format-enforcer` - Normalize format (reusable)
+  6. `quality-gates` - Validate completeness
+  7. `report-renderer` - Report completion
 - **Guardrails**: Respects `.github/copilot-instructions.md` if present
 
 ### sdd.analyze
@@ -115,12 +115,12 @@ This file maintains a registry of all available agents, their capabilities, and 
   - Severity-based finding classification (CRITICAL / HIGH / MEDIUM / LOW)
   - Session checkpoint lookup/creation/update for resumption across sessions
 - **Skill Chain**:
-   1. `core/session-bootstrap` - Initialize context (load existing checkpoint if present)
-   2. `artifact/artifact-modeling` - Build semantic models (reusable)
-   3. `reasoning/coverage-analysis` - Analyze traceability (reusable)
-   4. `formatting/format-enforcer` - Validate format (reusable)
-   5. `session/checkpoint-manager` - Create session checkpoint for analysis resumption
-   6. `core/report-renderer` - Report findings
+   1. `session-bootstrap` - Initialize context (load existing checkpoint if present)
+   2. `artifact-modeling` - Build semantic models (reusable)
+   3. `coverage-analysis` - Analyze traceability (reusable)
+   4. `format-enforcer` - Validate format (reusable)
+   5. `checkpoint-manager` - Create session checkpoint for analysis resumption
+   6. `report-renderer` - Report findings
 - **Guardrails**: Respects `.github/copilot-instructions.md` if present
 
 ### sdd.implement
@@ -137,13 +137,13 @@ This file maintains a registry of all available agents, their capabilities, and 
   - Pre-implementation readiness gating
   - Session checkpoint lookup/creation/update for resumption across sessions
 - **Skill Chain**:
-  1. `core/session-bootstrap` - Initialize context
-  2. `reasoning/coverage-analysis` - Check readiness (reusable)
-  3. `reasoning/work-decomposition` - Re-validate tasks (reusable)
-  4. `reasoning/dependency-analysis` - Compute execution order (reusable)
-  5. `specialized/execution/task-execution-controller` - Execute tasks
-  6. `specialized/execution/progress-tracker` - Track progress
-  7. `core/report-renderer` - Report completion
+  1. `session-bootstrap` - Initialize context
+  2. `coverage-analysis` - Check readiness (reusable)
+  3. `work-decomposition` - Re-validate tasks (reusable)
+  4. `dependency-analysis` - Compute execution order (reusable)
+  5. `task-execution-controller` - Execute tasks
+  6. `progress-tracker` - Track progress
+  7. `report-renderer` - Report completion
 - **Guardrails**: Respects `.github/copilot-instructions.md` if present
 
 ---
@@ -165,12 +165,12 @@ This file maintains a registry of all available agents, their capabilities, and 
   - First-time ARCUS integration context bootstrap
   - Baseline reset after major structural changes
 - **Skill Chain**:
-  1. `core/session-bootstrap` - Initialize repository context
-  2. `foundation/repository-context-builder` - Analyze repository and generate repo_scope.md + repo_map.md
-  3. `discovery/flow-and-scope-discovery` - Discover business flows and generate flows/*.md files
-  4. `foundation/test-pattern-discovery` - Analyze testing patterns and generate testing-patterns.md
-  5. `core/quality-gates` - Validate context artifacts
-  6. `core/report-renderer` - Report completion
+  1. `session-bootstrap` - Initialize repository context
+  2. `repository-context-builder` - Analyze repository and generate repo_scope.md + repo_map.md
+  3. `flow-and-scope-discovery` - Discover business flows and generate flows/*.md files
+  4. `test-pattern-discovery` - Analyze testing patterns and generate testing-patterns.md
+  5. `quality-gates` - Validate context artifacts
+  6. `report-renderer` - Report completion
 - **Guardrails**: Respects `.github/copilot-instructions.md` if present. Applies `.arcus-ignore` patterns during analysis.
 
 ### sdd.groom
@@ -217,11 +217,11 @@ This file maintains a registry of all available agents, their capabilities, and 
   - Artifact archival and housekeeping
   - Completion reporting with deferred items tracking
 - **Skill Chain**:
-  1. `core/session-bootstrap` - Resolve story ID and paths
-  2. `context/context-sync` - Refresh impacted `.context/` artifacts (story-scoped)
-  3. `artifact/markdown-generation` - Format completion summary
-  4. `artifact/markdown-validation` - Validate summary structure
-  5. `core/report-renderer` - Report closure and completion status
+  1. `session-bootstrap` - Resolve story ID and paths
+  2. `context-sync` - Refresh impacted `.context/` artifacts (story-scoped)
+  3. `markdown-generation` - Format completion summary
+  4. `markdown-validation` - Validate summary structure
+  5. `report-renderer` - Report closure and completion status
 - **Guardrails**: Does NOT implement any code. Closure is optional; skipping does not break the pipeline. Context refresh failure does not prevent story archival.
 
 ---

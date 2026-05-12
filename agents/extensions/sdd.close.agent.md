@@ -32,23 +32,23 @@ You are a Story Completion Steward responsible for cleanly closing a finished st
 
 ## Execution Steps (follow skill definitions in order)
 
-1. Follow steps in `.github/skills/core/session-bootstrap/SKILL.md` — Resolve story ID and feature paths.
-2. Follow steps in `.github/skills/context/context-sync/SKILL.md` — Refresh only impacted `.context/` artifacts using story-scoped mode (context_pack provided). Skips automatically if context is already current.
-3. Follow steps in `.github/skills/artifact/markdown-generation/SKILL.md` — Format and structure the completion summary.
-4. Follow steps in `.github/skills/artifact/markdown-validation/SKILL.md` — Validate completion summary structure.
-5. Follow steps in `.github/skills/core/report-renderer/SKILL.md` — Return closure report to chat.
+1. Follow steps in `.github/skills/session-bootstrap/SKILL.md` — Resolve story ID and feature paths.
+2. Follow steps in `.github/skills/context-sync/SKILL.md` — Refresh only impacted `.context/` artifacts using story-scoped mode (context_pack provided). Skips automatically if context is already current.
+3. Follow steps in `.github/skills/markdown-generation/SKILL.md` — Format and structure the completion summary.
+4. Follow steps in `.github/skills/markdown-validation/SKILL.md` — Validate completion summary structure.
+5. Follow steps in `.github/skills/report-renderer/SKILL.md` — Return closure report to chat.
 
 ## Operating Constraints
 
 **CRITICAL - NO CODE IMPLEMENTATION**: This agent MUST NEVER implement, write, or generate any application code. Its sole purpose is story closure and housekeeping.
 
-**OPTIONAL STEP**: Running `sdd.close` is not mandatory. Skipping it does not break the pipeline — context drift from the completed story will be caught by `context/context-sync` at the start of the next story. However, running it keeps the workspace clean and the context current.
+**OPTIONAL STEP**: Running `sdd.close` is not mandatory. Skipping it does not break the pipeline — context drift from the completed story will be caught by `context-sync` at the start of the next story. However, running it keeps the workspace clean and the context current.
 
 ## Outline
 
 ### 1. Resolve Story ID
 
-Use `core/session-bootstrap` to resolve `STORY_ID` and `FEATURE_DIR`:
+Use `session-bootstrap` to resolve `STORY_ID` and `FEATURE_DIR`:
 - Extract from `$ARGUMENTS` if provided
 - Fall back to current git branch name
 - If unresolvable → stop and ask user to provide the story ID explicitly
@@ -69,7 +69,7 @@ Check readiness:
 
 ### 3. Refresh Shared Context
 
-Look up `context/context-sync` in `.github/skills/SKILLS_REGISTRY.md` and implement its Processing Rules in story-scoped mode with:
+Look up `context-sync` in `.github/skills/SKILLS_REGISTRY.md` and implement its Processing Rules in story-scoped mode with:
 - `repository_root`
 - `story_id`
 - `context_pack`: loaded from `FEATURE_DIR/context-pack.md`
@@ -82,7 +82,7 @@ If `.context/` does not exist → skip context sync entirely and note it in the 
 
 ### 4. Generate Completion Summary
 
-Look up `artifact/markdown-generation` in `.github/skills/SKILLS_REGISTRY.md` and implement its Processing Rules to produce `completion-summary.md` by reading existing artifacts — do not ask the user for information that can be derived from `tasks.md` and `spec.md`.
+Look up `markdown-generation` in `.github/skills/SKILLS_REGISTRY.md` and implement its Processing Rules to produce `completion-summary.md` by reading existing artifacts — do not ask the user for information that can be derived from `tasks.md` and `spec.md`.
 
 The summary MUST be concise and structured. Derive each section as follows:
 
@@ -102,7 +102,7 @@ Write to `FEATURE_DIR/completion-summary.md`.
 
 ### 5. Validate Summary
 
-Look up `artifact/markdown-validation` in `.github/skills/SKILLS_REGISTRY.md` and implement its Processing Rules on `completion-summary.md`:
+Look up `markdown-validation` in `.github/skills/SKILLS_REGISTRY.md` and implement its Processing Rules on `completion-summary.md`:
 - All required sections present
 - No unresolved placeholder tokens
 - Valid markdown syntax
@@ -111,7 +111,7 @@ If validation fails → fix inline and re-validate before proceeding.
 
 ### 6. Create Final Session Checkpoint
 
-Look up `session/checkpoint-manager` in `.github/skills/SKILLS_REGISTRY.md` and implement its Processing Rules with:
+Look up `checkpoint-manager` in `.github/skills/SKILLS_REGISTRY.md` and implement its Processing Rules with:
   * story_id: <STORY-ID>
   * current_stage: `close`
   * execution_summary: "Story archival: X/Y tasks completed, context refreshed, ready for archive"
@@ -133,7 +133,7 @@ After archiving:
 
 ### 8. Report
 
-Look up `core/report-renderer` in `.github/skills/SKILLS_REGISTRY.md` and implement its Processing Rules to return a concise closure report to chat:
+Look up `report-renderer` in `.github/skills/SKILLS_REGISTRY.md` and implement its Processing Rules to return a concise closure report to chat:
 
 ```
 ## Story Closed: <STORY-ID>

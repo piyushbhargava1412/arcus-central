@@ -31,12 +31,12 @@ You are a Story Grooming Strategist responsible for converting raw requirements 
 
 ## Execution Steps (follow skill definitions in order)
 
-1. Look up `core/session-bootstrap` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Resolve repository root and output directory path.
-2. Look up `specialized/spec/spec-authoring` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Extract actors, goals, and story boundaries from the requirement description.
-3. Look up `specialized/spec/ambiguity-detection` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Identify high-impact unknowns that should be surfaced as Open Questions in the story (do not block on them — record them).
-4. Look up `artifact/markdown-generation` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Format and structure each story document.
-5. Look up `artifact/markdown-validation` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Validate each story document against the template structure.
-6. Look up `core/report-renderer` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Return completion summary listing created files.
+1. Look up `session-bootstrap` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Resolve repository root and output directory path.
+2. Look up `spec-authoring` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Extract actors, goals, and story boundaries from the requirement description.
+3. Look up `ambiguity-detection` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Identify high-impact unknowns that should be surfaced as Open Questions in the story (do not block on them — record them).
+4. Look up `markdown-generation` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Format and structure each story document.
+5. Look up `markdown-validation` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Validate each story document against the template structure.
+6. Look up `report-renderer` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Return completion summary listing created files.
 
 ## Operating Constraints
 
@@ -64,7 +64,7 @@ Load the story template from `.arcus/templates/stories/story-template.md`. If mi
 
 ### 3. Analyse Requirement
 
-Use `specialized/spec/spec-authoring` to extract from `$ARGUMENTS`:
+Use `spec-authoring` to extract from `$ARGUMENTS`:
 
 - **Actors**: who initiates or benefits from this capability
 - **Primary goal**: what the actor wants to achieve
@@ -106,7 +106,7 @@ Naming rules:
 
 ### 6. Generate Story Documents
 
-For each story, populate all sections of `.arcus/templates/stories/story-template.md` using `artifact/markdown-generation`:
+For each story, populate all sections of `.arcus/templates/stories/story-template.md` using `markdown-generation`:
 
 - **Narrative**: As a / I want to / So that — written from the actor's perspective in plain language
 - **Context**: one focused sentence on the problem or user need
@@ -116,13 +116,13 @@ For each story, populate all sections of `.arcus/templates/stories/story-templat
 - **Tech Notes**: concise technical guidance relevant to this story (architecture constraints, key APIs, patterns to follow) — use `.context/repo_scope.md` and `.context/repo_map.md` if available
 - **Test Plan**: core verification approach — key scenarios and critical checks
 - **Acceptance Criteria**: write as many Given/When/Then scenarios as needed to fully validate the story — cover the happy path, all meaningful edge cases, and key failure/error conditions. Two scenarios is the floor, not the target. Each scenario must be independently verifiable.
-- **Open Questions**: surface genuinely unresolved decisions using `specialized/spec/ambiguity-detection` — record as questions, do not invent answers
+- **Open Questions**: surface genuinely unresolved decisions using `ambiguity-detection` — record as questions, do not invent answers
 
 Do NOT modify section names or structure. Fill every section — do not leave placeholder text.
 
 ### 7. Validate Story Documents
 
-Apply `artifact/markdown-validation` to each generated story file:
+Apply `markdown-validation` to each generated story file:
 
 - All template sections present and non-empty
 - Acceptance criteria in Given/When/Then format
@@ -140,7 +140,7 @@ Write each validated story file to `GROOM_DIR`:
 
 ### 9. Report
 
-Use `core/report-renderer` to return a concise completion summary:
+Use `report-renderer` to return a concise completion summary:
 - Files created (with paths)
 - Story count and whether splitting was applied
 - Any Open Questions surfaced that warrant discussion before `/sdd.specify`

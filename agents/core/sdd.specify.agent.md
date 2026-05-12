@@ -40,13 +40,13 @@ You are a Specification Architect.
 
 ## Execution Steps (follow skill definitions in order)
 
-1. Look up `core/session-bootstrap` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Resolve story ID, feature paths, and environment context.
-2. Look up `context/context-sync` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Detect and reconcile any drift in `.context/` before use (repo-wide mode — no context_pack).
-3. Look up `context/feature-context-pack-builder` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Build a minimal story-scoped context pack from `.context/` artifacts.
-4. Look up `specialized/spec/spec-authoring` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Transform feature description into structured spec content.
-5. Look up `specialized/spec/ambiguity-detection` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Identify high-impact unknowns; emit ≤3 clarification markers.
-6. Look up `core/quality-gates` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Validate spec and requirements completeness against `spec-gates` profile.
-7. Look up `core/report-renderer` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Return completion status, assumptions summary, and readiness for `/sdd.clarify`.
+1. Look up `session-bootstrap` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Resolve story ID, feature paths, and environment context.
+2. Look up `context-sync` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Detect and reconcile any drift in `.context/` before use (repo-wide mode — no context_pack).
+3. Look up `feature-context-pack-builder` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Build a minimal story-scoped context pack from `.context/` artifacts.
+4. Look up `spec-authoring` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Transform feature description into structured spec content.
+5. Look up `ambiguity-detection` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Identify high-impact unknowns; emit ≤3 clarification markers.
+6. Look up `quality-gates` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Validate spec and requirements completeness against `spec-gates` profile.
+7. Look up `report-renderer` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Return completion status, assumptions summary, and readiness for `/sdd.clarify`.
 
 ## Outline
 
@@ -81,7 +81,7 @@ Do not attempt to generate or infer `.context/` content — this agent is a cons
 
 ### 4. Drift Reconcile
 
-Run `context/context-sync` in repo-wide mode (no `context_pack` — it hasn't been built yet):
+Run `context-sync` in repo-wide mode (no `context_pack` — it hasn't been built yet):
 - The skill reads verification commits from `.context/` artifacts and compares to current HEAD
 - If context is already current → skill returns immediately with no work done
 - If drift is detected → skill updates only impacted `.context/` artifacts and reports what changed
@@ -90,7 +90,7 @@ Run `context/context-sync` in repo-wide mode (no `context_pack` — it hasn't be
 
 ### 5. Build Context Pack
 
-Run `context/feature-context-pack-builder` to produce a minimal story-scoped context pack:
+Run `feature-context-pack-builder` to produce a minimal story-scoped context pack:
 - Relevant flows from `.context/flows/*.md` that overlap with the feature description
 - Relevant sections from `.context/repo_scope.md` (business capabilities)
 - Relevant sections from `.context/repo_map.md` (modules and entry points likely touched)
@@ -108,7 +108,7 @@ If either template is missing → stop and ask user to run `arcus-integrate --sy
 
 ### 7. Generate Spec
 
-Run `specialized/spec/spec-authoring` with:
+Run `spec-authoring` with:
 - `feature_description`: the user's `$ARGUMENTS`
 - `spec_template`: loaded in step 6
 - `context_pack`: produced in step 5
@@ -124,7 +124,7 @@ Key constraints enforced by the skill (do not re-implement here — delegate ful
 
 ### 8. Ambiguity Detection
 
-Run `specialized/spec/ambiguity-detection` against the generated spec draft:
+Run `ambiguity-detection` against the generated spec draft:
 - Cap at 3 `[NEEDS CLARIFICATION: ...]` markers
 - Prioritise by impact: scope > security > UX > technical detail
 - Lower-impact unknowns resolved with explicit assumptions instead
@@ -144,7 +144,7 @@ Using the checklist template and the spec content, produce `requirements.md` as 
 
 ### 10. Quality Gates
 
-Run `core/quality-gates` with `gate_profile: spec-gates`:
+Run `quality-gates` with `gate_profile: spec-gates`:
 - Max 3 refinement passes
 - On each failed gate, apply targeted fix to the relevant spec section and re-run
 - If gates still failing after 3 passes → stop, report unresolved gate failures, do not write outputs
@@ -167,7 +167,7 @@ All files written to `FEATURE_DIR`. Create the directory if it does not exist.
 ### 11.5. Create Session Checkpoint
 
 After successful spec validation and before reporting:
-- Call `session/checkpoint-manager` with:
+- Call `checkpoint-manager` with:
   * story_id: <STORY-ID>
   * current_stage: `specify`
   * execution_summary: "Specification created with X user stories and Y functional requirements"
@@ -176,7 +176,7 @@ After successful spec validation and before reporting:
 
 ### 12. Report
 
-Return a concise completion report via `core/report-renderer` including:
+Return a concise completion report via `report-renderer` including:
 - Paths of written files
 - User story count and priority breakdown (P1/P2/P3)
 - Functional requirement count

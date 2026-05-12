@@ -21,9 +21,9 @@ Outputs:
 - `.context/testing-patterns.md`
 
 Primary skills used:
-- `foundation/repository-context-builder`  
-- `discovery/flow-and-scope-discovery`  
-- `foundation/test-pattern-discovery`  
+- `repository-context-builder`
+- `flow-and-scope-discovery`
+- `test-pattern-discovery`  
 
 Entry criteria: repository reachable; no active integration locks.  
 Exit criteria: `.context/` artifacts created or updated; quality gates passed.

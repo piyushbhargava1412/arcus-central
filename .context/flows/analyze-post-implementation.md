@@ -14,9 +14,9 @@ Outputs:
 - Verification report, suggested `.context/` updates (if drift detected), release readiness assessment
 
 Primary skills used:
-- `reasoning/coverage-analysis`  
-- `maintenance/context-drift-and-reconcile`  
-- `core/report-renderer`  
+- `coverage-analysis`
+- `context-sync`
+- `report-renderer`  
 
 Entry criteria: Implementation completed for a release or milestone; tests available.  
 Exit criteria: Verification report created; `.context/` refreshed if drift detected.

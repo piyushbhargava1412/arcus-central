@@ -220,28 +220,28 @@ validate_readonly_copies() {
 
 # ─── Validation ───────────────────────────────────────────────────
 validate_central_structure() {
-    local central_path="$1"
-    local required_dirs=("agents" "prompts" "skills" "templates" "scripts" "guidelines")
-    for dir in "${required_dirs[@]}"; do
-        if [[ ! -d "$central_path/$dir" ]]; then
-            error "Missing required directory in central repo: $dir"
-        fi
-    done
+     local central_path="$1"
+     local required_dirs=("agents" "prompts" "skills" "templates" "scripts" "guidelines")
+     for dir in "${required_dirs[@]}"; do
+         if [[ ! -d "$central_path/$dir" ]]; then
+             error "Missing required directory in central repo: $dir"
+         fi
+     done
 
-    # Validate at least one skill directory with SKILL.md exists
-    local skill_count=0
-    # Find any SKILL.md under skills/ (allow nested capability-based folders)
-    while IFS= read -r -d '' skill_file; do
-        ((skill_count++))
-    done < <(find "$central_path/skills" -type f -name "SKILL.md" -print0 2>/dev/null)
+     # Validate at least one skill folder with SKILL.md exists (flat structure)
+     local skill_count=0
+     # Find any SKILL.md directly under skills/{skill-name}/ (flat structure, no nested categories)
+     while IFS= read -r -d '' skill_file; do
+         ((skill_count++))
+     done < <(find "$central_path/skills" -maxdepth 2 -type f -name "SKILL.md" -print0 2>/dev/null)
 
-    if [[ $skill_count -eq 0 ]]; then
-        error "No valid skills found (expected skills/{skill-name}/SKILL.md structure)"
-    fi
-    info "Found $skill_count skill(s)"
+     if [[ $skill_count -eq 0 ]]; then
+         error "No valid skills found (expected skills/{skill-name}/SKILL.md structure)"
+     fi
+     info "Found $skill_count skill(s)"
 
-    success "Central repo structure valid"
-}
+     success "Central repo structure valid"
+ }
 
 # ═══════════════════════════════════════════════════════════════════
 # MAIN
@@ -447,20 +447,28 @@ main() {
         warning "SKILLS_REGISTRY.md not found in central — skipping"
     fi
 
-    # Skills: copy SKILL.md files preserving capability folder structure
+    # Skills: copy all skill folders (flat structure) to .github/skills/
     mkdir -p "$TARGET_REPO/.github/skills"
     local skill_count=0
-    while IFS= read -r -d '' skill_file; do
-        # compute relative path under CENTRAL_REPO/skills
-        local rel_path
-        rel_path=$(get_relative_path "$CENTRAL_REPO/skills" "$skill_file")
-        local dst_file="$TARGET_REPO/.github/skills/$rel_path"
-        mkdir -p "$(dirname "$dst_file")"
-        if copy_file_readonly "$skill_file" "$dst_file"; then
-            ((skill_count++))
+    while IFS= read -r -d '' skill_dir; do
+        local skill_name=$(basename "$skill_dir")
+        local dst_skill_dir="$TARGET_REPO/.github/skills/$skill_name"
+
+        # Remove existing skill folder if syncing
+        if [[ -d "$dst_skill_dir" ]]; then
+            rm -rf "$dst_skill_dir"
         fi
-    done < <(find "$CENTRAL_REPO/skills" -type f -name "SKILL.md" -print0 2>/dev/null)
-    info "$skill_count skill files copied to .github/skills/ (preserving directory structure)"
+
+        # Copy entire skill folder
+        mkdir -p "$dst_skill_dir"
+        cp -r "$skill_dir"/* "$dst_skill_dir/" 2>/dev/null || true
+
+        # Set all files in skill folder to read-only
+        find "$dst_skill_dir" -type f -exec chmod 444 {} \;
+
+        ((skill_count++))
+    done < <(find "$CENTRAL_REPO/skills" -maxdepth 1 -type d -not -path "$CENTRAL_REPO/skills" -print0 2>/dev/null)
+    info "$skill_count skill folders copied to .github/skills/ (flat structure)"
 
     success "Phase 2 done: $agent_count agents, $prompt_count prompts, $skill_count skills copied"
     echo ""

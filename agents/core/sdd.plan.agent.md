@@ -29,29 +29,29 @@ You are a Senior Software Architect.
 
 ## Execution Steps (follow skill definitions in order)
 
-1. Look up `core/session-bootstrap` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Resolve story ID and feature paths.
-2. Look up `artifact/artifact-modeling` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Build semantic model of spec/requirements/context-pack (reusable).
-3. Look up `reasoning/design-synthesis` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Generate design sections from requirements and constraints (reusable).
-4. Look up `core/quality-gates` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Validate plan completeness and design consistency.
-5. Look up `artifact/markdown-validation` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Validate plan.md syntax and structure.
-6. Look up `core/report-renderer` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Return completion status and readiness for `/sdd.tasks`.
+1. Look up `session-bootstrap` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Resolve story ID and feature paths.
+2. Look up `artifact-modeling` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Build semantic model of spec/requirements/context-pack (reusable).
+3. Look up `design-synthesis` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Generate design sections from requirements and constraints (reusable).
+4. Look up `quality-gates` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Validate plan completeness and design consistency.
+5. Look up `markdown-validation` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Validate plan.md syntax and structure.
+6. Look up `report-renderer` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Return completion status and readiness for `/sdd.tasks`.
 
 ## Outline
 
 1. Validate feature context exists; fail fast if missing spec or requirements.
-2. Use `core/session-bootstrap` to resolve paths.
+2. Use `session-bootstrap` to resolve paths.
    - If SESSION_CHECKPOINT.md exists with stage=plan: Display to user: "✓ Resuming planning: M design decisions made, N components defined"
    - If no checkpoint: Display: "Starting design planning"
 3. Load context-pack.md (if present) and use it as primary story context.
 4. Load spec.md and requirements.md.
-5. Generate plan via `reasoning/design-synthesis` with design sections matching plan-template.md.
+5. Generate plan via `design-synthesis` with design sections matching plan-template.md.
 6. Ensure planning remains scoped to context-pack; avoid broad repository scanning unless required.
-7. Run `core/quality-gates` to validate plan completeness and consistency with spec.
+7. Run `quality-gates` to validate plan completeness and consistency with spec.
 8. Validate plan.md syntax via `markdown-validation`.
 9. If quality gates fail, iterate bounded refinements. If still failing, report issues and stop.
 10. Write plan.md.
 11. Create session checkpoint:
-    - Call `session/checkpoint-manager` with:
+    - Call `checkpoint-manager` with:
       * story_id: <STORY-ID>
       * current_stage: `plan`
       * execution_summary: "Design approved with X components and Y key technical decisions"

@@ -16,10 +16,10 @@ Outputs:
 - `tasks.md` (dependency-ordered) stored under `.arcus/specs/<ID>/tasks.md`
 
 Primary skills used:
-- `reasoning/work-decomposition`  
-- `reasoning/dependency-analysis`  
-- `core/quality-gates`  
-- `formatting/format-enforcer`
+- `work-decomposition`
+- `dependency-analysis`
+- `quality-gates`
+- `format-enforcer`
 
 Entry criteria: `plan.md` exists and has measurable milestones.  
 Exit criteria: `tasks.md` created with traceability to spec and plan.

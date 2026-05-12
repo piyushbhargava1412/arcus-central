@@ -29,26 +29,26 @@ You are a Task Execution Conductor.
 
 ## Execution Steps (follow skill definitions in order)
 
-1. Look up `core/session-bootstrap` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Resolve story ID, feature paths, and environment context. Load SESSION_CHECKPOINT.md if exists.
-2. Look up `reasoning/coverage-analysis` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Gate pre-implementation readiness by comparing requirements ↔ tasks.
-3. Look up `reasoning/work-decomposition` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Re-validate work items and ensure tasks accurately map to requirements.
-4. Look up `reasoning/dependency-analysis` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Compute safe execution order, identify parallel batches and critical path.
-5. Look up `specialized/execution/task-execution-controller` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Execute tasks in phase/dependency order (stage-specific).
-6. Look up `specialized/execution/progress-tracker` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Update and render progress metrics after each batch.
-7. Look up `session/checkpoint-manager` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Create session checkpoint after batch completion.
-8. Look up `core/report-renderer` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Render final completion report and recommended next actions.
+1. Look up `session-bootstrap` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Resolve story ID, feature paths, and environment context. Load SESSION_CHECKPOINT.md if exists.
+2. Look up `coverage-analysis` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Gate pre-implementation readiness by comparing requirements ↔ tasks.
+3. Look up `work-decomposition` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Re-validate work items and ensure tasks accurately map to requirements.
+4. Look up `dependency-analysis` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Compute safe execution order, identify parallel batches and critical path.
+5. Look up `task-execution-controller` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Execute tasks in phase/dependency order (stage-specific).
+6. Look up `progress-tracker` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Update and render progress metrics after each batch.
+7. Look up `checkpoint-manager` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Create session checkpoint after batch completion.
+8. Look up `report-renderer` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Render final completion report and recommended next actions.
 
 ## Outline
 
 1. Validate preconditions: confirm `tasks.md` exists and appears syntactically correct. Fail fast with a clear instruction if missing.
-2. Bootstrap session via `core/session-bootstrap` to determine canonical locations and environment variables.
+2. Bootstrap session via `session-bootstrap` to determine canonical locations and environment variables.
    - Load SESSION_CHECKPOINT.md if it exists (returned by session-bootstrap).
    - If checkpoint exists with stage=implement: Display to user: "✓ Resuming <STORY>: X/Y tasks (Z%), Phase: <phase>, Next: <task-id>"
    - If checkpoint exists but is stale (uncommitted changes in checkpoint): Warn: "⚠ Uncommitted changes detected. Review before continuing?"
    - If no checkpoint: Display: "Starting fresh: <STORY> | X tasks ready for implementation"
 3. Load `context-pack.md` (if present) and use it as primary story context.
-4. Load `tasks.md` and build semantic models via `reasoning/work-decomposition` and `reasoning/dependency-analysis`. Use these to compute execution phases and parallelizable batches.
-5. Run `reasoning/coverage-analysis` as a preflight gate to ensure tasks sufficiently cover the approved requirements within the scoped story context. If gaps exist:
+4. Load `tasks.md` and build semantic models via `work-decomposition` and `dependency-analysis`. Use these to compute execution phases and parallelizable batches.
+5. Run `coverage-analysis` as a preflight gate to ensure tasks sufficiently cover the approved requirements within the scoped story context. If gaps exist:
    - Report all gaps with their severity (CRITICAL / HIGH / MEDIUM / LOW)
    - **CRITICAL gaps**: halt unconditionally and instruct the user to run `/sdd.tasks` to address them. CRITICAL gaps cannot be overridden — they indicate requirements with zero task coverage that would block baseline functionality.
    - **HIGH gaps**: halt and present the gaps clearly. To proceed, the user must type the exact token: `OVERRIDE: <reason>` where `<reason>` is a brief justification (minimum 5 words). Vague responses ("ok", "yes", "go ahead", "proceed") are not accepted — re-prompt.
@@ -57,13 +57,13 @@ You are a Task Execution Conductor.
      ```
      - OVERRIDE [<ISO-timestamp>]: Coverage gate bypassed — <user-provided reason>. HIGH gaps: <list gap IDs>.
      ```
-6. If gate passes (or user overrides), orchestrate execution using `specialized/execution/task-execution-controller`:
+6. If gate passes (or user overrides), orchestrate execution using `task-execution-controller`:
    - Execute phase-by-phase (Setup → Foundational → Stories → Polish).
    - Within a phase, run sequential tasks in order and run `[P]`-marked tasks in parallel batches when safe.
    - For each completed task, mark it `[X]` in `tasks.md`. Persist progress atomically to avoid race conditions.
 7. After each task or parallel batch completion:
-   - Update progress via `specialized/execution/progress-tracker` and emit a compact status summary.
-   - Create session checkpoint via `session/checkpoint-manager` with:
+   - Update progress via `progress-tracker` and emit a compact status summary.
+   - Create session checkpoint via `checkpoint-manager` with:
      * story_id: <STORY-ID>
      * current_stage: `implement`
      * tasks_file_path: .arcus/specs/<STORY-ID>/tasks.md
@@ -73,7 +73,7 @@ You are a Task Execution Conductor.
      * last_commit_hash: [if code committed, else omit]
    - Checkpoint is written to .arcus/specs/<STORY-ID>/SESSION_CHECKPOINT.md
    - Display: "✓ Batch complete | Checkpoint saved"
-8. On completion (or if execution is stopped), render a concise final report via `core/report-renderer` summarizing completed tasks, failures, next actionable tasks, and any unresolved gaps.
+8. On completion (or if execution is stopped), render a concise final report via `report-renderer` summarizing completed tasks, failures, next actionable tasks, and any unresolved gaps.
 
 ## Error Handling
 
@@ -102,5 +102,5 @@ You are a Task Execution Conductor.
 ## Completion
 
 - Verify all required tasks are marked `[X]`.
-- Run a final `reasoning/coverage-analysis` check to ensure no CRITICAL coverage gaps remain.
+- Run a final `coverage-analysis` check to ensure no CRITICAL coverage gaps remain.
 - Emit a final report showing: total tasks, completed, failed, next recommended actions, and a short confidence score.

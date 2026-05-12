@@ -40,12 +40,12 @@ You are a Consistency Auditor.
 
 ## Execution Steps (follow skill definitions in order)
 
-1. Look up `core/session-bootstrap` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Resolve story ID and feature paths.
-2. Look up `artifact/artifact-modeling` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Build semantic models of spec/plan/tasks/context-pack (reusable).
-3. Look up `reasoning/coverage-analysis` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Compute requirement-to-task traceability and identify gaps (reusable).
-4. Look up `formatting/format-enforcer` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Validate artifact format consistency (reusable).
-5. Look up `context/context-sync` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - In post-implementation mode, reconcile changed code against shared context using story-scoped mode (context_pack provided).
-6. Look up `core/report-renderer` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Return completion status and findings report.
+1. Look up `session-bootstrap` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Resolve story ID and feature paths.
+2. Look up `artifact-modeling` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Build semantic models of spec/plan/tasks/context-pack (reusable).
+3. Look up `coverage-analysis` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Compute requirement-to-task traceability and identify gaps (reusable).
+4. Look up `format-enforcer` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Validate artifact format consistency (reusable).
+5. Look up `context-sync` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - In post-implementation mode, reconcile changed code against shared context using story-scoped mode (context_pack provided).
+6. Look up `report-renderer` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Return completion status and findings report.
 
 ## Mode Selection
 
@@ -69,14 +69,14 @@ If user intent is ambiguous, default to pre-implementation mode.
    - Show analysis findings and remediation status
    - If no checkpoint: Display: "Starting analysis session"
 2. Validate all required story artifacts exist; fail fast if any are missing.
-3. Use `core/session-bootstrap` to resolve paths.
+3. Use `session-bootstrap` to resolve paths.
 4. Load `context-pack.md` (if present) and use it as primary story context.
 5. Load spec.md, plan.md, tasks.md.
 6. Build semantic models via `analyze/artifact-modeling`.
 7. Compute coverage gaps via `analyze/coverage-mapper`.
 8. Score findings by severity and render analysis findings.
 9. Create session checkpoint:
-   - Call `session/checkpoint-manager` with:
+   - Call `checkpoint-manager` with:
      * story_id: <STORY-ID>
      * current_stage: `analyze`
      * execution_summary: "Analysis complete: N total issues identified (M critical, X medium, Y low)"
@@ -88,7 +88,7 @@ If user intent is ambiguous, default to pre-implementation mode.
 11. If in post-implementation mode:
     - inspect actual changed files for the story
     - compare intended story scope from `context-pack.md` with actual implementation footprint
-    - use `context/context-sync` skill (story-scoped mode, with `context_pack`) to update only impacted shared artifacts in:
+    - use `context-sync` skill (story-scoped mode, with `context_pack`) to update only impacted shared artifacts in:
       - `.context/repo_scope.md`
       - `.context/repo_map.md`
       - `.context/flows/*.md`

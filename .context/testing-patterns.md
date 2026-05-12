@@ -12,9 +12,9 @@
 
 | Framework | Purpose | Evidence |
 |-----------|---------|----------|
-| **Quality Gates** | Validate artifact readiness | `skills/core/quality-gates/SKILL.md` |
-| **Markdown Validation** | Check format compliance | `skills/artifact/markdown-validation/SKILL.md` |
-| **Artifact Modeling** | Ensure data structure integrity | `skills/artifact/artifact-modeling/SKILL.md` |
+| **Quality Gates** | Validate artifact readiness | `skills/quality-gates/SKILL.md` |
+| **Markdown Validation** | Check format compliance | `skills/markdown-validation/SKILL.md` |
+| **Artifact Modeling** | Ensure data structure integrity | `skills/artifact-modeling/SKILL.md` |
 | **Manual Integration** | End-to-end workflow testing | No example repositories detected in this repository; run integration scenarios against a target repository |
 
 ---
@@ -23,7 +23,7 @@
 
 ### 1. Skill Quality Gates (Internal Validation)
 
-**Location**: `skills/core/quality-gates/SKILL.md`  
+**Location**: `skills/quality-gates/SKILL.md`  
 **Type**: Validation gates within skill execution  
 **Trigger**: Every skill execution includes validation checkpoints
 
@@ -40,7 +40,7 @@ Each skill implements validation gates before returning results:
 
 ### 2. Markdown Validation
 
-**Location**: `skills/artifact/markdown-validation/SKILL.md`  
+**Location**: `skills/markdown-validation/SKILL.md`  
 **Type**: Format and structure checking  
 **Trigger**: After artifact generation, before handoff
 
@@ -190,7 +190,7 @@ Assert: "Spec references identified flows"
 | Aspect | Confidence | Evidence |
 |--------|-----------|----------|
 | Quality Gates Pattern | HIGH | Every SKILL.md includes "Validation Gates" section |
-| Markdown Validation Pattern | HIGH | `skills/artifact/markdown-validation/SKILL.md` explicitly defined |
+| Markdown Validation Pattern | HIGH | `skills/markdown-validation/SKILL.md` explicitly defined |
 | Artifact Conformance Pattern | HIGH | Templates in `templates/` define expected structure for all artifacts |
 | Confidence-Based Assertions | HIGH | All skill definitions (e.g., `repository-context-builder`) require confidence levels |
 

@@ -14,10 +14,10 @@ Outputs:
 - Analysis report (CRITICAL/HIGH/MEDIUM/LOW findings)
 
 Primary skills used:
-- `reasoning/coverage-analysis`  
-- `reasoning/dependency-analysis`  
-- `core/report-renderer`  
-- `core/quality-gates`
+- `coverage-analysis`
+- `dependency-analysis`
+- `report-renderer`
+- `quality-gates`
 
 Entry criteria: `tasks.md` present; team intends to proceed to implementation.  
 Exit criteria: Analysis report issued and blockers addressed.

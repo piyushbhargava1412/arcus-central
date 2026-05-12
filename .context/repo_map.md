@@ -32,42 +32,30 @@ bigfin_arcus-central/
 │       ├── sdd.instructions.agent.md      # Instruction architecture
 │       └── sdd.close.agent.md             # Story closure, context refresh, archiving
 │
-├── skills/                                # Skill implementations (23 skills)
-│   ├── foundation/
-│   │   ├── repository-context-builder/    # Builds repo_scope.md + repo_map.md
-│   │   └── test-pattern-discovery/        # Discovers testing patterns
-│   ├── discovery/
-│   │   └── flow-and-scope-discovery/      # Maps business flows
-│   ├── context/
-│   │   ├── feature-context-pack-builder/  # Builds story-local context
-│   │   └── context-sync/                  # Detects and reconciles code/context drift
-│   ├── artifact/
-│   │   ├── artifact-modeling/
-│   │   ├── artifact-patcher/
-│   │   ├── markdown-generation/
-│   │   └── markdown-validation/
-│   ├── core/
-│   │   ├── session-bootstrap/
-│   │   ├── quality-gates/
-│   │   └── report-renderer/
-│   ├── session/
-│   │   └── checkpoint-manager/            # Creates lightweight session checkpoints for resumption
-│   ├── reasoning/
-│   │   ├── coverage-analysis/
-│   │   ├── dependency-analysis/
-│   │   ├── design-synthesis/
-│   │   └── work-decomposition/
-│   ├── specialized/
-│   │   ├── spec/
-│   │   │   ├── spec-authoring/
-│   │   │   └── ambiguity-detection/
-│   │   └── execution/
-│   │       ├── task-execution-controller/
-│   │       └── progress-tracker/
-│   ├── formatting/
-│   │   └── format-enforcer/
-│   ├── interaction/
-│   │    └── question-orchestration/
+├── skills/                                # Skill implementations (23 skills, flat structure)
+│   ├── ambiguity-detection/
+│   ├── artifact-modeling/
+│   ├── artifact-patcher/
+│   ├── checkpoint-manager/                # Creates lightweight session checkpoints for resumption
+│   ├── context-sync/                      # Detects and reconciles code/context drift
+│   ├── coverage-analysis/
+│   ├── dependency-analysis/
+│   ├── design-synthesis/
+│   ├── feature-context-pack-builder/      # Builds story-local context
+│   ├── flow-and-scope-discovery/          # Maps business flows
+│   ├── format-enforcer/
+│   ├── markdown-generation/
+│   ├── markdown-validation/
+│   ├── progress-tracker/
+│   ├── quality-gates/
+│   ├── question-orchestration/
+│   ├── report-renderer/
+│   ├── repository-context-builder/        # Builds repo_scope.md + repo_map.md
+│   ├── session-bootstrap/
+│   ├── spec-authoring/
+│   ├── task-execution-controller/
+│   ├── test-pattern-discovery/            # Discovers testing patterns
+│   ├── work-decomposition/
 │   └── SKILLS_REGISTRY.md                 # Skill definitions index
 │
 ├── prompts/                               # Agent prompts (9 files)
@@ -349,17 +337,31 @@ Skills like `repository-context-builder` and `flow-and-scope-discovery` follow s
 
 ### Skills (23 total)
 
-By category:
-- **Foundation**: [repository-context-builder](../skills/foundation/repository-context-builder/SKILL.md), [test-pattern-discovery](../skills/foundation/test-pattern-discovery/SKILL.md)
-- **Discovery**: [flow-and-scope-discovery](../skills/discovery/flow-and-scope-discovery/SKILL.md)
-- **Context**: [feature-context-pack-builder](../skills/context/feature-context-pack-builder/SKILL.md), [context-sync](../skills/context/context-sync/SKILL.md)
-- **Artifact**: [artifact-modeling](../skills/artifact/artifact-modeling/SKILL.md), [artifact-patcher](../skills/artifact/artifact-patcher/SKILL.md), [markdown-generation](../skills/artifact/markdown-generation/SKILL.md), [markdown-validation](../skills/artifact/markdown-validation/SKILL.md)
-- **Core**: [session-bootstrap](../skills/core/session-bootstrap/SKILL.md), [quality-gates](../skills/core/quality-gates/SKILL.md), [report-renderer](../skills/core/report-renderer/SKILL.md)
-- **Session**: [checkpoint-manager](../skills/session/checkpoint-manager/SKILL.md)
-- **Reasoning**: [coverage-analysis](../skills/reasoning/coverage-analysis/SKILL.md), [dependency-analysis](../skills/reasoning/dependency-analysis/SKILL.md), [design-synthesis](../skills/reasoning/design-synthesis/SKILL.md), [work-decomposition](../skills/reasoning/work-decomposition/SKILL.md)
-- **Specialized**: [spec-authoring](../skills/specialized/spec/spec-authoring/SKILL.md), [ambiguity-detection](../skills/specialized/spec/ambiguity-detection/SKILL.md), [task-execution-controller](../skills/specialized/execution/task-execution-controller/SKILL.md), [progress-tracker](../skills/specialized/execution/progress-tracker/SKILL.md)
-- **Formatting**: [format-enforcer](../skills/formatting/format-enforcer/SKILL.md)
-- **Interaction**: [question-orchestration](../skills/interaction/question-orchestration/SKILL.md)
+All skills are now in the flat `skills/` directory structure for better IDE detection:
+
+- [ambiguity-detection](../skills/ambiguity-detection/SKILL.md)
+- [artifact-modeling](../skills/artifact-modeling/SKILL.md)
+- [artifact-patcher](../skills/artifact-patcher/SKILL.md)
+- [checkpoint-manager](../skills/checkpoint-manager/SKILL.md)
+- [context-sync](../skills/context-sync/SKILL.md)
+- [coverage-analysis](../skills/coverage-analysis/SKILL.md)
+- [dependency-analysis](../skills/dependency-analysis/SKILL.md)
+- [design-synthesis](../skills/design-synthesis/SKILL.md)
+- [feature-context-pack-builder](../skills/feature-context-pack-builder/SKILL.md)
+- [flow-and-scope-discovery](../skills/flow-and-scope-discovery/SKILL.md)
+- [format-enforcer](../skills/format-enforcer/SKILL.md)
+- [markdown-generation](../skills/markdown-generation/SKILL.md)
+- [markdown-validation](../skills/markdown-validation/SKILL.md)
+- [progress-tracker](../skills/progress-tracker/SKILL.md)
+- [quality-gates](../skills/quality-gates/SKILL.md)
+- [question-orchestration](../skills/question-orchestration/SKILL.md)
+- [report-renderer](../skills/report-renderer/SKILL.md)
+- [repository-context-builder](../skills/repository-context-builder/SKILL.md)
+- [session-bootstrap](../skills/session-bootstrap/SKILL.md)
+- [spec-authoring](../skills/spec-authoring/SKILL.md)
+- [task-execution-controller](../skills/task-execution-controller/SKILL.md)
+- [test-pattern-discovery](../skills/test-pattern-discovery/SKILL.md)
+- [work-decomposition](../skills/work-decomposition/SKILL.md)
 
 ### Templates (11 total)
 

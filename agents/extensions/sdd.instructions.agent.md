@@ -35,13 +35,13 @@ You are the Instruction Architect responsible for creating and maintaining `.git
 
 ## Execution Steps (follow skill definitions in order)
 
-1. Look up `core/session-bootstrap` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Resolve repository paths and check for `.context/` availability.
-2. Look up `artifact/artifact-modeling` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Build semantic model from `.context/` artifacts (reusable).
-3. Look up `artifact/markdown-validation` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Validate file paths, links, and markdown quality.
-4. Look up `artifact/markdown-generation` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Format and structure the output instruction document.
-5. Look up `interaction/question-orchestration` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Drive the INIT mode questionnaire when no instructions file exists.
-6. Look up `formatting/format-enforcer` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Enforce semantic versioning and amendment log format.
-7. Look up `core/report-renderer` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Return sync validation report on completion.
+1. Look up `session-bootstrap` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Resolve repository paths and check for `.context/` availability.
+2. Look up `artifact-modeling` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Build semantic model from `.context/` artifacts (reusable).
+3. Look up `markdown-validation` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Validate file paths, links, and markdown quality.
+4. Look up `markdown-generation` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Format and structure the output instruction document.
+5. Look up `question-orchestration` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Drive the INIT mode questionnaire when no instructions file exists.
+6. Look up `format-enforcer` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Enforce semantic versioning and amendment log format.
+7. Look up `report-renderer` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Return sync validation report on completion.
 
 ## Operating Constraints
 
@@ -52,11 +52,11 @@ You are the Instruction Architect responsible for creating and maintaining `.git
 ## Outline
 
 1. **Bootstrap & Mode Selection**
-- Use `core/session-bootstrap` to resolve repository paths.
+- Use `session-bootstrap` to resolve repository paths.
 - Check if `.github/copilot-instructions.md` exists:
   - If EXISTS → proceed in **UPDATE mode**
   - If NOT EXISTS → enter **INIT mode**:
-    - Use `interaction/question-orchestration` to drive a concise questionnaire capturing:
+    - Use `question-orchestration` to drive a concise questionnaire capturing:
       - coding conventions
       - testing strategy
       - security expectations
@@ -180,7 +180,7 @@ You are the Instruction Architect responsible for creating and maintaining `.git
 - Preserve all previous amendments.
 
 7. **Validate Consistency with Dependent Files**
-- Apply `artifact/markdown-validation` skill.
+- Apply `markdown-validation` skill.
 - Check instruction-specific cross-references:
   - All guideline files discovered in step 4 (dynamic validation)
   - Template files alignment (spec, plan, tasks)
@@ -188,7 +188,7 @@ You are the Instruction Architect responsible for creating and maintaining `.git
 - **CRITICAL**: File validation results belong in the output report, NOT in `copilot-instructions.md`.
 
 8. **Mandatory Quality Checks**
-- Apply `artifact/markdown-validation` skill.
+- Apply `markdown-validation` skill.
 - Instruction-specific checks:
   - Version incremented correctly per semantic versioning rules
   - Amendment log updated with new entry
@@ -198,7 +198,7 @@ You are the Instruction Architect responsible for creating and maintaining `.git
   - Declarative language: MUST/SHOULD/MAY clearly marked
 
 9. **Write Updated Instructions**
-- Apply `artifact/markdown-generation` skill.
+- Apply `markdown-generation` skill.
 - Write completed file to `.github/copilot-instructions.md`.
 - **CRITICAL**: Exclude validation status and file existence tables from the written file.
 - Include only project-specific content, not meta-information.
@@ -211,7 +211,7 @@ You are the Instruction Architect responsible for creating and maintaining `.git
 - Document all updates in the validation report.
 
 11. **Produce Sync Validation Report**
-- Apply `core/report-renderer` skill.
+- Apply `report-renderer` skill.
 - Include:
   - Version change: old → new with bump justification
   - Sections modified: added / modified / removed

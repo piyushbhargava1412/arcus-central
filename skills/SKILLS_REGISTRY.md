@@ -9,8 +9,8 @@ Skills are **reusable instruction sets** (markdown files) that you implement dir
 **When you see "implement skill X":**
 
 1. **Find** the skill: Look up skill name in this registry (e.g., search for "repository-context-builder")
-2. **Identify** the file path from the registry entry (e.g., `foundation/repository-context-builder/SKILL.md`)
-3. **Construct** full path: `.github/skills/` + file path = `.github/skills/foundation/repository-context-builder/SKILL.md`
+2. **Identify** the file path from the registry entry (e.g., `repository-context-builder/SKILL.md`)
+3. **Construct** full path: `.github/skills/` + file path = `.github/skills/repository-context-builder/SKILL.md`
 4. **Read** the SKILL.md file completely
 5. **Implement**: Follow the Processing Rules section step-by-step yourself
    - Do NOT invoke tools, agents, or functions
@@ -37,9 +37,9 @@ The SDD framework provides **23 reusable skills** organized by capability domain
 
 These skills are foundational and used by all or most agents across the SDD lifecycle.
 
-### `core/session-bootstrap`
+### `session-bootstrap`
 
-- **File**: `core/session-bootstrap/SKILL.md`
+- **File**: `session-bootstrap/SKILL.md`
 - **Purpose**: Initialize stage context and resolve canonical artifact/template paths
 - **Inputs**: `user_input`, `repository_root`
 - **Outputs**: `story_id`, `feature_dir`, `artifact_paths`, `template_paths`
@@ -51,9 +51,9 @@ These skills are foundational and used by all or most agents across the SDD life
   - Resolve template paths
   - Ensure deterministic path generation
 
-### `core/report-renderer`
+### `report-renderer`
 
-- **File**: `core/report-renderer/SKILL.md`
+- **File**: `report-renderer/SKILL.md`
 - **Purpose**: Render concise, deterministic stage completion reports for chat output
 - **Inputs**: `stage_name`, `output_paths`, `status`, `warnings`
 - **Outputs**: `chat_report`
@@ -65,9 +65,9 @@ These skills are foundational and used by all or most agents across the SDD life
   - Preserve deterministic output format
   - Keep reports scannable and action-oriented
 
-### `core/quality-gates`
+### `quality-gates`
 
-- **File**: `core/quality-gates/SKILL.md`
+- **File**: `quality-gates/SKILL.md`
 - **Purpose**: Apply deterministic quality checks to stage artifacts with pass/fail results
 - **Inputs**: `artifact`, `checklist_template`, `gate_profile`, `guardrails` (optional)
 - **Outputs**: `checklist`, `gate_results`, `remediation_items`
@@ -87,9 +87,9 @@ These skills are foundational and used by all or most agents across the SDD life
 
 These skills handle artifact creation, modification, and validation.
 
-### `artifact/artifact-modeling`
+### `artifact-modeling`
 
-- **File**: `artifact/artifact-modeling/SKILL.md`
+- **File**: `artifact-modeling/SKILL.md`
 - **Purpose**: Build semantic models of artifacts for analysis and traceability
 - **Inputs**: `artifacts`, `artifact_types`
 - **Outputs**: `semantic_models`, `traceability_mappings`
@@ -101,9 +101,9 @@ These skills handle artifact creation, modification, and validation.
   - Assign stable identifiers
   - Create queryable indices for coverage analysis
 
-### `artifact/artifact-patcher`
+### `artifact-patcher`
 
-- **File**: `artifact/artifact-patcher/SKILL.md`
+- **File**: `artifact-patcher/SKILL.md`
 - **Purpose**: Apply patches into artifacts with conflict detection and audit trail
 - **Inputs**: `artifact_draft`, `patches`, `patch_mappings`
 - **Outputs**: `patched_artifact`, `change_log`
@@ -115,9 +115,9 @@ These skills handle artifact creation, modification, and validation.
   - Preserve artifact structure
   - Maintain change audit trail
 
-### `artifact/markdown-generation`
+### `markdown-generation`
 
-- **File**: `artifact/markdown-generation/SKILL.md`
+- **File**: `markdown-generation/SKILL.md`
 - **Purpose**: Generate well-formatted markdown documents with proper structure
 - **Inputs**: `content`, `format_style`
 - **Outputs**: `formatted_markdown`
@@ -129,9 +129,9 @@ These skills handle artifact creation, modification, and validation.
   - Maintain markdown syntax validity
   - Apply consistent styling
 
-### `artifact/markdown-validation`
+### `markdown-validation`
 
-- **File**: `artifact/markdown-validation/SKILL.md`
+- **File**: `markdown-validation/SKILL.md`
 - **Purpose**: Validate markdown documents including paths, links, and quality
 - **Inputs**: `artifact`, `validation_rules`
 - **Outputs**: `validation_results`, `violations`
@@ -149,9 +149,9 @@ These skills handle artifact creation, modification, and validation.
 
 These skills handle design, decomposition, and analysis reasoning.
 
-### `reasoning/design-synthesis`
+### `design-synthesis`
 
-- **File**: `reasoning/design-synthesis/SKILL.md`
+- **File**: `design-synthesis/SKILL.md`
 - **Purpose**: Decompose requirements into comprehensive design with decisions and trade-offs
 - **Inputs**: `requirements_context`, `constraints`, `guardrails`
 - **Outputs**: `design_sections`, `design_decisions`
@@ -163,9 +163,9 @@ These skills handle design, decomposition, and analysis reasoning.
   - Document design trade-offs with rationale
   - Validate design against guardrails
 
-### `reasoning/work-decomposition`
+### `work-decomposition`
 
-- **File**: `reasoning/work-decomposition/SKILL.md`
+- **File**: `work-decomposition/SKILL.md`
 - **Purpose**: Break requirements/design into concrete work items organized by phase/priority
 - **Inputs**: `requirements`, `design_context`, `organization_model`, `guardrails`
 - **Outputs**: `work_items`, `organization_structure`
@@ -178,9 +178,9 @@ These skills handle design, decomposition, and analysis reasoning.
   - Mark parallelizable items
   - Validate work item independence and testability
 
-### `reasoning/dependency-analysis`
+### `dependency-analysis`
 
-- **File**: `reasoning/dependency-analysis/SKILL.md`
+- **File**: `dependency-analysis/SKILL.md`
 - **Purpose**: Analyze work item relationships and compute execution order
 - **Inputs**: `work_items`, `dependency_relationships`
 - **Outputs**: `dependency_graph`, `execution_phases`, `parallel_opportunities`
@@ -193,9 +193,9 @@ These skills handle design, decomposition, and analysis reasoning.
   - Detect parallel opportunities
   - Flag critical paths
 
-### `reasoning/coverage-analysis`
+### `coverage-analysis`
 
-- **File**: `reasoning/coverage-analysis/SKILL.md`
+- **File**: `coverage-analysis/SKILL.md`
 - **Purpose**: Analyze traceability between artifact levels and identify coverage gaps
 - **Inputs**: `artifacts_models`, `severity_profile`
 - **Outputs**: `coverage_matrix`, `gap_list`, `overlap_list`, `metrics`
@@ -212,9 +212,9 @@ These skills handle design, decomposition, and analysis reasoning.
 
 ## User Interaction Skills (🟨)
 
-### `interaction/question-orchestration`
+### `question-orchestration`
 
-- **File**: `interaction/question-orchestration/SKILL.md`
+- **File**: `question-orchestration/SKILL.md`
 - **Purpose**: Conduct interactive questioning with recommendations and answer capture
 - **Inputs**: `question_queue`, `max_questions`, `user_interaction_mode`
 - **Outputs**: `answered_questions`, `response_mappings`
@@ -231,9 +231,9 @@ These skills handle design, decomposition, and analysis reasoning.
 
 ## Output Formatting Skills (🟨)
 
-### `formatting/format-enforcer`
+### `format-enforcer`
 
-- **File**: `formatting/format-enforcer/SKILL.md`
+- **File**: `format-enforcer/SKILL.md`
 - **Purpose**: Validate artifact format against schema and normalize output
 - **Inputs**: `artifact`, `format_schema`, `normalization_rules`
 - **Outputs**: `normalized_artifact`, `format_violations`
@@ -252,9 +252,9 @@ These skills handle design, decomposition, and analysis reasoning.
 
 These skills establish baseline repository context for all downstream operations.
 
-### `foundation/repository-context-builder`
+### `repository-context-builder`
 
-- **File**: `foundation/repository-context-builder/SKILL.md`
+- **File**: `repository-context-builder/SKILL.md`
 - **Purpose**: Build or refresh baseline repository context by analyzing repository structure
 - **Inputs**: `repository_root`
 - **Outputs**: `repo_scope`, `repo_map`
@@ -267,9 +267,9 @@ These skills establish baseline repository context for all downstream operations
   - Analyze repository structure and tech stack
   - Extract implementation evidence
 
-### `foundation/test-pattern-discovery`
+### `test-pattern-discovery`
 
-- **File**: `foundation/test-pattern-discovery/SKILL.md`
+- **File**: `test-pattern-discovery/SKILL.md`
 - **Purpose**: Analyse existing tests and persist shared repository test-writing conventions
 - **Inputs**: `repository_root`, `repo_scope`, `repo_map`
 - **Outputs**: `testing_patterns`
@@ -280,9 +280,9 @@ These skills establish baseline repository context for all downstream operations
   - Capture recurring test conventions with evidence
   - Generate `.context/testing-patterns.md` with `arcus-context-meta` block
 
-### `discovery/flow-and-scope-discovery`
+### `flow-and-scope-discovery`
 
-- **File**: `discovery/flow-and-scope-discovery/SKILL.md`
+- **File**: `flow-and-scope-discovery/SKILL.md`
 - **Purpose**: Identify business flows and map each flow to implementation scope
 - **Inputs**: `repo_scope`, `repo_map`
 - **Outputs**: `flows`
@@ -300,9 +300,9 @@ These skills establish baseline repository context for all downstream operations
 
 These skills manage session state and context persistence across multiple work sessions.
 
-### `session/checkpoint-manager`
+### `checkpoint-manager`
 
-- **File**: `session/checkpoint-manager/SKILL.md`
+- **File**: `checkpoint-manager/SKILL.md`
 - **Purpose**: Create lightweight session checkpoints to resume work across multiple sessions at any SDD stage without reloading full context
 - **Inputs**: `story_id`, `current_stage`, `tasks_file_path` (optional), `execution_summary`, `last_completed_task_id` (optional), `blockers`, `last_commit_hash` (optional)
 - **Outputs**: `checkpoint_file_path`, `token_estimate`, `stage_for_recovery`
@@ -322,9 +322,9 @@ These skills manage session state and context persistence across multiple work s
 
 These skills manage feature-specific context and keep shared context aligned with code.
 
-### `context/feature-context-pack-builder`
+### `feature-context-pack-builder`
 
-- **File**: `context/feature-context-pack-builder/SKILL.md`
+- **File**: `feature-context-pack-builder/SKILL.md`
 - **Purpose**: Build minimal story-specific context pack from shared `.context/` artifacts
 - **Inputs**: `story_description`, `story_id`
 - **Outputs**: `context_pack`
@@ -336,9 +336,9 @@ These skills manage feature-specific context and keep shared context aligned wit
   - Build minimal story-scoped context pack
   - Write to `.arcus/specs/<STORY-ID>/context-pack.md`
 
-### `context/context-sync`
+### `context-sync`
 
-- **File**: `context/context-sync/SKILL.md`
+- **File**: `context-sync/SKILL.md`
 - **Purpose**: Detect and reconcile drift between code and shared `.context/` artifacts using git verification commits. Operates in repo-wide or story-scoped mode.
 - **Inputs**: `repository_root`, `story_id` (optional), `context_pack` (optional)
 - **Outputs**: `updated_context`
@@ -361,9 +361,9 @@ These skills are context-specific or narrow in scope, used by 1-2 agents.
 
 ### Specification Domain
 
-#### `specialized/spec/spec-authoring`
+#### `spec-authoring`
 
-- **File**: `specialized/spec/spec-authoring/SKILL.md`
+- **File**: `spec-authoring/SKILL.md`
 - **Purpose**: Convert natural language into structured, technology-agnostic specifications
 - **Inputs**: `feature_description`, `spec_template`, `context_pack` (optional), `guardrails` (optional)
 - **Outputs**: `spec_sections`, `requirements_list`, `assumptions`
@@ -376,9 +376,9 @@ These skills are context-specific or narrow in scope, used by 1-2 agents.
   - Record assumptions separately from spec body
   - Enforce spec/requirements.md boundary
 
-#### `specialized/spec/ambiguity-detection`
+#### `ambiguity-detection`
 
-- **File**: `specialized/spec/ambiguity-detection/SKILL.md`
+- **File**: `ambiguity-detection/SKILL.md`
 - **Purpose**: Identify and prioritize unresolved requirement ambiguities
 - **Inputs**: `spec_draft`, `assumptions`, `guardrails`
 - **Outputs**: `clarification_markers`, `prioritized_questions`
@@ -392,9 +392,9 @@ These skills are context-specific or narrow in scope, used by 1-2 agents.
 
 ### Execution Domain
 
-#### `specialized/execution/task-execution-controller`
+#### `task-execution-controller`
 
-- **File**: `specialized/execution/task-execution-controller/SKILL.md`
+- **File**: `task-execution-controller/SKILL.md`
 - **Purpose**: Execute tasks in phase order respecting dependencies and applying execution policy
 - **Inputs**: `tasks_list`, `dependency_graph`, `execution_policy`, `context_pack` (optional)
 - **Outputs**: `completed_tasks`, `execution_log`, `errors`
@@ -407,9 +407,9 @@ These skills are context-specific or narrow in scope, used by 1-2 agents.
   - Mark completed tasks atomically in `tasks.md`
   - Handle failures gracefully per phase type
 
-#### `specialized/execution/progress-tracker`
+#### `progress-tracker`
 
-- **File**: `specialized/execution/progress-tracker/SKILL.md`
+- **File**: `progress-tracker/SKILL.md`
 - **Purpose**: Update and render task progress status with completion metrics
 - **Inputs**: `tasks_file`, `execution_log`
 - **Outputs**: `progress_report`, `completion_metrics`
@@ -460,35 +460,35 @@ These skills are context-specific or narrow in scope, used by 1-2 agents.
 ## Skills by Usage Level
 
 ### 🟢 Used by All/Most Agents (4)
-- `core/session-bootstrap` (all 10 agents)
-- `core/report-renderer` (all 10 agents)
-- `core/quality-gates` (3 core agents — spec, plan, tasks)
-- `session/checkpoint-manager` (7 core agents)
+- `session-bootstrap` (all 10 agents)
+- `report-renderer` (all 10 agents)
+- `quality-gates` (3 core agents — spec, plan, tasks)
+- `checkpoint-manager` (7 core agents)
 
 ### 🟦 Widely Reusable (8)
-- `artifact/artifact-modeling` (3 agents)
-- `artifact/artifact-patcher` (2+ agents)
-- `artifact/markdown-generation` (4+ agents)
-- `artifact/markdown-validation` (3+ agents)
-- `reasoning/design-synthesis` (2 agents)
-- `reasoning/work-decomposition` (3 agents)
-- `reasoning/dependency-analysis` (3 agents)
-- `reasoning/coverage-analysis` (2 agents)
+- `artifact-modeling` (3 agents)
+- `artifact-patcher` (2+ agents)
+- `markdown-generation` (4+ agents)
+- `markdown-validation` (3+ agents)
+- `design-synthesis` (2 agents)
+- `work-decomposition` (3 agents)
+- `dependency-analysis` (3 agents)
+- `coverage-analysis` (2 agents)
 
 ### 🟨 Multi-Agent Context & Formatting (5)
-- `context/feature-context-pack-builder` (multi-stage)
-- `context/context-sync` (3 agents, 2 modes)
-- `interaction/question-orchestration` (2+ agents)
-- `formatting/format-enforcer` (2-3 agents)
-- `discovery/flow-and-scope-discovery` (1 agent, foundational)
+- `feature-context-pack-builder` (multi-stage)
+- `context-sync` (3 agents, 2 modes)
+- `question-orchestration` (2+ agents)
+- `format-enforcer` (2-3 agents)
+- `flow-and-scope-discovery` (1 agent, foundational)
 
 ### 🟪 Specialized/Narrow (5)
-- `foundation/repository-context-builder` (foundational)
-- `foundation/test-pattern-discovery` (foundational)
-- `specialized/spec/spec-authoring` (2 agents)
-- `specialized/spec/ambiguity-detection` (2 agents)
-- `specialized/execution/task-execution-controller` (1 agent)
-- `specialized/execution/progress-tracker` (1 agent)
+- `repository-context-builder` (foundational)
+- `test-pattern-discovery` (foundational)
+- `spec-authoring` (2 agents)
+- `ambiguity-detection` (2 agents)
+- `task-execution-controller` (1 agent)
+- `progress-tracker` (1 agent)
 
 ---
 
@@ -510,14 +510,14 @@ These skills are context-specific or narrow in scope, used by 1-2 agents.
 |---------|--------|
 | Current | Moved registry to `skills/SKILLS_REGISTRY.md` for co-location with skills; updated File paths to be relative (no `skills/` prefix) |
 | Current | Added "Quick Start: How ARCUS Skills Work" section at top of registry for runtime skill discovery |
-| Current | Added `session/checkpoint-manager` skill and Session Management domain to enable lightweight session checkpoint creation and resumption across any SDD stage (~300 tokens vs ~8K full reload) |
+| Current | Added `checkpoint-manager` skill and Session Management domain to enable lightweight session checkpoint creation and resumption across any SDD stage (~300 tokens vs ~8K full reload) |
 | Current | Updated all 7 core agents (specify, clarify, plan, tasks, implement, analyze, close) to integrate checkpoint-manager for session persistence |
-| Current | Enhanced `core/session-bootstrap` with Rule 5 to load SESSION_CHECKPOINT.md at session start for automatic resumption |
-| Current | Merged `context-drift-and-reconcile` + `context-refresh-from-implementation` → `context/context-sync` (two-mode unified skill) |
+| Current | Enhanced `session-bootstrap` with Rule 5 to load SESSION_CHECKPOINT.md at session start for automatic resumption |
+| Current | Merged `context-drift-and-reconcile` + `context-refresh-from-implementation` → `context-sync` (two-mode unified skill) |
 | Current | Removed `specialized/repository-analysis` (stale, unused) |
 | Current | Added `sdd.close` agent to registry |
-| Current | Added `foundation/test-pattern-discovery` (was missing from registry) |
-| Current | Added `specialized/execution/progress-tracker` (was missing from registry) |
+| Current | Added `test-pattern-discovery` (was missing from registry) |
+| Current | Added `progress-tracker` (was missing from registry) |
 
 ---
 

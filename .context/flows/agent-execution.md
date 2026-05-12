@@ -19,7 +19,7 @@
   - `Delegation Model`: Which skills to call and in what order
 
 ### 2. Context Loading (Agent Bootstrap)
-- Agent calls `core/session-bootstrap` skill
+- Agent calls `session-bootstrap` skill
 - Bootstrap loads:
   - `.context/repo_scope.md` (repository business scope)
   - `.context/repo_map.md` (technical topology)
