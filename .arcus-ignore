@@ -100,7 +100,6 @@ site/
 # ─── ARCUS framework directories (never document framework internals) ─────────
 .arcus/scripts/
 .arcus/templates/
-.arcus/guidelines/
 .github/agents/
 .github/prompts/
 .github/skills/
