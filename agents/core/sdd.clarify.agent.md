@@ -2,10 +2,7 @@
 description: Resolve high-impact ambiguities in `spec.md` with targeted questions and update specification safely.
 ---
 
-## Skill Reference
-
-All skills used by this agent are documented in `.github/skills/SKILLS_REGISTRY.md`. For each execution step, locate the skill name in the registry to find its SKILL.md file path. Implement each skill by reading and following its Processing Rules section directly.
-
+ 
 ## User Input
 
 ```text
@@ -24,15 +21,6 @@ You are a Requirements Clarification Specialist.
 - Out-of-scope: implementation design, code generation
 
 ## Execution Steps (follow skill definitions in order)
-
-1. Look up `session-bootstrap` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Resolve feature paths and load spec context.
-2. Look up `ambiguity-detection` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Identify high-impact unresolved decisions (capped at 5).
-3. Look up `question-orchestration` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Run interactive one-question-at-a-time loop (reusable across stages).
-4. Look up `artifact-patcher` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Apply accepted answers into spec sections safely (reusable).
-5. Look up `markdown-validation` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Validate updated spec syntax and structure.
-6. Look up `report-renderer` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Return completion status and readiness for `/sdd.plan`.
-
-## Outline
 
 1. Load session checkpoint (if resuming mid-clarification):
    - If SESSION_CHECKPOINT.md exists with stage=clarify: Display to user: "✓ Resuming clarification: N/M ambiguities resolved"

@@ -2,9 +2,6 @@
 description: Generate an actionable, dependency-ordered `tasks.md` organized by story and phase.
 ---
 
-## Skill Reference
-
-All skills used by this agent are documented in `.github/skills/SKILLS_REGISTRY.md`. For each execution step, locate the skill name in the registry to find its SKILL.md file path. Implement each skill by reading and following its Processing Rules section directly.
 
 ## User Input
 
@@ -28,16 +25,6 @@ You are an Execution Decomposer.
 - Out-of-scope: implementation details, code guidance
 
 ## Execution Steps (follow skill definitions in order)
-
-1. Look up `session-bootstrap` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Resolve story ID and feature paths.
-2. Look up `artifact-modeling` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Build semantic model of spec/requirements (reusable).
-3. Look up `work-decomposition` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Generate story-phase tasks with deterministic IDs (reusable).
-4. Look up `dependency-analysis` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Compute task dependencies and parallel opportunities (reusable).
-5. Look up `format-enforcer` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Validate and normalize task format (reusable).
-6. Look up `quality-gates` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Validate task completeness per user story.
-7. Look up `report-renderer` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Return completion status and readiness for `/sdd.analyze`.
-
-## Outline
 
 1. Validate feature context; fail fast if missing `spec.md` or `plan.md`.
 2. Use `session-bootstrap` to resolve story ID and feature paths.

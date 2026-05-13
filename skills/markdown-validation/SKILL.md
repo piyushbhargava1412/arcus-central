@@ -15,7 +15,7 @@ metadata:
 
 ## Purpose
 
-Perform mechanical validation of any markdown artifact — checking structure, syntax, links, placeholders, and formatting consistency. The skill does not define what sections an artifact should contain (that is the responsibility of `quality-gates` or the calling agent) — it verifies that what is present is well-formed and complete.
+Perform mechanical validation of any markdown artifact — checking structure, syntax, links, placeholders, and formatting consistency. The skill does not define what sections an artifact should contain (that is the responsibility of `quality-gates` or the caller) — it verifies that what is present is well-formed and complete.
 
 ## Inputs
 

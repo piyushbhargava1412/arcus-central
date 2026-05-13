@@ -15,7 +15,7 @@ metadata:
 
 ## Purpose
 
-Standardize completion summaries across agents so users get consistent, low-noise status outputs.
+Standardize completion summaries across workflows so users get consistent, low-noise status outputs.
 
 ## Inputs
 
@@ -34,9 +34,9 @@ Standardize completion summaries across agents so users get consistent, low-nois
 **For all other stages**: Use ultra-concise one-liner.
   - Format: "✓ <stage-action>: <key-metric> | Ready for /<next-stage>"
   - Examples:
-    - Specify: "✓ Spec generated: 5 stories, 12 requirements | Ready for /sdd.clarify"
-    - Plan: "✓ Design approved: 4 components, 7 decisions | Ready for /sdd.tasks"
-    - Implement: "✓ 23/23 tasks done | Ready to review or /sdd.close"
+    - Specify: "✓ Spec generated: 5 stories, 12 requirements | Ready for clarification"
+    - Plan: "✓ Design approved: 4 components, 7 decisions | Ready for task breakdown"
+    - Implement: "✓ 23/23 tasks done | Ready to review or archive"
 
 1. Preserve deterministic ordering for reproducible outputs.
 2. Keep wording concise and action-oriented.

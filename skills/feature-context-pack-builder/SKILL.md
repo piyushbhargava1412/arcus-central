@@ -145,8 +145,4 @@ Must include:
 
 ## Handoff
 
-Used by:
-- specify agent
-- plan agent
-
-This skill provides temporary story-scoped context, not shared repository intelligence.
+This skill produces temporary story-scoped context, distinct from shared repository-level intelligence.

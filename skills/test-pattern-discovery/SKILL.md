@@ -81,7 +81,7 @@ Prefer omission over weak inference.
 
 ### 5. Capture canonical examples
 
-Record a small set of representative test files that future agents can mimic.
+Record a small set of representative test files that future processes can learn from and mimic.
 
 ### 6. Assign confidence
 
@@ -181,11 +181,5 @@ confidence: high | medium | low
 - `OVER_GENERALIZATION`: patterns too vague to be actionable — omit and note in file
 
 ## Handoff
-
-Used by:
-- `feature-context-pack-builder`
-- specify agent
-- plan agent
-- implement agent
 
 Produces shared repository test-convention context only.

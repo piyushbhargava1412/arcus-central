@@ -15,7 +15,7 @@ metadata:
 
 ## Purpose
 
-Detect high-impact uncertainty in requirements that would cause scope or UX drift and convert it into a concise clarification backlog. Primarily used by clarify stage.
+Detect high-impact uncertainty in requirements that would cause scope or UX drift and convert it into a concise clarification backlog.
 
 ## Inputs
 

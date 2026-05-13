@@ -33,7 +33,6 @@ Used at the **start of a new story** to catch any changes that landed on `main` 
 
 - Drift source: all commits between `verification-commit` and current `HEAD`
 - Scope: entire repository change set
-- Callers: `sdd.specify`
 
 ### Story-Scoped Mode (`context_pack` provided)
 
@@ -41,7 +40,6 @@ Used **after implementation** to reconcile context with the specific changes mad
 
 - Drift source: this story's implementation changes, focused through `context_pack` scope
 - Scope: story-relevant files and flows identified in `context_pack`
-- Callers: `sdd.analyze` (post-implementation), `sdd.close`
 
 ## When To Use
 
@@ -53,7 +51,7 @@ Used **after implementation** to reconcile context with the specific changes mad
 ## Non-Goals
 
 Do not:
-- rebuild all `.context/` artifacts from scratch — use `sdd.context-builder` for that
+- rebuild all `.context/` artifacts from scratch — use the context builder
 - generate story-specific artifacts (`spec.md`, `plan.md`, `tasks.md`, `context-pack.md`)
 - scan the entire repository unless git diff fallback is required
 - update artifacts outside `.context/`
@@ -97,7 +95,7 @@ Required artifacts:
 - `.context/flows/` (directory)
 - `.context/testing-patterns.md`
 
-If any are missing → STOP and instruct baseline context creation via `/sdd.context-builder`.
+If any are missing → STOP and instruct baseline context creation via the context builder.
 
 ---
 
@@ -239,24 +237,28 @@ Keep output concise and scannable.
 ## Failure Modes
 
 - `CONTEXT_ALREADY_CURRENT`: early exit — verification-commit matches HEAD; no work needed
-- `MISSING_CONTEXT`: one or more required `.context/` artifacts absent — stop and instruct to run `/sdd.context-builder`
+- `MISSING_CONTEXT`: one or more required `.context/` artifacts absent — stop and instruct context builder invocation
 - `GIT_UNAVAILABLE`: git not found — skip freshness check, use fallback diff where possible
 - `NO_VERIFICATION_COMMIT`: `arcus-context-meta` block absent or commit is `unknown` — use fallback diff
 - `MISSING_ROOT`: repository root unresolved — stop and report
 - `UNMAPPED_CHANGE`: changed file cannot be mapped to any `.context/` artifact — log for manual review, continue
 - `FLOW_SYNC_AMBIGUITY`: changed file matches multiple flows — log for manual review, update most specific match only
 - `SCOPE_DEVIATION`: changed file is outside story scope (story-scoped mode) — log warning, still evaluate for context impact
-- `OVERBROAD_REFRESH`: refresh scope would require rewriting >50% of an artifact — abort that artifact's refresh, report for manual `/sdd.context-builder` run
+- `OVERBROAD_REFRESH`: refresh scope would require rewriting >50% of an artifact — abort that artifact's refresh, report for manual context builder invocation
 
 ---
 
 ## Handoff
 
-Used by:
-- `sdd.specify` (repo-wide mode — before feature context pack building)
-- `sdd.analyze` (story-scoped mode — post-implementation)
-- `sdd.close` (story-scoped mode — before archiving)
+Used by any workflow that needs to detect and reconcile context drift.
 
-Do NOT use for:
-- initial context generation → use `sdd.context-builder` instead
-- full context rebuild after major restructuring → use `sdd.context-builder` instead
+### When To Use
+
+- At the start of new feature work — before building story context (repo-wide mode)
+- After feature implementation (story-scoped mode)
+- Before archiving or completing a feature (story-scoped mode)
+
+### When NOT To Use
+
+- Initial context generation (use the context builder instead)
+- Full context rebuild after major restructuring (use the context builder instead)

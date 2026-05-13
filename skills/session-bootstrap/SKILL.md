@@ -1,6 +1,6 @@
 ---
 name: session-bootstrap
-description: Resolve feature identity and canonical artifact/template paths for the current SDD stage.
+description: Resolve feature identity and canonical artifact/template paths for the current stage.
 metadata: 
   inputs:
     - user_input
@@ -19,7 +19,7 @@ metadata:
 
 ## Purpose
 
-Provide a single reusable mechanism to initialize stage context so path logic is not duplicated across agents. Resolves a story ID from available sources and builds all canonical artifact paths for the current stage.
+Provide a single reusable mechanism to initialize stage context so path logic is not duplicated across callers. Resolves a story ID from available sources and builds all canonical artifact paths for the current stage.
 
 ## Inputs
 
@@ -68,7 +68,7 @@ Build the canonical feature directory from the resolved `story_id`:
 feature_dir = <repository_root>/.arcus/specs/<story_id>/
 ```
 
-If the directory does not yet exist, note it for creation — do not create it here. Creation is the responsibility of the calling agent's write step.
+If the directory does not yet exist, note it for creation — do not create it here. Creation is the responsibility of the caller's write step.
 
 ### Rule 3 — Artifact Paths
 
@@ -82,7 +82,7 @@ Build stage artifact paths under `feature_dir`:
 | Plan | `feature_dir/plan.md` |
 | Tasks | `feature_dir/tasks.md` |
 
-Return only the paths relevant to the calling agent's stage — do not return all paths to every agent.
+Return only the paths relevant to the current stage — do not return all possible paths.
 
 ### Rule 4 — Template Paths
 
@@ -106,12 +106,12 @@ After resolving story ID and paths:
 2. If it exists:
   - Read and parse the checkpoint file
   - Extract metadata: `stage`, `generated-at` timestamp
-  - Return checkpoint content to calling agent for display
+  - Return checkpoint content to the caller for display
 3. If it does NOT exist:
   - Return null/empty checkpoint indicator
-  - Agent continues normally
+  - Execution resumes normally
 
-This enables agents to resume from previous sessions without full context reload.
+This enables callers to resume from previous sessions without full context reload.
 
 ### Rule 6 — Deterministic Output
 

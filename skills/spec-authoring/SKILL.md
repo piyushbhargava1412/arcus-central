@@ -17,7 +17,7 @@ metadata:
 
 ## Purpose
 
-Own the transformation from user intent to complete specification content while staying implementation-agnostic. Produces the initial `spec.md` and `requirements.md` that all downstream agents depend on. Primarily used by `sdd.specify`.
+Own the transformation from user intent to complete specification content while staying implementation-agnostic. Produces structured specification and requirements documents that downstream processes depend on.
 
 ## Inputs
 
@@ -125,7 +125,7 @@ Every reasonable default applied during authoring MUST be recorded in the `assum
 - ASSUMPTION: <what was assumed> — <why this is a reasonable default>
 ```
 
-Assumptions are NOT written into `spec.md` body. They are returned as a separate output and surfaced in the `sdd.specify` completion report so the user can review and challenge them before proceeding to `sdd.clarify`.
+Assumptions are NOT written into `spec.md` body. They are returned as a separate output for caller review and challenge before proceeding to the clarification phase.
 
 ### Rule 10 — Refinement Iterations
 

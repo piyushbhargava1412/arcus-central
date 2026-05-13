@@ -2,10 +2,7 @@
 description: Convert requirements into structured implementation-ready user stories for a single repository context.
 ---
 
-## Skill Reference
-
-All skills used by this agent are documented in `.github/skills/SKILLS_REGISTRY.md`. For each execution step, locate the skill name in the registry to find its SKILL.md file path. Implement each skill by reading and following its Processing Rules section directly.
-
+ 
 ## User Input
 
 ```text
@@ -29,22 +26,13 @@ You are a Story Grooming Strategist responsible for converting raw requirements 
 - In-scope: requirement analysis, story splitting decisions, story generation, file naming
 - Out-of-scope: code implementation, architecture design, cross-repository logic, spec/plan/tasks generation
 
-## Execution Steps (follow skill definitions in order)
-
-1. Look up `session-bootstrap` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Resolve repository root and output directory path.
-2. Look up `spec-authoring` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Extract actors, goals, and story boundaries from the requirement description.
-3. Look up `ambiguity-detection` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Identify high-impact unknowns that should be surfaced as Open Questions in the story (do not block on them — record them).
-4. Look up `markdown-generation` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Format and structure each story document.
-5. Look up `markdown-validation` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Validate each story document against the template structure.
-6. Look up `report-renderer` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Return completion summary listing created files.
-
 ## Operating Constraints
 
 **CRITICAL - NO CODE IMPLEMENTATION**: This agent MUST NEVER implement, write, or generate any application code, regardless of user phrasing. This agent's sole purpose is to groom requirements into structured user stories.
 
 **User Intent Interpretation**: When users say "implement" while using this agent, they mean "groom the requirement into user stories" — NOT "write code now." Code implementation occurs ONLY in the `/sdd.implement` agent after all preparatory phases are complete.
 
-## Outline
+## Execution Steps (follow skill definitions in order)
 
 ### 1. Validate Input
 
