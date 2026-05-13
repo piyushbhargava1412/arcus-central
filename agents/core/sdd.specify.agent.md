@@ -156,8 +156,22 @@ All files written to `FEATURE_DIR`. Create the directory if it does not exist.
 After successful spec validation and before reporting:
 - Call `checkpoint-manager` with:
   * story_id: <STORY-ID>
+  * workflow_name: `sdd`
   * current_stage: `specify`
   * execution_summary: "Specification created with X user stories and Y functional requirements"
+  * position_snapshot: "Specification draft validated and written with supporting context-pack and requirements artifacts"
+  * progress_items:
+    - `User Stories: X`
+    - `Functional Requirements: Y`
+    - `Clarification Markers: Z`
+  * resume_hint: "Proceed to clarification if ambiguity markers remain; otherwise proceed to planning"
+  * checkpoint_metrics:
+    - `assumption_count: A`
+    - `priority_breakdown: P1=<N>, P2=<N>, P3=<N>`
+  * artifacts_updated:
+    - `.arcus/specs/<STORY-ID>/context-pack.md`
+    - `.arcus/specs/<STORY-ID>/spec.md`
+    - `.arcus/specs/<STORY-ID>/requirements.md`
   * blockers: [any remaining ambiguities or assumptions that may need clarification]
 - Checkpoint is written to `.arcus/specs/<STORY-ID>/SESSION_CHECKPOINT.md`
 

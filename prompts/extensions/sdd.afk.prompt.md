@@ -9,6 +9,7 @@ Objective:
 - Produce working, tested code with minimal token consumption (≤30% vs 9-stage SDD).
 - Suppress all narrative/reasoning output from stdout; capture all details in structured artifacts (checkpoint + log).
 - Track token consumption accurately across all stages.
+- Default artifact set is lean: `context-pack.md`, `architect-output.md`, `test-plan.md`, `EXECUTION_LOG.md`, `SESSION_CHECKPOINT.md`, and code/test changes. Do not generate `spec.md` or `requirements.md` unless explicitly requested.
 
 Execution:
 - Follow the ordered `Execution Steps` defined in `.github/agents/sdd.afk.agent.md`.
@@ -31,6 +32,8 @@ Execution:
 **Session Checkpoint** (`.arcus/specs/<STORY-ID>/SESSION_CHECKPOINT.md`):
 - Comprehensive record of all decisions, assumptions, blockers, token details
 - Written atomically at end of each stage
+- Use `workflow_name: afk` and AFK-native stages only: `architect`, `testgen`, `code`, `complete`
+- Next-step and resume text must stay inside the AFK flow; never hand off to planning or tasks agents
 
 ## Token Consumption Tracking (MANDATORY)
 
@@ -64,6 +67,10 @@ Hard boundaries:
 - Task count is scope-driven; no artificial limits (e.g., no 5-15 max).
 - Code stage uses Ralph loop (plan → execute → verify) per individual task.
 - TDD discipline: tests before or with code; ≥80% coverage per task.
+- Architect stage is lean: bootstrap/context-pack → ambiguity detection → single-pass decomposition → concise design synthesis → checkpoint.
+- Test stage derives from architect output: dependency analysis → coverage analysis → markdown generation → checkpoint.
+- Remove duplicate decomposition and artifact patching unless a concrete target artifact requires it.
+- Run `context-sync` only once at the end of code stage when implementation changes story-relevant context.
 - Non-blocking errors (ambiguity, coverage gaps, task count) → document in checkpoint; continue execution.
 - Blocking errors (code syntax invalid, guidelines violated) → flag in checkpoint; halt.
 

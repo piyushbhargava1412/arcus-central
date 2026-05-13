@@ -51,9 +51,20 @@ You are a Task Execution Conductor.
    - Update progress via `progress-tracker` and emit a compact status summary.
    - Create session checkpoint via `checkpoint-manager` with:
      * story_id: <STORY-ID>
+     * workflow_name: `sdd`
      * current_stage: `implement`
      * tasks_file_path: .arcus/specs/<STORY-ID>/tasks.md
      * execution_summary: [brief summary of completed tasks]
+     * position_snapshot: "Implementation batch applied and task progress persisted"
+     * progress_items:
+       - `Completed Tasks: X/Y`
+       - `Current Phase: <phase>`
+     * resume_hint: "Resume implementation from the next unchecked task or address listed blockers"
+     * checkpoint_metrics:
+       - `batch_tests_passing: N`
+       - `files_changed_in_batch: M`
+     * artifacts_updated:
+       - `.arcus/specs/<STORY-ID>/tasks.md`
      * last_completed_task_id: [most recent completed task]
      * blockers: [if any, else empty]
      * last_commit_hash: [if code committed, else omit]

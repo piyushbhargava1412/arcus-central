@@ -66,8 +66,20 @@ If user intent is ambiguous, default to pre-implementation mode.
 9. Create session checkpoint:
    - Call `checkpoint-manager` with:
      * story_id: <STORY-ID>
+     * workflow_name: `sdd`
      * current_stage: `analyze`
      * execution_summary: "Analysis complete: N total issues identified (M critical, X medium, Y low)"
+     * position_snapshot: "Analysis findings recorded with severity breakdown and recommended next action"
+     * progress_items:
+       - `Critical Findings: M`
+       - `Medium Findings: X`
+       - `Low Findings: Y`
+     * resume_hint: "Address critical findings before continuing; otherwise proceed based on analysis mode"
+     * checkpoint_metrics:
+       - `total_findings: N`
+       - `analysis_mode: <pre-implementation|post-implementation>`
+     * artifacts_updated:
+       - `.arcus/specs/<STORY-ID>/SESSION_CHECKPOINT.md`
      * blockers: [list critical findings that block proceeding]
    - Checkpoint is written to `.arcus/specs/<STORY-ID>/SESSION_CHECKPOINT.md`
 10. If in pre-implementation mode:

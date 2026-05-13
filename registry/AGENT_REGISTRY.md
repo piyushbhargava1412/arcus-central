@@ -26,13 +26,14 @@ This file maintains a registry of all available agents, their capabilities, and 
   - Specification creation using `spec-template.md`
   - Quality validation checklist generation
   - Bounded clarification questions (max 3)
-  - Session checkpoint lookup/creation/update for resumption across sessions
+  - Workflow-native checkpoint snapshots for resumption across sessions
 - **Skill Chain**:
   1. `session-bootstrap` - Initialize context
   2. `spec-authoring` - Generate specification
   3. `ambiguity-detection` - Detect unresolved decisions
   4. `quality-gates` - Validate completeness
-  5. `report-renderer` - Report completion
+  5. `checkpoint-manager` - Save resumable workflow snapshot
+  6. `report-renderer` - Report completion
 - **Guardrails**: Respects `.github/copilot-instructions.md` if present in target repo
 
 ### sdd.clarify
@@ -47,14 +48,15 @@ This file maintains a registry of all available agents, their capabilities, and 
   - One-question-at-a-time interactive loop
   - Safe specification patching with conflict detection
   - Bounded clarification (max 5 questions per session)
-  - Session checkpoint lookup/creation/update for resumption across sessions
+  - Workflow-native checkpoint snapshots for resumption across sessions
 - **Skill Chain**:
   1. `session-bootstrap` - Initialize context
   2. `ambiguity-detection` - Identify high-impact decisions
   3. `question-orchestration` - Interactive Q&A (reusable across agents)
   4. `artifact-patcher` - Apply answers to spec (reusable)
   5. `markdown-validation` - Validate spec syntax
-  6. `report-renderer` - Report completion
+  6. `checkpoint-manager` - Save resumable workflow snapshot
+  7. `report-renderer` - Report completion
 - **Guardrails**: Respects `.github/copilot-instructions.md` if present
 
 ### sdd.plan
@@ -69,14 +71,15 @@ This file maintains a registry of all available agents, their capabilities, and 
   - Design synthesis with trade-offs and decisions
   - Technology-agnostic architecture planning
   - Component-level responsibility mapping
-  - Session checkpoint lookup/creation/update for resumption across sessions
+  - Workflow-native checkpoint snapshots for resumption across sessions
 - **Skill Chain**:
   1. `session-bootstrap` - Initialize context
   2. `artifact-modeling` - Build semantic model (reusable)
   3. `design-synthesis` - Generate design sections (reusable)
   4. `quality-gates` - Validate plan completeness
   5. `markdown-validation` - Validate syntax
-  6. `report-renderer` - Report completion
+  6. `checkpoint-manager` - Save resumable workflow snapshot
+  7. `report-renderer` - Report completion
 - **Guardrails**: Respects `.github/copilot-instructions.md` if present
 
 ### sdd.tasks
@@ -113,13 +116,13 @@ This file maintains a registry of all available agents, their capabilities, and 
   - Coverage gap identification
   - Duplication and ambiguity detection
   - Severity-based finding classification (CRITICAL / HIGH / MEDIUM / LOW)
-  - Session checkpoint lookup/creation/update for resumption across sessions
+  - Workflow-native checkpoint snapshots for resumption across sessions
 - **Skill Chain**:
    1. `session-bootstrap` - Initialize context (load existing checkpoint if present)
    2. `artifact-modeling` - Build semantic models (reusable)
    3. `coverage-analysis` - Analyze traceability (reusable)
    4. `format-enforcer` - Validate format (reusable)
-   5. `checkpoint-manager` - Create session checkpoint for analysis resumption
+  5. `checkpoint-manager` - Save resumable workflow snapshot for analysis
    6. `report-renderer` - Report findings
 - **Guardrails**: Respects `.github/copilot-instructions.md` if present
 
@@ -135,7 +138,7 @@ This file maintains a registry of all available agents, their capabilities, and 
   - Phase-by-phase progression
   - Progress tracking with completion metrics
   - Pre-implementation readiness gating
-  - Session checkpoint lookup/creation/update for resumption across sessions
+  - Workflow-native checkpoint snapshots for resumption across sessions
 - **Skill Chain**:
   1. `session-bootstrap` - Initialize context
   2. `coverage-analysis` - Check readiness (reusable)
@@ -143,7 +146,8 @@ This file maintains a registry of all available agents, their capabilities, and 
   4. `dependency-analysis` - Compute execution order (reusable)
   5. `task-execution-controller` - Execute tasks
   6. `progress-tracker` - Track progress
-  7. `report-renderer` - Report completion
+  7. `checkpoint-manager` - Save resumable workflow snapshot
+  8. `report-renderer` - Report completion
 - **Guardrails**: Respects `.github/copilot-instructions.md` if present
 
 ---
@@ -159,17 +163,18 @@ This file maintains a registry of all available agents, their capabilities, and 
 - **Role**: Autonomous SDD Orchestrator
 - **Key Capabilities**:
   - Autonomous three-stage orchestration (no human gating between stages)
+  - Lean artifact generation by default (no `spec.md` or `requirements.md` unless explicitly requested)
   - Scope-driven task decomposition (no artificial task limits)
   - Explicit assumption resolution (no clarifying questions)
   - Dual test plan generation (developer + QA with full traceability)
   - Test-driven code generation (Ralph loop per task: plan → execute → verify)
   - Silent execution (zero console output; all status in checkpoint)
   - Token optimization (≤30% of 9-stage SDD cost)
-  - Checkpoint-centric resumption (mid-stage recovery without context reload)
+  - Checkpoint-centric resumption with AFK-native stage snapshots (mid-stage recovery without context reload)
 - **Skill Chain**:
-  - **Architect Stage**: spec-authoring → ambiguity-detection → work-decomposition → design-synthesis → quality-gates → checkpoint-manager (9 skills, ~2100 tokens)
-  - **Test Gen Stage**: work-decomposition → design-synthesis → dependency-analysis → coverage-analysis → artifact-patcher → markdown-generation → checkpoint-manager (8 skills, ~1800 tokens)
-  - **Code Stage**: task-execution-controller (Ralph loop per task) → progress-tracker → format-enforcer → artifact-markdown-validation → context-sync → checkpoint-manager (7 skills, ~4700 tokens)
+  - **Architect Stage**: session-bootstrap → feature-context-pack-builder (if needed) → ambiguity-detection → work-decomposition → design-synthesis → checkpoint-manager
+  - **Test Gen Stage**: dependency-analysis → coverage-analysis → markdown-generation → checkpoint-manager
+  - **Code Stage**: task-execution-controller (Ralph loop per task) → progress-tracker → format-enforcer → context-sync (if needed) → checkpoint-manager
 - **Guardrails**: Enforces `.github/copilot-instructions.md` guidelines during code generation. Respects `.context/` artifacts for selective context loading. Code generated in target repo source directories (src/, app/, etc.), NOT in .arcus/specs/
 
 ### sdd.context-builder
@@ -296,4 +301,4 @@ The typical SDD workflow follows this sequence:
 
 ## See Also
 
-- [SKILLS_REGISTRY.md](../skills/SKILLS_REGISTRY.md) — Registry of all 23 reusable skills, organized by capability domain with reusability matrices. Now includes session checkpoint management for multi-session resumption.
+- [SKILLS_REGISTRY.md](../skills/SKILLS_REGISTRY.md) — Registry of all 23 reusable skills, organized by capability domain with reusability matrices. Includes workflow-agnostic checkpoint management for multi-session resumption.

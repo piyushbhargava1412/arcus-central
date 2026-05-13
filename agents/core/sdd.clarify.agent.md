@@ -127,8 +127,19 @@ You are a Requirements Clarification Specialist.
 6. Create session checkpoint:
    - Call `checkpoint-manager` with:
      * story_id: <STORY-ID>
+         * workflow_name: `sdd`
      * current_stage: `clarify`
      * execution_summary: "Resolved N ambiguities from M total. Spec iteration updated."
+         * position_snapshot: "Clarification pass applied to spec with accepted answers and remaining open questions captured"
+         * progress_items:
+             - `Ambiguities Resolved: N/M`
+             - `Sections Updated: <count-or-brief-list>`
+         * resume_hint: "Proceed to planning if critical ambiguities are cleared; otherwise continue clarification"
+         * checkpoint_metrics:
+             - `accepted_answers: N`
+             - `remaining_open_questions: R`
+         * artifacts_updated:
+             - `.arcus/specs/<STORY-ID>/spec.md`
      * blockers: [list any remaining unresolved questions from the original queue, if any]
    - Checkpoint is written to `.arcus/specs/<STORY-ID>/SESSION_CHECKPOINT.md`
 

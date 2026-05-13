@@ -41,8 +41,19 @@ You are a Senior Software Architect.
 11. Create session checkpoint:
     - Call `checkpoint-manager` with:
       * story_id: <STORY-ID>
+      * workflow_name: `sdd`
       * current_stage: `plan`
       * execution_summary: "Design approved with X components and Y key technical decisions"
+      * position_snapshot: "Plan drafted and validated with design components, sequencing, and technical decisions captured"
+      * progress_items:
+        - `Design Components: X`
+        - `Key Decisions: Y`
+      * resume_hint: "Proceed to task breakdown once design blockers are cleared"
+      * checkpoint_metrics:
+        - `phase_count: P`
+        - `open_design_questions: Q`
+      * artifacts_updated:
+        - `.arcus/specs/<STORY-ID>/plan.md`
       * blockers: [if any design decisions remain unresolved]
     - Checkpoint is written to `.arcus/specs/<STORY-ID>/SESSION_CHECKPOINT.md`
 12. Report completion with path, design overview, and readiness for `/sdd.tasks`.

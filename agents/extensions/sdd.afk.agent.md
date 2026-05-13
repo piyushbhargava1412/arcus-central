@@ -21,10 +21,10 @@ You are an Autonomous SDD Orchestrator.
   - `.github/copilot-instructions.md` (guardrails; always available)
   - Optional: `.arcus/specs/<STORY-ID>/SESSION_CHECKPOINT.md` (for resumption)
 - Output artifacts:
-  - `.arcus/specs/<STORY-ID>/spec.md` (generated from story)
   - `.arcus/specs/<STORY-ID>/context-pack.md` (story-scoped context built from `.context/`; replaces broad `.context/` in memory)
   - `.arcus/specs/<STORY-ID>/architect-output.md` (tasks + pseudo-code + assumptions + decisions)
   - `.arcus/specs/<STORY-ID>/test-plan.md` (developer + QA test plans + traceability)
+  - `.arcus/specs/<STORY-ID>/EXECUTION_LOG.md` (milestone-only execution log)
   - Generated code in target repo source directories (`src/`, `app/`, `lib/`, etc.)
   - `.arcus/specs/<STORY-ID>/SESSION_CHECKPOINT.md` (execution status, all details)
 - Out-of-scope:
@@ -32,6 +32,7 @@ You are an Autonomous SDD Orchestrator.
   - Interactive clarification (no questions asked — use defaults)
   - Complex/ambiguous stories (use traditional 9-stage SDD instead)
   - Cross-repository integration stories (single-repo only)
+  - Default generation of `spec.md` and `requirements.md` unless explicitly requested
   - Verbose reporting or per-skill logging
   - Loading `.context/` after context-pack exists (memory optimization)
 
@@ -70,27 +71,21 @@ You are an Autonomous SDD Orchestrator.
 4. **Input phase**: Load `.context/repo_scope.md`, `.context/repo_map.md`, `.context/flows/*.md`, `.context/testing-patterns.md` as input reference (these are input artifacts only; do NOT keep them in memory after building context-pack).
 5. Invoke `feature-context-pack-builder` — Build story-scoped context pack from `.context/` artifacts and write to `.arcus/specs/<STORY-ID>/context-pack.md`.
 6. **EXPLICITLY RELEASE .context/ FROM MEMORY**: After context-pack is successfully written, discard/release all `.context/` artifacts from LLM memory (do not retain them in context window for subsequent steps). This frees context space and prevents context rot.
-7. Invoke `context-sync` — Detect context drift using context-pack (NOT `.context/`; story-scoped mode).
-8. Invoke `spec-authoring` — Transform story description into task breakdown using context-pack.
-9. Invoke `ambiguity-detection` — Identify gaps; resolve via explicit assumptions (do NOT create clarification questions).
-10. Invoke `work-decomposition` — Decompose story into scope-driven tasks (no artificial limits).
-11. Invoke `design-synthesis` — Document architectural decisions.
-12. Invoke `quality-gates` — Validate task breakdown completeness.
+7. Invoke `ambiguity-detection` — Identify gaps in the story and context-pack; resolve via explicit assumptions (do NOT create clarification questions).
+8. Invoke `work-decomposition` — Decompose story into scope-driven implementation tasks (single pass; no artificial limits).
+9. Invoke `design-synthesis` — Document concise architectural decisions and implementation approach grounded in the decomposed work.
 13. **Milestone**: Append to EXECUTION_LOG.md: `- HH:MM:SS [Architect] Design complete: <N> tasks, <M> decisions`
-14. Invoke `checkpoint-manager` — Save architect-output.md and checkpoint (stage=architect). **MUST include**: `token_consumed_architect`, `task_count`, `assumption_count`, `decision_count` fields.
+14. Invoke `checkpoint-manager` — Save architect-output.md and checkpoint (`workflow_name=afk`, `stage=architect`). **MUST include**: `token_consumed_architect`, `task_count`, `assumption_count`, `decision_count`, `artifacts_updated`, and an AFK-native `resume_hint` that points only to the next AFK stage.
 15. **Milestone**: Append to EXECUTION_LOG.md: `- HH:MM:SS [Architect] Checkpoint saved. Tokens: <N>`
 
 ### Test Generation Stage
 
 16. **Milestone**: Append to EXECUTION_LOG.md: `- HH:MM:SS [TestGen] Stage starting`
-17. Invoke `work-decomposition` — Break tasks into test scenarios (using context-pack, NOT `.context/`).
-18. Invoke `design-synthesis` — Determine test approach (unit/integration/e2e).
-19. Invoke `dependency-analysis` — Map test dependencies.
-20. Invoke `coverage-analysis` — Trace test cases ↔ tasks; compute coverage.
-21. Invoke `artifact-patcher` — Update context-pack with new decisions.
-22. Invoke `markdown-generation` — Generate test-plan.md document.
+17. Invoke `dependency-analysis` — Map architect-stage tasks into a safe execution and verification order.
+18. Invoke `coverage-analysis` — Derive test cases from architect-stage tasks and decisions; trace test cases ↔ tasks; compute coverage.
+19. Invoke `markdown-generation` — Generate test-plan.md document from the architect output, dependency analysis, and coverage analysis.
 23. **Milestone**: Append to EXECUTION_LOG.md: `- HH:MM:SS [TestGen] Design complete: <N> test cases, <M>% traceability`
-24. Invoke `checkpoint-manager` — Save test-plan.md and checkpoint (stage=test). **MUST include**: `token_consumed_test_generation`, `test_case_count`, `coverage_percentage` fields.
+24. Invoke `checkpoint-manager` — Save test-plan.md and checkpoint (`workflow_name=afk`, `stage=testgen`). **MUST include**: `token_consumed_test_generation`, `test_case_count`, `coverage_percentage`, `artifacts_updated`, and an AFK-native `resume_hint` that points only to the AFK code stage.
 25. **Milestone**: Append to EXECUTION_LOG.md: `- HH:MM:SS [TestGen] Checkpoint saved. Tokens: <N>`
 
 ### Code Stage
@@ -98,11 +93,10 @@ You are an Autonomous SDD Orchestrator.
 26. **Milestone**: Append to EXECUTION_LOG.md: `- HH:MM:SS [Code] Stage starting. <N> tasks to implement`
 27. Invoke `task-execution-controller` — Execute Ralph loop per task (plan → execute → verify); generate code in target repo source dirs using context-pack (`.arcus/specs/<STORY-ID>/context-pack.md`). **For each task completion**, append milestone: `- HH:MM:SS [Code] Task <ID> complete: <files>, <tests passing>, <tokens consumed>`
 28. Invoke `progress-tracker` — Track completion after each task.
-29. Invoke `format-enforcer` — Validate code style vs. guidelines (from context-pack).
-30. Invoke `markdown-validation` — Validate test file syntax.
-31. Invoke `context-sync` — Update context-pack after code completion (story-scoped mode using context-pack only).
+29. Invoke `format-enforcer` — Validate code style vs. guidelines (from context-pack). Use strict enforcement only when the repo or workflow requires it.
+30. Invoke `context-sync` only if implementation changed story-relevant context assumptions or flows; otherwise skip it.
 32. **Milestone**: Append to EXECUTION_LOG.md: `- HH:MM:SS [Code] All tasks complete. <N> files, <M> tests passing`
-33. Invoke `checkpoint-manager` — Save final checkpoint (stage=complete). **MUST include**: `token_consumed_code`, `token_consumed_total`, per-task token breakdown, `files_created_count`, `tests_passing_count` fields.
+33. Invoke `checkpoint-manager` — Save code-stage checkpoint (`workflow_name=afk`, `stage=code`) and final completion checkpoint (`workflow_name=afk`, `stage=complete`) as needed. **MUST include**: `token_consumed_code`, `token_consumed_total`, per-task token breakdown, `files_created_count`, `tests_passing_count`, `artifacts_updated`, and AFK-native next-step text only.
 34. **Milestone**: Append to EXECUTION_LOG.md: `- HH:MM:SS [Complete] Story finished. Total tokens: <N>.`
 
 

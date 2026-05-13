@@ -105,8 +105,19 @@ If validation fails → fix inline and re-validate before proceeding.
 
 Invoke `checkpoint-manager` and follow its Processing Rules with:
   * story_id: <STORY-ID>
+  * workflow_name: `sdd`
   * current_stage: `close`
   * execution_summary: "Story archival: X/Y tasks completed, context refreshed, ready for archive"
+  * position_snapshot: "Completion summary prepared and story is ready for archive or final cleanup"
+  * progress_items:
+    - `Tasks Completed: X/Y`
+    - `Context Refresh: <done|skipped|not-needed>`
+  * resume_hint: "Archive the story if no deferred items remain; otherwise resolve deferred work first"
+  * checkpoint_metrics:
+    - `deferred_items: D`
+    - `archive_ready: <yes|no>`
+  * artifacts_updated:
+    - `.arcus/specs/<STORY-ID>/completion-summary.md`
   * blockers: [any deferred items or incomplete tasks]
 
 Checkpoint is written to `.arcus/specs/<STORY-ID>/SESSION_CHECKPOINT.md`

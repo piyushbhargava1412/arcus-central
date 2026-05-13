@@ -303,15 +303,15 @@ These skills manage session state and context persistence across multiple work s
 ### `checkpoint-manager`
 
 - **File**: `checkpoint-manager/SKILL.md`
-- **Purpose**: Create lightweight session checkpoints to resume work across multiple sessions at any SDD stage without reloading full context
-- **Inputs**: `story_id`, `current_stage`, `tasks_file_path` (optional), `execution_summary`, `last_completed_task_id` (optional), `blockers`, `last_commit_hash` (optional)
-- **Outputs**: `checkpoint_file_path`, `token_estimate`, `stage_for_recovery`
-- **Used By**: All core agents (`specify`, `clarify`, `plan`, `tasks`, `implement`, `analyze`, `close`)
-- **Reusability**: ⭐⭐⭐⭐⭐ (7/7 agents)
+- **Purpose**: Create lightweight workflow-native checkpoints to resume work across multiple sessions without reloading full context
+- **Inputs**: `story_id`, `current_stage`, `workflow_name` (optional), `tasks_file_path` (optional), `execution_summary`, `position_snapshot` (optional), `progress_items` (optional), `resume_hint` (optional), `checkpoint_metrics` (optional), `artifacts_updated` (optional), `last_completed_task_id` (optional), `blockers`, `last_commit_hash` (optional)
+- **Outputs**: `checkpoint_file_path`, `checkpoint_token_estimate`, `checkpoint_stage`
+- **Used By**: Core and extension agents including `specify`, `clarify`, `plan`, `implement`, `analyze`, `close`, and `afk`
+- **Reusability**: ⭐⭐⭐⭐⭐ (multi-workflow)
 - **Key Responsibilities**:
-  - Create stage-aware lightweight session checkpoints (< 500 tokens)
-  - Capture current position, progress, blockers, and next steps
-  - Support resumption at ANY SDD stage
+  - Create workflow-native lightweight checkpoints (< 500 tokens)
+  - Capture current position, progress signals, blockers, and next steps
+  - Support resumption across arbitrary workflows and stage labels
   - Enable ~300-token context reload vs ~8K full artifact reload
   - Provide deterministic, human-readable checkpoint content
   - Integrate with session-bootstrap for checkpoint loading at session start
@@ -463,7 +463,7 @@ These skills are context-specific or narrow in scope, used by 1-2 agents.
 - `session-bootstrap` (all 10 agents)
 - `report-renderer` (all 10 agents)
 - `quality-gates` (3 core agents — spec, plan, tasks)
-- `checkpoint-manager` (7 core agents)
+- `checkpoint-manager` (core + extension agents)
 
 ### 🟦 Widely Reusable (8)
 - `artifact-modeling` (3 agents)
@@ -510,8 +510,8 @@ These skills are context-specific or narrow in scope, used by 1-2 agents.
 |---------|--------|
 | Current | Moved registry to `skills/SKILLS_REGISTRY.md` for co-location with skills; updated File paths to be relative (no `skills/` prefix) |
 | Current | Added "Quick Start: How ARCUS Skills Work" section at top of registry for runtime skill discovery |
-| Current | Added `checkpoint-manager` skill and Session Management domain to enable lightweight session checkpoint creation and resumption across any SDD stage (~300 tokens vs ~8K full reload) |
-| Current | Updated all 7 core agents (specify, clarify, plan, tasks, implement, analyze, close) to integrate checkpoint-manager for session persistence |
+| Current | Added `checkpoint-manager` skill and Session Management domain to enable lightweight workflow-native checkpoint creation and resumption across arbitrary workflows (~300 tokens vs ~8K full reload) |
+| Current | Updated checkpoint-using agents across SDD and AFK workflows to integrate checkpoint-manager for session persistence |
 | Current | Enhanced `session-bootstrap` with Rule 5 to load SESSION_CHECKPOINT.md at session start for automatic resumption |
 | Current | Merged `context-drift-and-reconcile` + `context-refresh-from-implementation` → `context-sync` (two-mode unified skill) |
 | Current | Removed `specialized/repository-analysis` (stale, unused) |
