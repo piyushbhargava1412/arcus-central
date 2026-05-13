@@ -2,10 +2,7 @@
 description: Create or update the copilot instruction architecture and ensure all dependent components stay in sync with governance standards.
 ---
 
-## Skill Reference
-
-All skills used by this agent are documented in `.github/skills/SKILLS_REGISTRY.md`. For each execution step, locate the skill name in the registry to find its SKILL.md file path. Implement each skill by reading and following its Processing Rules section directly.
-
+ 
 ## User Input
 
 ```text
@@ -33,23 +30,13 @@ You are the Instruction Architect responsible for creating and maintaining `.git
 - In-scope: creating, updating, and versioning the copilot instruction file and its cross-references
 - Out-of-scope: code implementation, architecture redesign, modifying story artifacts
 
-## Execution Steps (follow skill definitions in order)
-
-1. Look up `session-bootstrap` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Resolve repository paths and check for `.context/` availability.
-2. Look up `artifact-modeling` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Build semantic model from `.context/` artifacts (reusable).
-3. Look up `markdown-validation` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Validate file paths, links, and markdown quality.
-4. Look up `markdown-generation` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Format and structure the output instruction document.
-5. Look up `question-orchestration` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Drive the INIT mode questionnaire when no instructions file exists.
-6. Look up `format-enforcer` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Enforce semantic versioning and amendment log format.
-7. Look up `report-renderer` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Return sync validation report on completion.
-
 ## Operating Constraints
 
 **CRITICAL - NO CODE IMPLEMENTATION**: This agent MUST NEVER implement, write, or generate any application code, regardless of user phrasing. This agent's sole purpose is to create and maintain instruction files.
 
 **User Intent Interpretation**: When users say "implement" while using this agent, they mean "create/update the instruction architecture" — NOT "write code now." Code implementation occurs ONLY in the `/sdd.implement` agent after all preparatory phases are complete.
 
-## Outline
+## Execution Steps (follow skill definitions in order)
 
 1. **Bootstrap & Mode Selection**
 - Use `session-bootstrap` to resolve repository paths.

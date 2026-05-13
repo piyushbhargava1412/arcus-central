@@ -2,10 +2,7 @@
 description: Create or update `spec.md` from a natural language feature description using refreshed ARCUS repository context and validate readiness for planning.
 ---
 
-## Skill Reference
-
-All skills used by this agent are documented in `.github/skills/SKILLS_REGISTRY.md`. For each execution step, locate the skill name in the registry to find its SKILL.md file path. Implement each skill by reading and following its Processing Rules section directly.
-
+ 
 ## User Input
 
 ```text
@@ -39,16 +36,6 @@ You are a Specification Architect.
   - repo-wide scanning when `.context/` is available
 
 ## Execution Steps (follow skill definitions in order)
-
-1. Look up `session-bootstrap` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Resolve story ID, feature paths, and environment context.
-2. Look up `context-sync` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Detect and reconcile any drift in `.context/` before use (repo-wide mode — no context_pack).
-3. Look up `feature-context-pack-builder` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Build a minimal story-scoped context pack from `.context/` artifacts.
-4. Look up `spec-authoring` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Transform feature description into structured spec content.
-5. Look up `ambiguity-detection` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Identify high-impact unknowns; emit ≤3 clarification markers.
-6. Look up `quality-gates` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Validate spec and requirements completeness against `spec-gates` profile.
-7. Look up `report-renderer` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules — Return completion status, assumptions summary, and readiness for `/sdd.clarify`.
-
-## Outline
 
 ### 0. Sync Latest Code
 

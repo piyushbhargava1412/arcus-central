@@ -17,11 +17,11 @@ metadata:
 
 ## Purpose
 
-Safely orchestrate task execution following dependency order, handling failures gracefully, and marking completion. Translates each task in `tasks.md` into concrete LLM actions (file creation, code writing, file editing) and persists progress atomically after each task. Stage-specific to `sdd.implement`.
+Safely orchestrate task execution following dependency order, handling failures gracefully, and marking completion. Translates each task in `tasks.md` into concrete LLM actions (file creation, code writing, file editing) and persists progress atomically after each task.
 
 ## Inputs
 
-- `tasks_list`: approved tasks from `tasks.md` produced by `/sdd.tasks`
+- `tasks_list`: approved tasks from `tasks.md`
 - `dependency_graph`: computed dependencies and phases from `reasoning/dependency-analysis`
 - `execution_policy`: phase-by-phase, respect dependencies, mark completed
 - `context_pack` (optional): story-scoped context from `context-pack.md` — used to constrain file scope and validate task targets
@@ -30,7 +30,7 @@ Safely orchestrate task execution following dependency order, handling failures 
 
 ## Execution Model
 
-This skill executes inside an LLM-driven coding agent. Every task translates into one or more of the following **concrete actions**:
+This skill executes within an LLM-driven system. Every task translates into one or more of the following **concrete actions**:
 
 ### Action Types
 
@@ -120,7 +120,7 @@ When writing code as part of a task:
 
 On task failure:
 
-- **Sequential task fails**: stop the current phase immediately. Record the failure in the execution log with: task ID, file path, error description, last attempted action. Do not mark the task `[X]`. Report to the agent with recommended next steps.
+- **Sequential task fails**: stop the current phase immediately. Record the failure in the execution log with: task ID, file path, error description, last attempted action. Do not mark the task `[X]`. Report to the caller with recommended next steps.
 - **Parallel task fails**: do not stop the batch. Complete remaining `[P]` tasks in the batch. After the batch, report all failures together. Do not mark failed tasks `[X]`.
 - **Partial file write**: if a file was partially written before failure, note it explicitly in the error log — do not leave a corrupt file silently
 
@@ -162,7 +162,7 @@ If `context_pack` is provided:
 
 - `TASK_EXECUTION_FAILED`: record error and file path, continue parallel tasks or stop phase per Rule 6
 - `DEPENDENCY_VIOLATION`: stop and report unmet dependency — do not execute out-of-order
-- `TASKS_FILE_CORRUPTED`: stop and ask user to re-run `/sdd.tasks`
+- `TASKS_FILE_CORRUPTED`: stop and ask user to regenerate the tasks file
 - `AMBIGUOUS_TASK_TARGET`: stop and report task ID — task description does not contain a resolvable file path
 - `SCOPE_DEVIATION`: log warning and continue — task targets a file outside declared story scope
 - `FILE_OWNERSHIP_CONFLICT`: two `[P]` tasks write the same file — demote to sequential and log

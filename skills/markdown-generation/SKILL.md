@@ -14,7 +14,7 @@ metadata:
 
 ## Purpose
 
-Produce correctly structured, consistently formatted markdown output for any ARCUS artifact type. This skill handles the mechanical formatting — heading hierarchy, table alignment, code blocks, lists, frontmatter — so that calling agents focus on content, not syntax.
+Produce correctly structured, consistently formatted markdown output for any artifact type. This skill handles the mechanical formatting — heading hierarchy, table alignment, code blocks, lists, frontmatter — so that callers can focus on content, not syntax.
 
 ## Inputs
 
@@ -52,7 +52,7 @@ Place immediately after the H1 title, before any other content:
 
 ```markdown
 <!-- arcus-artifact-meta
-generated-by: <agent-name>
+generated-by: <process-name>
 template: <template-filename>
 arcus-version: <version>
 generated-at: <ISO-8601-timestamp>

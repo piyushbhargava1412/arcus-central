@@ -2,9 +2,6 @@
 description: Perform cross-artifact consistency and quality analysis before implementation, and reconcile shared context after implementation when requested.
 ---
 
-## Skill Reference
-
-All skills used by this agent are documented in `.github/skills/SKILLS_REGISTRY.md`. For each execution step, locate the skill name in the registry to find its SKILL.md file path. Implement each skill by reading and following its Processing Rules section directly.
 
 ## User Input
 
@@ -40,14 +37,7 @@ You are a Consistency Auditor.
 
 ## Execution Steps (follow skill definitions in order)
 
-1. Look up `session-bootstrap` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Resolve story ID and feature paths.
-2. Look up `artifact-modeling` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Build semantic models of spec/plan/tasks/context-pack (reusable).
-3. Look up `coverage-analysis` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Compute requirement-to-task traceability and identify gaps (reusable).
-4. Look up `format-enforcer` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Validate artifact format consistency (reusable).
-5. Look up `context-sync` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - In post-implementation mode, reconcile changed code against shared context using story-scoped mode (context_pack provided).
-6. Look up `report-renderer` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Return completion status and findings report.
-
-## Mode Selection
+### Mode Selection
 
 Determine mode from user intent:
 
@@ -61,8 +51,6 @@ Determine mode from user intent:
   - update only impacted `.context` artifacts if needed
 
 If user intent is ambiguous, default to pre-implementation mode.
-
-## Outline
 
 1. Load session checkpoint (if resuming mid-analysis):
    - If SESSION_CHECKPOINT.md exists with stage=analyze: Display to user: "✓ Resuming analysis: N issues identified, M critical. Status: <status>"

@@ -1,6 +1,6 @@
 ---
 name: checkpoint-manager
-description: Create lightweight session checkpoints to resume work across multiple sessions at any SDD stage without reloading full context.
+description: Create lightweight session checkpoints to resume work across multiple sessions at any stage without reloading full context.
 metadata:
   inputs:
     - story_id
@@ -20,14 +20,14 @@ metadata:
 
 ## Purpose
 
-Enable seamless resume of SDD workflow across session breaks at ANY stage (specify, clarify, plan, tasks, implement, analyze, close). Maintains a lightweight, human-readable checkpoint that provides instant orientation: what stage was active, what was done, what's next.
+Enable seamless resumption across session breaks at any stage. Maintains a lightweight, human-readable checkpoint that provides instant orientation: what stage was active, what was done, what's next.
 
 Reduces context reload overhead from ~8K tokens (full artifact reload) to ~300 tokens (checkpoint load).
 
 ## Inputs
 
 - `story_id`: Current story identifier (e.g., `FEAT-AUTH-001`)
-- `current_stage`: Which SDD stage is active: `specify` | `clarify` | `plan` | `tasks` | `implement` | `analyze` | `close`
+- `current_stage`: Which workflow stage is active
 - `tasks_file_path`: Path to `.arcus/specs/<STORY-ID>/tasks.md` (only if in tasks/implement/analyze stages; optional for earlier stages)
 - `execution_summary`: Brief summary of what was accomplished in the last interaction (2-3 sentences max)
 - `last_completed_task_id`: ID of the most recently completed task (e.g., `T012`) — only relevant for implement/analyze stages
@@ -91,7 +91,7 @@ arcus-artifact-meta:
 - User Stories: N defined
 - Requirements: M extracted
 - Coverage: X% complete
-- Next: Review spec.md or run /sdd.clarify to resolve ambiguities
+- Next: Review spec.md or proceed to clarification phase
 ```
 
 **For `clarify` stage:**
@@ -99,8 +99,8 @@ arcus-artifact-meta:
 ## Current Position
 - Ambiguities Resolved: N/M
 - Spec Version: Iteration K
-- Readiness: Ready for /sdd.plan | Needs more clarification
-- Next: Run /sdd.plan to design solution
+- Readiness: Ready for design | Needs more clarification
+- Next: Proceed to design phase
 ```
 
 **For `plan` stage:**
@@ -109,7 +109,7 @@ arcus-artifact-meta:
 - Design Components: N defined
 - Decisions Made: M
 - Plan Status: Draft | Pending review | Validated
-- Next: Review plan.md or run /sdd.tasks to create work breakdown
+- Next: Review plan.md or proceed to task breakdown phase
 ```
 
 **For `tasks` stage:**
@@ -118,7 +118,7 @@ arcus-artifact-meta:
 - Tasks Created: N total
 - Dependency Validation: Complete | Pending
 - Task Status: Ready for implementation | Needs refinement
-- Next: Review tasks.md or run /sdd.implement to start
+- Next: Review tasks.md or proceed to implementation phase
 ```
 
 **For `implement` stage:**
@@ -129,7 +129,7 @@ arcus-artifact-meta:
 - Next Task: <task-id> (<task-title>)
 - Batch Status: Last batch completed | Batch in progress
 - Blockers: None | <brief list>
-- Next: Run /sdd.implement to continue or run /sdd.analyze to review
+- Next: Proceed with implementation or perform analysis review
 ```
 
 **For `analyze` stage:**
@@ -138,7 +138,7 @@ arcus-artifact-meta:
 - Analysis Type: Pre-implementation gaps | Post-implementation reconciliation
 - Findings: N issues identified (M critical, X medium, Y low)
 - Status: Review required | Remediation needed | Ready to proceed
-- Next: Address findings or run /sdd.implement to continue
+- Next: Address findings or proceed with implementation
 ```
 
 **For `close` stage:**
@@ -185,7 +185,7 @@ arcus-artifact-meta:
 
 ## Failure Modes
 
-- `MISSING_STAGE`: Stop and request which SDD stage user is in
+- `MISSING_STAGE`: Stop and request which workflow stage the caller is in
 - `MALFORMED_TASKS_FILE`: Stop (implement stage only). Cannot compute progress.
 - `MISSING_EXECUTION_SUMMARY`: Stop and request brief summary of what was done
 - `CHECKPOINT_TOO_LARGE`: Trim execution summary until <500 tokens
@@ -203,7 +203,7 @@ New session: Load checkpoint → User sees "Resuming implement: 12/23 tasks, Nex
 
 ### Pattern 2: During `specify` (interactive clarification)
 ```
-/sdd.specify creates spec.md
+Specification phase generates spec.md
 [User asks clarifying questions]
 [Session breaks mid-clarification]
 New session: Load checkpoint → User sees "Resuming specify: Spec draft, 5 stories defined, Next: resolve 3 ambiguities"
@@ -211,7 +211,7 @@ New session: Load checkpoint → User sees "Resuming specify: Spec draft, 5 stor
 
 ### Pattern 3: During `analyze` (post-implementation review)
 ```
-/sdd.analyze finds gaps
+Analysis phase identifies gaps
 [User decides to remediate]
 [Session breaks during remediation planning]
 New session: Load checkpoint → User sees "Resuming analyze: 3 issues found, 1 critical, Next: review critical issue"
@@ -219,7 +219,7 @@ New session: Load checkpoint → User sees "Resuming analyze: 3 issues found, 1 
 
 ## Load at Session Start (Stage-Agnostic)
 
-When any SDD agent starts in a new session:
+When any process resumes in a new session:
 
 ```
 1. Bootstrap loads story context
@@ -256,7 +256,7 @@ When any SDD agent starts in a new session:
 ## Last Interaction Summary
 - What: Implemented robust error handling with proper logging, added exponential backoff retry mechanism, updated TypeScript types for error responses.
 - Blockers: None
-- Next Step: Continue with /sdd.implement to implement T013
+- Next Step: Continue with implementation phase to implement T013
 
 ## Code State
 - Code Committed: No
@@ -288,12 +288,12 @@ arcus-artifact-meta:
 - Ambiguities Resolved: 2/5
 - Spec Version: Iteration 3
 - Readiness: Needs more clarification (3 open questions remain)
-- Next: Continue with /sdd.clarify to resolve remaining ambiguities
+- Next: Continue with clarification phase to resolve remaining ambiguities
 
 ## Last Interaction Summary
 - What: Resolved authentication scope ambiguity (Q1) and clarified payment provider fallback behavior (Q2). Identified 3 remaining open questions about refund handling, currency conversion edge cases, and webhook retry strategy.
 - Blockers: Blocked on stakeholder clarification for refund handling requirements
-- Next Step: Wait for stakeholder input on Q3, then continue /sdd.clarify
+- Next Step: Wait for stakeholder input on Q3, then continue clarification phase
 
 ## Code State
 - Code Committed: N/A (specification phase)
@@ -329,7 +329,7 @@ arcus-artifact-meta:
 ## Last Interaction Summary
 - What: Completed post-implementation analysis. Found that error retry logic was implemented more broadly than originally scoped (affected 2 additional modules). Updated context artifacts to reflect actual implementation footprint.
 - Blockers: Critical finding: scope drift vs. spec (review before close)
-- Next Step: Run /sdd.implement to remediate or accept scope expansion
+- Next Step: Proceed with implementation phase to remediate or accept scope expansion
 
 ## Code State
 - Code Committed: Yes
@@ -349,7 +349,7 @@ arcus-artifact-meta:
 
 ## Integration Points
 
-**1. After any agent completes a stage segment:**
+**1. After any process completes a stage segment:**
 - If user might break session (implementation batches, clarification loops, analysis reviews)
 - Call checkpoint-manager to record current state
 

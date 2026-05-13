@@ -17,7 +17,7 @@ metadata:
 
 ## Purpose
 
-Provide reusable, stage-agnostic quality validation with explicit pass/fail outcomes. Called by agents at the end of each pipeline stage to confirm the artifact is ready before the next stage begins.
+Provide reusable quality validation with explicit pass/fail outcomes. Validates artifacts for structural completeness, internal consistency, and readiness for downstream processing.
 
 ## Inputs
 
@@ -41,7 +41,7 @@ Provide reusable, stage-agnostic quality validation with explicit pass/fail outc
 
 ## Gate Profiles
 
-### `spec-gates` — used by `sdd.specify`
+### `spec-gates` — validate specification artifacts
 
 Validates that `spec.md` and `requirements.md` are complete, testable, and technology-agnostic.
 
@@ -54,7 +54,7 @@ Validates that `spec.md` and `requirements.md` are complete, testable, and techn
 | S4 | Every user story has an Independent Test | `Independent Test` field is present and non-empty on each story |
 | S5 | Every user story has ≥1 Acceptance Scenario | Given/When/Then format, not a placeholder |
 | S6 | Functional requirements use MUST/SHOULD/MAY | Normative language present; no vague verbs ("should maybe", "could") |
-| S7 | No `[NEEDS CLARIFICATION]` markers remain unresolved | All markers either resolved or escalated to `sdd.clarify` |
+| S7 | No `[NEEDS CLARIFICATION]` markers remain unresolved | All markers either resolved or flagged for follow-up |
 | S8 | No stack/API/code details in spec | No class names, method signatures, framework names, or file paths |
 | S9 | Success criteria are measurable | Each SC-XXX includes a numeric threshold or verifiable outcome |
 | S10 | `requirements.md` exists and is non-empty | Testable requirements list generated alongside `spec.md` |
@@ -62,7 +62,7 @@ Validates that `spec.md` and `requirements.md` are complete, testable, and techn
 
 ---
 
-### `plan-gates` — used by `sdd.plan`
+### `plan-gates` — validate design artifacts
 
 Validates that `plan.md` is architecturally complete and traceable to the spec.
 
@@ -83,7 +83,7 @@ Validates that `plan.md` is architecturally complete and traceable to the spec.
 
 ---
 
-### `tasks-gates` — used by `sdd.tasks`
+### `tasks-gates` — validate task breakdown artifacts
 
 Validates that `tasks.md` is complete, dependency-ordered, and fully traceable.
 

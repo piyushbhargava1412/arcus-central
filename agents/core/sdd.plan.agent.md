@@ -2,9 +2,6 @@
 description: Generate a comprehensive implementation plan from approved specification and requirements artifacts.
 ---
 
-## Skill Reference
-
-All skills used by this agent are documented in `.github/skills/SKILLS_REGISTRY.md`. For each execution step, locate the skill name in the registry to find its SKILL.md file path. Implement each skill by reading and following its Processing Rules section directly.
 
 ## User Input
 
@@ -28,15 +25,6 @@ You are a Senior Software Architect.
 - Out-of-scope: task decomposition, code implementation
 
 ## Execution Steps (follow skill definitions in order)
-
-1. Look up `session-bootstrap` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Resolve story ID and feature paths.
-2. Look up `artifact-modeling` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Build semantic model of spec/requirements/context-pack (reusable).
-3. Look up `design-synthesis` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Generate design sections from requirements and constraints (reusable).
-4. Look up `quality-gates` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Validate plan completeness and design consistency.
-5. Look up `markdown-validation` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Validate plan.md syntax and structure.
-6. Look up `report-renderer` in `.github/skills/SKILLS_REGISTRY.md`, locate its SKILL.md file, and implement the Processing Rules - Return completion status and readiness for `/sdd.tasks`.
-
-## Outline
 
 1. Validate feature context exists; fail fast if missing spec or requirements.
 2. Use `session-bootstrap` to resolve paths.

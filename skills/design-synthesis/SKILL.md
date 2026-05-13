@@ -16,7 +16,7 @@ metadata:
 
 ## Purpose
 
-Transform requirements into actionable design organized by concern (architecture, data, flow, error handling, etc.). Decoupled from specific phase; used by planning, implementation design, and analysis stages.
+Transform requirements into actionable design organized by concern (architecture, data, flow, error handling, etc.).
 
 ## Inputs
 
