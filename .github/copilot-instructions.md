@@ -1,5 +1,4 @@
 # Copilot Instruction Architecture: ARCUS Central
-# Copilot Instruction Architecture: ARCUS Central
 
 **Version**: 1.0.0  
 **Last Updated**: 2026-05-23  
@@ -191,13 +190,8 @@ Always check `.arcus-ignore` before analyzing. Excluded paths MUST NOT appear in
 | Version | Date       | Change Summary                        | Type  |
 |---------|------------|---------------------------------------|-------|
 | 1.0.0   | 2026-05-23 | Initial creation from fresh context   | MAJOR |
-| Version | Date       | Change Summary                        | Type  |
-|---------|------------|---------------------------------------|-------|
-| 1.0.0   | 2026-05-23 | Initial creation from fresh context   | MAJOR |
 
 ---
 
-**Maintained by**: `sdd.instructions` agent  
-**Next Review**: 2026-08-23
 **Maintained by**: `sdd.instructions` agent  
 **Next Review**: 2026-08-23
