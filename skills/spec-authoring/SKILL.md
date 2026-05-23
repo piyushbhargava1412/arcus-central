@@ -1,16 +1,10 @@
 ---
 name: spec-authoring
-description: Convert natural language feature intent into structured, technology-agnostic specification content.
+description: Convert a natural language feature description into structured, technology-agnostic spec.md and requirements.md content. Use when an agent needs to generate or refine a feature specification, produce testable requirements, or author user stories and acceptance scenarios.
 metadata:
-  inputs:
-    - feature_description
-    - spec_template
-    - context_pack (optional)
-    - guardrails (optional)
-  outputs:
-    - spec_file
-    - requirements_file
-    - assumptions
+  version: "1.0.0"
+  type:
+    - agents
 ---
 
 # Spec Authoring

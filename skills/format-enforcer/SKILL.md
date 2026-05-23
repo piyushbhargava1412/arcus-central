@@ -1,14 +1,10 @@
 ---
 name: format-enforcer
-description: Validate artifact format against schema and normalize output for consistency.
+description: Validate and normalize artifact formatting against a provided schema. Use when an agent needs to enforce structural consistency on a spec, plan, tasks, or checklist artifact before writing or handoff.
 metadata:
-  inputs:
-    - artifact
-    - format_schema
-    - normalization_rules
-  outputs:
-    - normalized_artifact
-    - violations_report
+  version: "1.0.0"
+  type:
+    - agents
 ---
 
 # Format Enforcer

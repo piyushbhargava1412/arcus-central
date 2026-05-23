@@ -1,14 +1,10 @@
 ---
 name: markdown-validation
-description: Validate markdown documents for structural integrity, syntax correctness, link validity, placeholder resolution, and formatting consistency. Parameterizable by artifact type via validation_rules.
+description: Validate markdown documents for structural integrity, syntax correctness, link validity, placeholder resolution, and formatting consistency. Use when an agent needs to verify a generated artifact before handoff, or when validating a spec, plan, tasks, or context document for completeness and well-formedness.
 metadata:
-  inputs:
-    - artifact
-    - validation_rules
-    - artifact_type (optional)
-  outputs:
-    - validation_results
-    - violations
+  version: "1.0.0"
+  type:
+    - agents
 ---
 
 # Markdown Validation

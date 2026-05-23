@@ -1,13 +1,10 @@
 ---
 name: test-pattern-discovery
-description: Analyze existing tests and persist shared repository test-writing conventions in .context/testing-patterns.md for downstream story and implementation work.
-metadata: 
-  inputs:
-    - repository_root
-    - repo_scope
-    - repo_map
-  outputs:
-    - testing_patterns in .context/testing-patterns.md
+description: Analyze existing tests in a repository and persist shared testing conventions to .context/testing-patterns.md. Use when onboarding a repository to ARCUS, after major context refresh, or before story-level implementation work that needs to follow existing test patterns.
+metadata:
+  version: "1.0.0"
+  type:
+    - agents
 ---
 
 # Test Pattern Discovery
@@ -131,39 +128,7 @@ Persist a single markdown file at `.context/testing-patterns.md` containing:
 
 ## Recommended Structure
 
-```md
-# Testing Patterns
-
-<!-- arcus-context-meta
-verification-commit: <hash or unknown>
-generated-at: <ISO-TIMESTAMP>
-confidence: high | medium | low
--->
-
-## Test Frameworks
-- ...
-
-## Test Types and Locations
-- ...
-
-## Naming Conventions
-- ...
-
-## Mocking / Stubbing Style
-- ...
-
-## Assertion Style
-- ...
-
-## Test Data / Fixture Patterns
-- ...
-
-## Spring / Integration Test Patterns
-- ...
-
-## Canonical Example Files
-- ...
-```
+Use the template in [assets/testing-patterns-template.md](assets/testing-patterns-template.md) when writing the output file.
 
 ## Validation Gates
 

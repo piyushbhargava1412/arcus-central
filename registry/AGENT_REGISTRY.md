@@ -145,37 +145,13 @@ This file maintains a registry of all available agents, their capabilities, and 
   3. `work-decomposition` - Re-validate tasks (reusable)
   4. `dependency-analysis` - Compute execution order (reusable)
   5. `task-execution-controller` - Execute tasks
-  6. `progress-tracker` - Track progress
-  7. `checkpoint-manager` - Save resumable workflow snapshot
-  8. `report-renderer` - Report completion
+  6. `checkpoint-manager` - Save resumable workflow snapshot
+  7. `report-renderer` - Report completion
 - **Guardrails**: Respects `.github/copilot-instructions.md` if present
 
 ---
 
-## Extension Agents (5)
-
-### sdd.afk
-
-- **File**: `agents/extensions/sdd.afk.agent.md`
-- **Prompt**: `prompts/extensions/sdd.afk.prompt.md`
-- **Command**: `/sdd.afk <story_description_or_file>`
-- **Purpose**: Execute feature stories autonomously through three stages (Architect → Test → Code) without human review gates, producing working tested code with minimal token consumption
-- **Role**: Autonomous SDD Orchestrator
-- **Key Capabilities**:
-  - Autonomous three-stage orchestration (no human gating between stages)
-  - Lean artifact generation by default (no `spec.md` or `requirements.md` unless explicitly requested)
-  - Scope-driven task decomposition (no artificial task limits)
-  - Explicit assumption resolution (no clarifying questions)
-  - Dual test plan generation (developer + QA with full traceability)
-  - Test-driven code generation (Ralph loop per task: plan → execute → verify)
-  - Silent execution (zero console output; all status in checkpoint)
-  - Token optimization (≤30% of 9-stage SDD cost)
-  - Checkpoint-centric resumption with AFK-native stage snapshots (mid-stage recovery without context reload)
-- **Skill Chain**:
-  - **Architect Stage**: session-bootstrap → feature-context-pack-builder (if needed) → ambiguity-detection → work-decomposition → design-synthesis → checkpoint-manager
-  - **Test Gen Stage**: dependency-analysis → coverage-analysis → markdown-generation → checkpoint-manager
-  - **Code Stage**: task-execution-controller (Ralph loop per task) → progress-tracker → format-enforcer → context-sync (if needed) → checkpoint-manager
-- **Guardrails**: Enforces `.github/copilot-instructions.md` guidelines during code generation. Respects `.context/` artifacts for selective context loading. Code generated in target repo source directories (src/, app/, etc.), NOT in .arcus/specs/
+## Extension Agents (4)
 
 ### sdd.context-builder
 

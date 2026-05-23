@@ -40,7 +40,7 @@ These skills are foundational and used by all or most agents across the SDD life
 ### `session-bootstrap`
 
 - **File**: `session-bootstrap/SKILL.md`
-- **Purpose**: Initialize stage context and resolve canonical artifact/template paths
+- **Purpose**: Resolve a story ID from user input or git branch and return canonical artifact and template paths for the current SDD stage
 - **Inputs**: `user_input`, `repository_root`
 - **Outputs**: `story_id`, `feature_dir`, `artifact_paths`, `template_paths`
 - **Used By**: All core agents (`specify`, `clarify`, `plan`, `tasks`, `analyze`, `implement`, `close`)
@@ -54,7 +54,7 @@ These skills are foundational and used by all or most agents across the SDD life
 ### `report-renderer`
 
 - **File**: `report-renderer/SKILL.md`
-- **Purpose**: Render concise, deterministic stage completion reports for chat output
+- **Purpose**: Render concise, deterministic stage completion reports for chat output with status, artifact paths, and next-step recommendations
 - **Inputs**: `stage_name`, `output_paths`, `status`, `warnings`
 - **Outputs**: `chat_report`
 - **Used By**: All core agents (`specify`, `clarify`, `plan`, `tasks`, `analyze`, `implement`, `close`)
@@ -68,7 +68,7 @@ These skills are foundational and used by all or most agents across the SDD life
 ### `quality-gates`
 
 - **File**: `quality-gates/SKILL.md`
-- **Purpose**: Apply deterministic quality checks to stage artifacts with pass/fail results
+- **Purpose**: Apply deterministic quality checks to spec, plan, or tasks artifacts with explicit pass/fail gate results and prioritised remediation items
 - **Inputs**: `artifact`, `checklist_template`, `gate_profile`, `guardrails` (optional)
 - **Outputs**: `checklist`, `gate_results`, `remediation_items`
 - **Used By**: 3 agents (`specify`, `plan`, `tasks`)
@@ -118,7 +118,7 @@ These skills handle artifact creation, modification, and validation.
 ### `markdown-generation`
 
 - **File**: `markdown-generation/SKILL.md`
-- **Purpose**: Generate well-formatted markdown documents with proper structure
+- **Purpose**: Generate well-formatted markdown documents with correct structure, syntax, and readability for any ARCUS artifact type
 - **Inputs**: `content`, `format_style`
 - **Outputs**: `formatted_markdown`
 - **Used By**: 4+ agents (`groom`, `instructions`, `close`, `context-builder`)
@@ -132,7 +132,7 @@ These skills handle artifact creation, modification, and validation.
 ### `markdown-validation`
 
 - **File**: `markdown-validation/SKILL.md`
-- **Purpose**: Validate markdown documents including paths, links, and quality
+- **Purpose**: Validate markdown documents for structural integrity, syntax correctness, link validity, placeholder resolution, and formatting consistency
 - **Inputs**: `artifact`, `validation_rules`
 - **Outputs**: `validation_results`, `violations`
 - **Used By**: 3+ agents (`clarify`, `analyze`, `close`, extensions)
@@ -166,7 +166,7 @@ These skills handle design, decomposition, and analysis reasoning.
 ### `work-decomposition`
 
 - **File**: `work-decomposition/SKILL.md`
-- **Purpose**: Break requirements/design into concrete work items organized by phase/priority
+- **Purpose**: Break down requirements and design context into concrete, independently actionable work items organized by phase and priority
 - **Inputs**: `requirements`, `design_context`, `organization_model`, `guardrails`
 - **Outputs**: `work_items`, `organization_structure`
 - **Used By**: 3 agents (`tasks`, `analyze`, `implement`)
@@ -215,7 +215,7 @@ These skills handle design, decomposition, and analysis reasoning.
 ### `question-orchestration`
 
 - **File**: `question-orchestration/SKILL.md`
-- **Purpose**: Conduct interactive questioning with recommendations and answer capture
+- **Purpose**: Conduct interactive questioning one question at a time with recommendations, answer capture, and configurable iteration limits
 - **Inputs**: `question_queue`, `max_questions`, `user_interaction_mode`
 - **Outputs**: `answered_questions`, `response_mappings`
 - **Used By**: 2+ agents (`clarify`, `instructions`)
@@ -234,7 +234,7 @@ These skills handle design, decomposition, and analysis reasoning.
 ### `format-enforcer`
 
 - **File**: `format-enforcer/SKILL.md`
-- **Purpose**: Validate artifact format against schema and normalize output
+- **Purpose**: Validate and normalize artifact formatting against a provided schema
 - **Inputs**: `artifact`, `format_schema`, `normalization_rules`
 - **Outputs**: `normalized_artifact`, `format_violations`
 - **Used By**: 2-3 agents (`tasks`, `analyze`, extensions)
@@ -255,7 +255,7 @@ These skills establish baseline repository context for all downstream operations
 ### `repository-context-builder`
 
 - **File**: `repository-context-builder/SKILL.md`
-- **Purpose**: Build or refresh baseline repository context by analyzing repository structure
+- **Purpose**: Build or refresh baseline repository context by analyzing repository structure and generating repo_scope.md and repo_map.md in .context/ using only code evidence
 - **Inputs**: `repository_root`
 - **Outputs**: `repo_scope`, `repo_map`
 - **Used By**: 1 agent (`context-builder`)
@@ -270,7 +270,7 @@ These skills establish baseline repository context for all downstream operations
 ### `test-pattern-discovery`
 
 - **File**: `test-pattern-discovery/SKILL.md`
-- **Purpose**: Analyse existing tests and persist shared repository test-writing conventions
+- **Purpose**: Analyze existing tests in a repository and persist shared testing conventions to .context/testing-patterns.md
 - **Inputs**: `repository_root`, `repo_scope`, `repo_map`
 - **Outputs**: `testing_patterns`
 - **Used By**: 1 agent (`context-builder`)
@@ -283,7 +283,7 @@ These skills establish baseline repository context for all downstream operations
 ### `flow-and-scope-discovery`
 
 - **File**: `flow-and-scope-discovery/SKILL.md`
-- **Purpose**: Identify business flows and map each flow to implementation scope
+- **Purpose**: Identify business flows from repository entry surfaces and persist each as a separate file in .context/flows/
 - **Inputs**: `repo_scope`, `repo_map`
 - **Outputs**: `flows`
 - **Used By**: 1 agent (`context-builder`)
@@ -364,7 +364,7 @@ These skills are context-specific or narrow in scope, used by 1-2 agents.
 #### `spec-authoring`
 
 - **File**: `spec-authoring/SKILL.md`
-- **Purpose**: Convert natural language into structured, technology-agnostic specifications
+- **Purpose**: Convert a natural language feature description into structured, technology-agnostic spec.md and requirements.md content
 - **Inputs**: `feature_description`, `spec_template`, `context_pack` (optional), `guardrails` (optional)
 - **Outputs**: `spec_sections`, `requirements_list`, `assumptions`
 - **Used By**: 2 agents (`specify`, `groom`)
@@ -395,7 +395,7 @@ These skills are context-specific or narrow in scope, used by 1-2 agents.
 #### `task-execution-controller`
 
 - **File**: `task-execution-controller/SKILL.md`
-- **Purpose**: Execute tasks in phase order respecting dependencies and applying execution policy
+- **Purpose**: Execute approved tasks from tasks.md in strict phase order, respecting dependencies, and persisting progress atomically after each task
 - **Inputs**: `tasks_list`, `dependency_graph`, `execution_policy`, `context_pack` (optional)
 - **Outputs**: `completed_tasks`, `execution_log`, `errors`
 - **Used By**: 1 agent (`implement`)
@@ -406,20 +406,6 @@ These skills are context-specific or narrow in scope, used by 1-2 agents.
   - Enforce file ownership — no two parallel tasks write the same file
   - Mark completed tasks atomically in `tasks.md`
   - Handle failures gracefully per phase type
-
-#### `progress-tracker`
-
-- **File**: `progress-tracker/SKILL.md`
-- **Purpose**: Update and render task progress status with completion metrics
-- **Inputs**: `tasks_file`, `execution_log`
-- **Outputs**: `progress_report`, `completion_metrics`
-- **Used By**: 1 agent (`implement`)
-- **Reusability**: ⭐ (execution-specific)
-- **Key Responsibilities**:
-  - Count completed, failed, and pending tasks per phase
-  - Compute completion percentages
-  - Identify next actionable task
-  - Render concise progress summary after each batch
 
 ---
 
@@ -450,7 +436,7 @@ These skills are context-specific or narrow in scope, used by 1-2 agents.
 | plan | 3 | 1 | 1 | 1 | - | - | - | - |
 | tasks | 3 | 1 | 3 | 1 | - | - | 1 | - |
 | analyze | 3 | 1 | 2 | 1 | 1 | - | 1 | - |
-| implement | 3 | - | 3 | 1 | - | - | - | 2 |
+| implement | 3 | - | 3 | 1 | - | - | - | 1 |
 | groom | 2 | 2 | - | - | - | - | - | 1 |
 | instructions | 2 | 2 | - | - | - | 1 | 1 | - |
 | close | 3 | 2 | - | 1 | 1 | - | - | - |
@@ -488,7 +474,6 @@ These skills are context-specific or narrow in scope, used by 1-2 agents.
 - `spec-authoring` (2 agents)
 - `ambiguity-detection` (2 agents)
 - `task-execution-controller` (1 agent)
-- `progress-tracker` (1 agent)
 
 ---
 
@@ -496,9 +481,9 @@ These skills are context-specific or narrow in scope, used by 1-2 agents.
 
 | Metric | Value |
 |--------|-------|
-| **Total Skills** | 23 |
+| **Total Skills** | 22 |
 | **Reusable (used by 2+ agents)** | 16 (73%) |
-| **Specialized/Domain-Specific** | 6 (27%) |
+| **Specialized/Domain-Specific** | 5 (23%) |
 | **Skills by domain** | 10 domains |
 | **Agents covered** | 10 (6 core + 4 extensions) |
 
@@ -517,7 +502,7 @@ These skills are context-specific or narrow in scope, used by 1-2 agents.
 | Current | Removed `specialized/repository-analysis` (stale, unused) |
 | Current | Added `sdd.close` agent to registry |
 | Current | Added `test-pattern-discovery` (was missing from registry) |
-| Current | Added `progress-tracker` (was missing from registry) |
+| Current | Updated Purpose descriptions for 13 refactored skills to match skill-builder conventions |
 
 ---
 

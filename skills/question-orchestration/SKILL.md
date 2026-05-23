@@ -1,14 +1,10 @@
 ---
 name: question-orchestration
-description: Conduct interactive questioning with recommendations, answer capture, and iteration limits.
+description: Conduct interactive questioning one question at a time with recommendations, answer capture, and configurable iteration limits. Use when an agent needs to clarify ambiguities, confirm scope decisions, or gather structured input from the user during spec clarification, plan confirmation, or discovery workflows.
 metadata:
-  inputs:
-    - question_queue
-    - max_questions
-    - user_interaction_mode
-  outputs:
-    - question_answer_log
-    - answer_mapping
+  version: "1.0.0"
+  type:
+    - agents
 ---
 
 # Question Orchestration

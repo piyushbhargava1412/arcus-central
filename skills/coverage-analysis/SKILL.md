@@ -1,15 +1,10 @@
 ---
 name: coverage-analysis
-description: Analyze traceability between work items and requirements; identify gaps, overlaps, and coverage metrics.
+description: Computes traceability coverage between artifact levels (requirements, work items, tasks) and identifies gaps, overlaps, and coverage metrics. Use when checking requirement coverage, analyzing task-to-story traceability, tracking implementation completeness, or when asked to "check coverage", "find gaps in the plan", "analyze traceability", or "identify unmapped requirements".
 metadata:
-  inputs:
-    - artifacts_models
-    - severity_profile
-  outputs:
-    - coverage_matrix
-    - gap_list
-    - overlap_list
-    - metrics
+  version: "1.0.0"
+  type:
+    - agents
 ---
 
 # Coverage Analysis
@@ -23,24 +18,36 @@ Compute coverage between any two artifact levels (requirements ↔ work items, w
 - `artifacts_models`: semantic models (from work-decomposition or external artifact modeling)
 - `severity_profile`: which gaps are CRITICAL vs HIGH vs MEDIUM vs LOW
 
-## Processing Rules
+## Instructions
 
-1. For each top-level item (requirement/story), count assigned lower-level items (work items/tasks).
-2. For each lower-level item, verify it maps to at least one top-level item.
-3. Identify unmapped top-level items (gaps) and unmapped lower-level items (overmapping).
-4. Score each gap by severity: scope > security/privacy > UX > technical.
-5. Compute coverage percentage and overall metrics.
-6. Identify overlaps (multiple lower items serving one upper item) and potential consolidation.
+### Step 1: Map Top-Level to Lower-Level Items
+For each top-level item (requirement/story), count assigned lower-level items (work items/tasks).
+
+### Step 2: Verify Reverse Mapping
+For each lower-level item, verify it maps to at least one top-level item.
+
+### Step 3: Identify Gaps and Overmapping
+Collect unmapped top-level items (gaps) and unmapped lower-level items (overmapping).
+
+### Step 4: Score Gaps by Severity
+Apply `severity_profile` to rank each gap: scope > security/privacy > UX > technical.
+
+### Step 5: Compute Metrics
+Calculate coverage percentage, gap count, and critical issue count.
+
+### Step 6: Identify Overlaps
+Flag items where multiple lower-level items serve a single upper-level item and note consolidation candidates.
 
 ## Output Contract
 
-- Must return:
-  - coverage matrix: top-level ↔ lower-level counts
-  - gap list: `{ item, severity, reason }`
-  - overlap list: redundantly mapped items
-  - metrics: total coverage %, gap count, critical issue count
-- Must not return:
-  - design recommendations for fixing gaps
+Format output using the template in `assets/coverage-report-template.md`. Returns:
+- Coverage matrix: top-level ↔ lower-level counts
+- Gap list: `{ item, severity, reason }`
+- Overlap list: redundantly mapped items
+- Metrics: total coverage %, gap count, critical issue count
+
+Does not return:
+- Design recommendations for fixing gaps
 
 ## Validation Gates
 
@@ -49,8 +56,8 @@ Compute coverage between any two artifact levels (requirements ↔ work items, w
 - [ ] Severity scores assigned
 - [ ] Metrics consistent
 
-## Failure Modes
+## Troubleshooting
 
-- `UNMAPPED_TOP_ITEM`: report item with zero lower-level coverage
-- `UNMAPPED_LOWER_ITEM`: report item with zero mapped parent
+**`UNMAPPED_TOP_ITEM`**: Report the item with zero lower-level coverage.  
+**`UNMAPPED_LOWER_ITEM`**: Report the item with zero mapped parent.
 

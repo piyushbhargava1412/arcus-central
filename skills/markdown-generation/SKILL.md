@@ -1,13 +1,10 @@
 ---
 name: markdown-generation
-description: Generate well-formatted markdown documents with correct structure, syntax, and readability. Applies formatting rules appropriate to the target artifact type.
+description: Generate well-formatted markdown documents with correct structure, syntax, and readability for any ARCUS artifact type. Use when an agent needs to produce a spec, plan, tasks, flow, report, or context document and must ensure consistent formatting, correct heading hierarchy, and resolved placeholder tokens.
 metadata:
-  inputs:
-    - content
-    - format_style
-    - artifact_type (optional)
-  outputs:
-    - markdown_output
+  version: "1.0.0"
+  type:
+    - agents
 ---
 
 # Markdown Generation
@@ -122,48 +119,9 @@ Never place these blocks mid-document. Never omit them for artifact types that r
 
 ### Rule 7 — Format Style Rules
 
-Apply these rules based on `format_style`:
+Apply the appropriate formatting rules based on `format_style`. See [references/format-style-rules.md](references/format-style-rules.md) for the full per-type specification.
 
-**`document`** (spec, plan, instructions):
-- Full heading hierarchy (H1 → H2 → H3)
-- Prose paragraphs for context; lists for enumerable items
-- Tables for structured comparative data
-- Horizontal rules (`---`) between major sections
-
-**`report`** (analysis report, validation report):
-- Lead with a summary table of findings
-- Use consistent severity labels: CRITICAL / HIGH / MEDIUM / LOW
-- Each finding row: ID, Category, Severity, Location, Summary, Recommendation
-- Metrics block at the end with counts
-- Next Actions block as the final section
-
-**`checklist`** (requirements.md, tasks.md):
-- All items use checkbox syntax: `- [ ] ID: description`
-- Group items by phase or category under H2 headers
-- No prose paragraphs — checklist items only
-- Dependencies section at the end if applicable
-
-**`story`** (groom output):
-- Follow story-template.md section order exactly
-- Narrative section: **As a** / **I want to** / **So that** on separate lines
-- Acceptance criteria: Given/When/Then on separate indented lines
-
-**`summary`** (completion-summary.md):
-- Lead with status line and key metadata
-- Delivered section: grouped by user story
-- Deferred section: task IDs with descriptions
-- Context Updated section: list of artifact paths
-- Keep the entire document under 60 lines
-
-**`flow`** (.context/flows/*.md):
-- Each section is a bullet list, not prose
-- Entry points, core path, scope: one item per line
-- arcus-context-meta block immediately after H1
-
-**`index`** (copilot-instructions.md sections):
-- Reference links only — no duplicated content
-- Format: `- [Label](path/to/file.md)`
-- Group by category under H3 headers
+Available styles: `document`, `report`, `checklist`, `story`, `summary`, `flow`, `index`
 
 ### Rule 8 — Whitespace and Spacing
 

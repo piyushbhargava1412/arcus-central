@@ -1,13 +1,10 @@
 ---
 name: context-sync
-description: Detect drift between current code and shared .context artifacts using verification commits and git diff, then update only impacted artifacts. Operates in repo-wide mode (story start) or story-scoped mode (post-implementation) depending on whether a context_pack is provided.
+description: Detects drift between the current codebase and shared .context artifacts using git diff, then updates only the impacted artifacts. Supports repo-wide mode (full diff since last verification commit) and story-scoped mode (targeted diff for a specific story). Use when starting a new story, after completing implementation, during story closure, or when asked to "sync context", "refresh .context", "update repo map", or "reconcile context after changes".
 metadata:
-  inputs:
-    - repository_root
-    - story_id (optional — required for story-scoped mode)
-    - context_pack (optional — triggers story-scoped mode when provided)
-  outputs:
-    - updated_context
+  version: "1.0.0"
+  type:
+    - agents
 ---
 
 # Context Sync
@@ -56,6 +53,8 @@ Do not:
 - scan the entire repository unless git diff fallback is required
 - update artifacts outside `.context/`
 - infer behaviour without evidence from code changes
+- use this skill for initial context generation — use the context builder instead
+- use this skill after major restructuring that requires full context rebuild — use the context builder instead
 
 ## Inputs
 
@@ -69,7 +68,7 @@ Use the smallest possible change set to update only the shared context that is a
 
 ---
 
-## Processing Rules
+## Instructions
 
 ### 0. Freshness Check (Early Exit)
 
@@ -234,31 +233,14 @@ Keep output concise and scannable.
 
 ---
 
-## Failure Modes
+## Troubleshooting
 
-- `CONTEXT_ALREADY_CURRENT`: early exit — verification-commit matches HEAD; no work needed
-- `MISSING_CONTEXT`: one or more required `.context/` artifacts absent — stop and instruct context builder invocation
-- `GIT_UNAVAILABLE`: git not found — skip freshness check, use fallback diff where possible
-- `NO_VERIFICATION_COMMIT`: `arcus-context-meta` block absent or commit is `unknown` — use fallback diff
-- `MISSING_ROOT`: repository root unresolved — stop and report
-- `UNMAPPED_CHANGE`: changed file cannot be mapped to any `.context/` artifact — log for manual review, continue
-- `FLOW_SYNC_AMBIGUITY`: changed file matches multiple flows — log for manual review, update most specific match only
-- `SCOPE_DEVIATION`: changed file is outside story scope (story-scoped mode) — log warning, still evaluate for context impact
-- `OVERBROAD_REFRESH`: refresh scope would require rewriting >50% of an artifact — abort that artifact's refresh, report for manual context builder invocation
-
----
-
-## Handoff
-
-Used by any workflow that needs to detect and reconcile context drift.
-
-### When To Use
-
-- At the start of new feature work — before building story context (repo-wide mode)
-- After feature implementation (story-scoped mode)
-- Before archiving or completing a feature (story-scoped mode)
-
-### When NOT To Use
-
-- Initial context generation (use the context builder instead)
-- Full context rebuild after major restructuring (use the context builder instead)
+**`CONTEXT_ALREADY_CURRENT`**: Early exit — verification-commit matches HEAD; no work needed.  
+**`MISSING_CONTEXT`**: One or more required `.context/` artifacts absent — stop and instruct context builder invocation.  
+**`GIT_UNAVAILABLE`**: Git not found — skip freshness check, use fallback diff where possible.  
+**`NO_VERIFICATION_COMMIT`**: `arcus-context-meta` block absent or commit is `unknown` — use fallback diff.  
+**`MISSING_ROOT`**: Repository root unresolved — stop and report.  
+**`UNMAPPED_CHANGE`**: Changed file cannot be mapped to any `.context/` artifact — log for manual review, continue.  
+**`FLOW_SYNC_AMBIGUITY`**: Changed file matches multiple flows — log for manual review, update most specific match only.  
+**`SCOPE_DEVIATION`**: Changed file is outside story scope (story-scoped mode) — log warning, still evaluate for context impact.  
+**`OVERBROAD_REFRESH`**: Refresh scope would require rewriting >50% of an artifact — abort that artifact's refresh, report for manual context builder invocation.

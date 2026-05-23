@@ -1,12 +1,10 @@
 ---
 name: feature-context-pack-builder
-description: Build a minimal, story-specific context pack from shared .context artifacts and persist it to .arcus/specs/<STORY-ID>/context-pack.md without scanning the full repository.
+description: Builds a minimal, story-scoped context pack from shared .context artifacts and writes it to .arcus/specs/STORY-ID/context-pack.md without scanning the full repository. Use at the start of a new story, after drift reconciliation, before specification and planning, or when asked to "build context for this story", "create a context pack", or "load story context".
 metadata:
-    inputs:
-      - story_description
-      - story_id
-    outputs:
-      - context_pack
+  version: "1.0.0"
+  type:
+    - agents
 ---
 
 # Feature Context Pack Builder
@@ -42,92 +40,47 @@ Do not:
 - `story_description`
 - `story_id`
 
-## Processing Rules
+## Instructions
 
-1. Parse story description to identify:
-    - domain terms
-    - user intent
-    - key actions
-    - entities/integrations if mentioned
+### Step 1: Parse Story Description
+Extract from `story_description`:
+- Domain terms
+- User intent and key actions
+- Entities and integrations if mentioned
 
-2. Read shared context from:
-    - `.context/repo_scope.md`
-    - `.context/repo_map.md`
-    - `.context/flows/*.md`
+### Step 2: Read Shared Context
+Read all of:
+- `.context/repo_scope.md`
+- `.context/repo_map.md`
+- `.context/flows/*.md`
 
-3. Match relevant flows using:
-    - flow names
-    - entry points
-    - domain terms
-    - integrations
-    - scope hints
+### Step 3: Match and Select Relevant Flows
+Match flows using flow names, entry points, domain terms, integrations, and scope hints. Select the smallest relevant set — prefer 1–2 primary flows; include more only if strongly justified.
 
-4. Select the smallest relevant set of flows:
-    - prefer 1–2 primary flows
-    - include more only if strongly justified
+### Step 4: Extract Relevant Details
+From selected flows, extract only: entry points, core path, data touchpoints, integrations, scope, and tests. Add repo-level context (modules, config hotspots, integration areas) only if directly relevant.
 
-5. Extract only relevant details:
-    - entry points
-    - core path
-    - data touchpoints
-    - integrations
-    - scope
-    - tests
+### Step 5: Identify Likely Working Area
+Derive candidate packages/modules and likely classes/services from selected flows.
 
-6. Add repo-level context only if directly relevant:
-    - modules/packages
-    - config hotspots
-    - integration areas
+### Step 6: Capture Uncertainty
+Explicitly record: no matching flow, ambiguous mapping, missing context, or weak evidence. Prefer a smaller pack over a broader one.
 
-7. Identify likely working area:
-    - candidate packages/modules
-    - likely classes/services if evident from selected flows
-
-8. Capture uncertainty explicitly:
-    - no matching flow
-    - ambiguous mapping
-    - missing context
-    - weak evidence
-
-9. Prefer a smaller pack over a broader one.
-
-## Persistence Rules
-
-1. Ensure directory exists:
-    - `.arcus/specs/<STORY-ID>/`
-
-2. Write file:
-    - `context-pack.md`
-
-3. If file exists:
-    - overwrite it
-
-4. Do not write story context packs into `.context/`
+### Step 7: Write Output
+Ensure `.arcus/specs/<STORY-ID>/` exists. Write (or overwrite) `context-pack.md` using the template in `assets/context-pack-template.md`. Do not write into `.context/`.
 
 ## Output Contract
 
-### context_pack (`.arcus/specs/<STORY-ID>/context-pack.md`)
+Format output using the template in `assets/context-pack-template.md`. The written file must include all ten sections: Story Summary, Relevant Flows, Entry Points, Core Path, Data Touchpoints, Integrations, Scope, Likely Working Areas, Tests, and Assumptions / Gaps.
 
-Must include:
+Output must be:
+- Minimal and focused
+- Derived only from shared context artifacts
+- Explicit about uncertainty — never speculative
 
-- Story Summary
-- Relevant Flows
-- Entry Points
-- Core Path
-- Data Touchpoints
-- Integrations
-- Scope
-- Likely Working Areas
-- Tests
-- Assumptions / Gaps
-
-## Output Quality Rules
-
-- minimal and focused
-- derived only from shared context artifacts
-- no repo-wide expansion
-- no speculative broadening
-- explicit about uncertainty
+Does not return:
+- Repo-wide expansions
+- Content not grounded in `.context/` artifacts
 
 ## Validation Gates
 
@@ -137,12 +90,8 @@ Must include:
 - [ ] scope limited to relevant areas
 - [ ] output written to `.arcus/specs/<STORY-ID>/context-pack.md`
 
-## Failure Modes
+## Troubleshooting
 
-- `NO_MATCHING_FLOW`: produce partial pack with explicit gaps
-- `AMBIGUOUS_MAPPING`: include bounded alternatives and mark uncertainty
-- `INSUFFICIENT_CONTEXT`: report missing shared context needed for grounding
-
-## Handoff
-
-This skill produces temporary story-scoped context, distinct from shared repository-level intelligence.
+**`NO_MATCHING_FLOW`**: Produce a partial pack with explicit gaps noted in Assumptions / Gaps.  
+**`AMBIGUOUS_MAPPING`**: Include bounded alternatives and mark uncertainty explicitly.  
+**`INSUFFICIENT_CONTEXT`**: Report which shared context artifact is missing and stop.

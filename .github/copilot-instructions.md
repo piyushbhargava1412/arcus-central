@@ -1,139 +1,127 @@
-# ARCUS Central — Copilot Instructions
+# Copilot Instruction Architecture: ARCUS Central
 
 **Version**: 1.0.0  
-**Last Updated**: 2026-04-29  
-**Repository**: bigfin_arcus-central  
-**Purpose**: Spec Driven Development (SDD) framework distribution hub
+**Last Updated**: 2026-05-23  
+**Framework**: SDD (Spec Driven Development)
 
 ---
 
 ## Project Context
 
-ARCUS Central is the authoritative distribution hub for the Spec Driven Development (SDD) methodology. It provides:
-- **10 Agents** that guide specification, planning, analysis, and implementation workflows
-- **23 Reusable Skills** that agents delegate to for focused capabilities
-- **11 Document Templates** for specs, plans, tasks, and context artifacts
-- **Instruction Architecture** (guidelines for engineering, architecture, languages, infrastructure, testing)
-- **Integration Automation** (Bash scripts that distribute framework to target repositories)
+### Repository Summary
 
-The framework is **Bash/Markdown-based**; no business logic or application code exists in this repository.
+| Field | Value |
+|---|---|
+| **Repository** | `arcus-central` |
+| **Purpose** | Authoritative distribution hub for the ARCUS SDD framework — maintains and distributes agents, skills, templates, guidelines, and integration scripts to target repositories |
+| **Stage** | Active development |
+| **Architecture Style** | Framework distribution hub — no runtime process, no application code |
+| **Primary Languages** | Bash (scripts), Markdown (all framework components) |
+| **Authoritative Tech Docs** | [`.context/repo_map.md`](../.context/repo_map.md) · [`.context/repo_scope.md`](../.context/repo_scope.md) |
 
-## Architecture Style
+### Technology Stack
 
-**Distributed Agent/Skill Framework** — Agents orchestrate; skills implement. Modular, stateless, test-driven component architecture with evidence-based context generation.
+> **Full tech stack details**: See [`.context/repo_map.md` → Overview](../.context/repo_map.md#overview)
 
----
+### Key Modules
 
-## Core Principles (Project-Specific Governance)
-
-### P1: Agent Governance — Mandatory
-
-When **creating or modifying agents**:
-- **MUST** follow the structure defined in `templates/agent-file-template.md`
-- **MUST** update `registry/AGENT_REGISTRY.md` with agent metadata (name, role, scope, capabilities, delegation model)
-- **MUST** refresh `.context/` after agent changes using `sdd.context-builder` agent
-- **SHOULD** create an associated prompt file in `prompts/` and register in `registry/`
-- **MUST** include: role, scope, delegation model, input/output specs, error handling
-
-**Rationale**: Agents are the primary interface for the framework. Consistency in structure, registration, and context ensures discoverability and reliable delegation.
-
-### P2: Skill Governance — Mandatory
-
-When **creating or modifying skills**:
-- **MUST** follow structure defined in `skills/[category]/SKILL.md` (metadata + implementation details)
-- **MUST** include: input contract, output contract, processing rules, dependencies, error handling
-- **MUST** update `skills/SKILLS_REGISTRY.md` with skill metadata (name, domain, inputs, outputs, reusability notes)
-- **MUST** refresh `.context/` after skill changes using `sdd.context-builder` agent
-- **SHOULD** organize skills by capability domain (foundation, discovery, context, artifact, core, reasoning, specialized, formatting, maintenance, interaction)
-
-**Rationale**: Skills are the building blocks of agent orchestration. Proper registration and governance ensure skills can be discovered, composed, and reused reliably across agents.
-
-### P3: Documentation Strategy — Mandatory
-
-When **maintaining documentation**, follow this priority:
-1. **ALWAYS** create/update `.context/` artifacts:
-   - `.context/repo_scope.md` — Business capabilities, component responsibilities, integration model
-   - `.context/repo_map.md` — Technical topology, directory structure, tech stack, entry points
-   - `.context/flows/` — Key execution flows (integration, agent execution, skill delegation)
-   - `.context/testing-patterns.md` — How framework components are validated
-
-2. **ALWAYS** maintain core documentation:
-   - `README.md` — Project overview and quick start
-   - `ARCUS_INTEGRATION_GUIDE.md` — Integration guide and CLI reference
-   - `registry/AGENT_REGISTRY.md` — All agents and their capabilities
-   - `skills/SKILLS_REGISTRY.md` — All skills and domains
-   - `docs/SDD-Flow-Diagram.md` — Visual workflow representation
-
-3. **AVOID** creating additional how-to guides, tutorials, or comprehensive documentation unless explicitly requested
-
-4. **MUST** review and update `.context/` artifacts after every significant change (new agents, skills, features)
-
-5. **NEVER** generate auto-summaries, final summaries, or comprehensive summaries unless explicitly requested by the user
-
-**Rationale**: ARCUS is a framework distribution hub. Over-documentation creates maintenance burden. `.context/` serves as the authoritative, concise guide; registry files enable discovery; core docs guide integration.
-
-### P4: Context Refresh — Mandatory
-
-**After any of the following changes**:
-- New agent added or agent structure modified
-- New skill added or skill interface changed
-- New template added
-- Integration model changed
-- Distribution strategy changed
-- New instruction file added
-
-**Action**: Run `sdd.context-builder` agent to refresh `.context/repo_scope.md` and `.context/repo_map.md`
-
-**Rationale**: Context drift leads to hallucinations and incorrect agent behavior. Keeping `.context/` aligned with implementation is non-negotiable.
+> **Full module map**: See [`.context/repo_map.md` → Key Packages / Modules](../.context/repo_map.md#key-packages--modules)
 
 ---
 
-## Engineering References
+## System Functionalities
 
-The following instruction files define reusable guidelines that target repositories inherit:
-
-| Guideline | Purpose | Reference |
-|-----------|---------|-----------|
-| Engineering Standards | Code quality, patterns, design principles | `guidelines/engineering/engineering-guidelines.md` |
-| Clean Code | SOLID principles, code clarity, maintainability | `guidelines/engineering/clean-code-guidelines.md` |
-| Architecture Principles | System design, modularity, scalability, resilience | `guidelines/architecture/architecture-guidelines.md` |
-| Language Conventions | Language-specific standards and idioms | `guidelines/languages/language-guidelines.md` |
-| Language-Specific Guides | Java, Node.js, Python idioms and patterns | `guidelines/languages/java.md`, `guidelines/languages/nodejs.md`, `guidelines/languages/python.md` |
-| Infrastructure Patterns | Deployment, configuration, infrastructure | `guidelines/infra/infrastructure-guidelines.md` |
-| Testing Standards | Test writing, coverage, test-driven development | `guidelines/testing/testing-guidelines.md` |
-| TDD Guidelines | Test-driven development practices | `guidelines/testing/tdd-guidelines.md` |
-| Security Standards | Security principles, threat modeling, secure coding | `guidelines/security/security.md` |
+> **Full responsibilities and boundaries**: See [`.context/repo_scope.md` → Core Responsibilities](.context/repo_scope.md#core-responsibilities)
 
 ---
 
-## Repository Scope & Configuration
+## Business Flows
 
-### Respecting `.arcus-ignore`
+_Load only the flow relevant to your current task._
 
-- **ALWAYS** check `.arcus-ignore` file before analyzing repository structure
-- **ALWAYS** exclude paths matching `.arcus-ignore` patterns from analysis
-- **NEVER** mention ignored paths in any artifacts, documentation, or instructions
-- **TREAT** ignored paths as if they don't exist (especially `.arcus/`, `.github/agents/`, `.github/prompts/`, `.github/skills/`)
-
-**Rationale**: `.arcus-ignore` defines framework components that are distributed infrastructure, not application code. Ignoring these prevents pollution of generated context artifacts and keeps analysis focused on actual application logic.
-
-### Documentation Scope
-
-- **Document:** Application code, business logic, actual features in non-ignored paths
-- **Document:** Project-specific configuration, constraints, custom patterns
-- **DO NOT Document:** Framework components (agents, skills, templates, scripts)
-- **DO NOT Document:** Ignored paths or framework tooling
+- [Framework distribution](.context/flows/framework-distribution.md)
+- [CLI installation](.context/flows/cli-installation.md)
+- [Framework removal](.context/flows/framework-removal.md)
+- [Feature story scaffolding](.context/flows/feature-story-scaffolding.md)
 
 ---
 
-## Implementation Constraints
+## Testing Conventions
 
-- **No business logic in this repository** — Framework components only (agents, skills, templates, guidelines)
-- **No code generation in agents** — Agents guide implementation; they delegate to skills for generation
-- **Bash/Markdown only** — No additional programming languages without explicit approval
-- **Symlink-first distribution** — For templates, scripts, instructions (instant updates to integrated repos)
-- **Copy-only for agents/prompts** — Due to IntelliJ agent discovery limitations
-- **Read-only enforcement** — Central sources as `chmod a-w`; copies as `chmod 444`
+> **Repo testing conventions**: See [`.context/testing-patterns.md`](.context/testing-patterns.md)
+
+---
+
+## Engineering Standards & Guidelines
+
+All engineering principles, architecture guidelines, language standards, testing requirements, and infrastructure patterns are defined in the following guideline files:
+
+**Engineering & Code Quality**:
+- See [guidelines/engineering/engineering-guidelines.md](guidelines/engineering/engineering-guidelines.md)
+- See [guidelines/engineering/clean-code-guidelines.md](guidelines/engineering/clean-code-guidelines.md)
+
+**Architecture & System Design**:
+- See [guidelines/architecture/architecture-guidelines.md](guidelines/architecture/architecture-guidelines.md)
+
+**Language & Coding Standards**:
+- See [guidelines/languages/language-guidelines.md](guidelines/languages/language-guidelines.md)
+- Bash: N/A (no dedicated guideline file)
+- Java: See [guidelines/languages/java.md](guidelines/languages/java.md) — for target repos using Java; not applicable to this repository
+- Node.js: See [guidelines/languages/nodejs.md](guidelines/languages/nodejs.md) — for target repos using Node.js; not applicable to this repository
+- Python: See [guidelines/languages/python.md](guidelines/languages/python.md) — minor applicability (skill-builder helper scripts only)
+
+**Testing & Quality Assurance**:
+- See [guidelines/testing/testing-guidelines.md](guidelines/testing/testing-guidelines.md)
+- See [guidelines/testing/tdd-guidelines.md](guidelines/testing/tdd-guidelines.md)
+
+**Infrastructure & Deployment**:
+- See [guidelines/infra/infrastructure-guidelines.md](guidelines/infra/infrastructure-guidelines.md)
+
+**Security**:
+- See [guidelines/security/security.md](guidelines/security/security.md)
+
+### Language Guidelines
+
+_These are best practice suggestions. Existing repository conventions take precedence._
+
+- Bash: N/A (guideline not yet available)
+- Python (minor): See [guidelines/languages/python.md](guidelines/languages/python.md)
+
+---
+
+## Project-Specific Overrides
+
+### Authoritative Source Directories
+
+The following directories are the **authoritative sources** for all framework components:
+
+- `agents/` — agent definitions (NOT `.github/agents/`)
+- `skills/` — skill instruction sets (NOT `.github/skills/`)
+- `prompts/` — agent prompts (NOT `.github/prompts/`)
+- `templates/` — SDD artifact templates
+- `guidelines/` — engineering standards
+
+### Managed Read-Only Copies — MUST NOT Edit
+
+`.github/agents/`, `.github/prompts/`, `.github/skills/` are read-only copies managed by `integrate.sh`. **Never edit these directly.** Changes must be made in the authoritative source directories above; run `arcus-integrate --sync` to propagate.
+
+### No Application Code
+
+This repository contains **no application code**. All Copilot analysis MUST be scoped to framework components only (agents, skills, templates, guidelines, scripts). Do not generate service code, REST endpoints, data models, or business logic.
+
+### Skill Count
+
+The authoritative `skills/` directory contains **22 skills**. The `skill-builder` skill exists only in `.github/skills/` (a managed copy). If adding a new skill, create it in `skills/` first.
+
+### .arcus-ignore Compliance
+
+Always check `.arcus-ignore` before analyzing. Excluded paths MUST NOT appear in any generated artifacts. Key excluded paths: `.github/agents/`, `.github/prompts/`, `.github/skills/`, `.arcus/scripts/`, `.arcus/templates/`.
+
+---
+
+## Conventions Override
+
+> **Repository conventions always take precedence over generic guidelines.** The patterns, structure, and standards already established in this repository (as captured in `.context/`) are the authoritative source. Guideline files under `guidelines/` provide best practice suggestions to fill gaps — they must not be used to override or restructure existing repository conventions unless the user explicitly requests a change.
 
 ---
 
@@ -141,48 +129,33 @@ The following instruction files define reusable guidelines that target repositor
 
 ### Repository Analysis
 
-1. **ALWAYS** check `.arcus-ignore` before analyzing repository structure
-2. **ALWAYS** exclude paths matching `.arcus-ignore` patterns from all analysis
-3. **NEVER** mention ignored paths in any artifacts or documentation
-4. **ONLY** document application code found in non-ignored paths
+1. **ALWAYS** check `.arcus-ignore` before analyzing the repository
+2. **ALWAYS** exclude paths matching `.arcus-ignore` patterns from all analysis and artifacts
+3. **NEVER** mention `.github/agents/`, `.github/prompts/`, `.github/skills/` as sources of truth
+4. **ONLY** document framework components in `agents/`, `skills/`, `prompts/`, `templates/`, `guidelines/`
 
-### Framework Context Management
+### Editing Framework Components
 
-1. **ALWAYS** refresh `.context/` after structural changes using `sdd.context-builder`
-2. **ALWAYS** validate artifacts generated are in scope for target repositories
-3. **NEVER** generate or assume content beyond evidence from actual codebase
-4. **ONLY** reference `.context/` as authoritative repository intelligence
+1. **READ** the existing `SKILL.md` or agent file before editing it
+2. **PRESERVE** the YAML frontmatter block at the top of every `SKILL.md`
+3. **VALIDATE** that cross-references to other skills/templates remain accurate after edits
+4. **NEVER** edit files under `.github/agents/`, `.github/prompts/`, `.github/skills/` directly
 
----
+### Quality Assurance
 
-## Quality Gates
-
-Before merging changes to this repository:
-
-1. ✅ **Agent/Skill Registration**: All new agents/skills registered in appropriate registry
-2. ✅ **Structure Compliance**: Follows relevant template (agent, skill, instruction)
-3. ✅ **Context Alignment**: `.context/` updated if scope/capabilities changed
-4. ✅ **Cross-Reference Accuracy**: All registry links validate; no broken references
-5. ✅ **Markdown Validation**: Valid Markdown syntax; no unresolved links
-6. ✅ **Documentation Completeness**: Input/output contracts, error handling, dependencies documented
+1. **ENFORCE** no unexplained bracket tokens `[...]` remain in generated artifacts
+2. **CHECK** all markdown links resolve to actual files before writing
+3. **ENSURE** `arcus-context-meta` blocks are present in all `.context/` artifacts
 
 ---
 
 ## Amendment Log
 
-| Version | Date | Type | Summary |
-|---------|------|------|---------|
-| 1.0.1 | 2026-05-07 | MINOR | Added "Repository Scope & Configuration" and "Agent Behavioral Rules" sections. Explicitly documented `.arcus-ignore` patterns, repository analysis constraints, and framework context management rules per instruction-template.md. |
-| 1.0.0 | 2026-04-29 | INIT | Initial copilot instructions created for ARCUS Central framework hub. Established agent governance (P1), skill governance (P2), documentation strategy (P3), and context refresh (P4) as mandatory principles. |
+| Version | Date       | Change Summary                        | Type  |
+|---------|------------|---------------------------------------|-------|
+| 1.0.0   | 2026-05-23 | Initial creation from fresh context   | MAJOR |
 
 ---
 
-## See Also
-
-- [Repository Scope](../.context/repo_scope.md) — Business capabilities, component architecture
-- [Repository Map](../.context/repo_map.md) — Technical topology, directory structure
-- [Agent Registry](../registry/AGENT_REGISTRY.md) — All agents and their capabilities
-- [Skill Registry](../skills/SKILLS_REGISTRY.md) — All skills and domains
-- [Integration Guide](../ARCUS_INTEGRATION_GUIDE.md) — CLI usage and integration workflow
-
-
+**Maintained by**: `sdd.instructions` agent  
+**Next Review**: 2026-08-23

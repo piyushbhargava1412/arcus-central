@@ -1,16 +1,10 @@
 ---
 name: task-execution-controller
-description: Execute tasks in phase order while respecting dependencies, applying execution policy, and persisting progress atomically.
+description: Execute approved tasks from tasks.md in strict phase order, respecting dependencies, and persisting progress atomically after each task. Use when an agent is implementing a story and needs to translate task descriptions into file creation, file edits, or shell commands while maintaining a consistent execution log.
 metadata:
-  inputs:
-    - tasks_list
-    - dependency_graph
-    - execution_policy
-    - context_pack (optional)
-  outputs:
-    - updated_tasks_file
-    - execution_log
-    - error_list
+  version: "1.0.0"
+  type:
+    - agents
 ---
 
 # Task Execution Controller

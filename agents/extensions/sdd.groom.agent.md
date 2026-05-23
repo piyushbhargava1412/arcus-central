@@ -19,7 +19,7 @@ You are a Story Grooming Strategist responsible for converting raw requirements 
 
 - Input artifacts:
   - Requirement description (`$ARGUMENTS`)
-  - `.arcus/templates/stories/story-template.md`
+  - `.arcus/templates/story-template.md`
   - `.context/repo_scope.md` (optional — use if available to align story scope with repo boundaries)
 - Output artifacts:
   - One or more `.md` story files written to `.groom/` in the target repository root
@@ -48,7 +48,7 @@ Set the output directory to `.groom/` at the repository root (NOT `.arcus/groom/
 - Create the directory if it does not exist.
 - Do NOT delete any existing files in this directory.
 
-Load the story template from `.arcus/templates/stories/story-template.md`. If missing → stop and ask user to run `arcus-integrate --sync`.
+Load the story template from `.arcus/templates/story-template.md`. If missing → stop and ask user to run `arcus-integrate --sync`.
 
 ### 3. Analyse Requirement
 
@@ -94,7 +94,7 @@ Naming rules:
 
 ### 6. Generate Story Documents
 
-For each story, populate all sections of `.arcus/templates/stories/story-template.md` using `markdown-generation`:
+For each story, populate all sections of `.arcus/templates/story-template.md` using `markdown-generation`:
 
 - **Narrative**: As a / I want to / So that — written from the actor's perspective in plain language
 - **Context**: one focused sentence on the problem or user need

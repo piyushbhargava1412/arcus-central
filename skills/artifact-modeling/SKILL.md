@@ -1,13 +1,10 @@
 ---
 name: artifact-modeling
-description: Build semantic models of artifacts for consistent analysis and traceability.
+description: Builds normalized, queryable semantic models of specification artifacts (spec, plan, tasks) for coverage analysis, consistency checking, and cross-artifact traceability. Use when analyzing artifact relationships, checking requirement coverage, performing cross-artifact reasoning, or when asked to "model artifacts", "build traceability mappings", or "extract entities from the spec".
 metadata:
-  inputs:
-    - artifacts
-    - artifact_types
-  outputs:
-    - semantic_models
-    - traceability_mappings
+  version: "1.0.0"
+  type:
+    - agents
 ---
 
 # Artifact Modeling
@@ -21,26 +18,36 @@ Create normalized, queryable semantic models of any artifacts (spec, plan, tasks
 - `artifacts`: content from one or more artifacts (spec.md, plan.md, tasks.md, etc.)
 - `artifact_types`: what artifact types are being modeled (spec, plan, tasks, etc.)
 
-## Processing Rules
+## Instructions
 
-1. Extract entities from artifacts based on type:
-   - From spec: requirements (with keys/slugs), user stories, acceptance criteria
-   - From plan: design decisions, components, data flows
-   - From tasks: work items, IDs, dependencies, phases
-2. Build invertible mappings for traceability.
-3. Assign stable identifiers to each entity for cross-reference.
-4. Validate extracted models for consistency and completeness.
-5. Create queryable indices for coverage and gap analysis.
+### Step 1: Extract Entities
+Extract entities from each artifact based on its type:
+- From spec: requirements (with keys/slugs), user stories, acceptance criteria
+- From plan: design decisions, components, data flows
+- From tasks: work items, IDs, dependencies, phases
+
+### Step 2: Assign Stable Identifiers
+Assign stable, unique identifiers to each entity for consistent cross-reference across artifacts.
+
+### Step 3: Build Traceability Mappings
+Build invertible mappings linking entities across artifact types (requirement ↔ story ↔ task).
+
+### Step 4: Create Queryable Indices
+Create queryable indices for downstream coverage and gap analysis.
+
+### Step 5: Validate Models
+Validate extracted models for consistency, completeness, and absence of circular references.
 
 ## Output Contract
 
-- Must return:
-  - semantic models per artifact type
-  - traceability mappings (requirement ↔ story ↔ task)
-  - entity inventories with stable IDs and keys
-- Must not return:
-  - modified artifacts
-  - implementation analysis
+Returns:
+- Semantic models per artifact type
+- Traceability mappings (requirement ↔ story ↔ task)
+- Entity inventories with stable IDs and keys
+
+Does not return:
+- Modified artifacts
+- Implementation analysis
 
 ## Validation Gates
 
@@ -50,9 +57,9 @@ Create normalized, queryable semantic models of any artifacts (spec, plan, tasks
 - [ ] No circular references
 - [ ] Models are complete for their artifact types
 
-## Failure Modes
+## Troubleshooting
 
-- `PARSE_ERROR`: stop and report unparseable artifact
-- `INVALID_STRUCTURE`: stop and report structural issue
-- `ENTITY_COLLISION`: report duplicate or conflicting entities
+**`PARSE_ERROR`**: Stop and report the unparseable artifact.  
+**`INVALID_STRUCTURE`**: Stop and report the structural issue.  
+**`ENTITY_COLLISION`**: Report duplicate or conflicting entities.
 

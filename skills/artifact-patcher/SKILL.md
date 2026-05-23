@@ -1,14 +1,10 @@
 ---
 name: artifact-patcher
-description: Apply accepted answers or changes into artifact sections with conflict detection and audit trail.
+description: Safely integrates patches (clarifications, updates, corrections) into any artifact (spec, plan, tasks) with conflict detection and an audit trail. Use when applying accepted answers to clarification markers, updating artifact sections from user feedback, or when asked to "apply patches", "update the spec with answers", "resolve clarification markers", or "integrate changes into the artifact".
 metadata:
-  inputs:
-    - artifact_draft
-    - patches
-    - patch_mappings
-  outputs:
-    - updated_artifact
-    - change_log
+  version: "1.0.0"
+  type:
+    - agents
 ---
 
 # Artifact Patcher
@@ -23,24 +19,32 @@ Safely integrate patches (clarifications, updates, corrections) into any artifac
 - `patches`: user-provided answers/changes mapped to artifact locations
 - `patch_mappings`: where each patch belongs (section, heading, marker replacement)
 
-## Processing Rules
+## Instructions
 
-1. Locate relevant markers or sections in artifact (e.g., `[NEEDS CLARIFICATION: ...]`, old content).
-2. Replace marker/content with patch value.
-3. Detect if new patch conflicts with existing artifact content.
-4. If conflict found, replace old content with patch and log change.
-5. Preserve artifact structure and heading hierarchy.
-6. Remove resolved markers; do not duplicate.
-7. Maintain deterministic ordering.
+### Step 1: Locate Patch Targets
+Locate the relevant markers or sections in the artifact (e.g., `[NEEDS CLARIFICATION: ...]`, outdated content) using `patch_mappings`.
+
+### Step 2: Apply Patches
+Replace each located marker or content block with the corresponding patch value. Remove resolved markers; do not duplicate them.
+
+### Step 3: Detect Conflicts
+Check whether any new patch value conflicts with existing artifact content. If a conflict is found, replace the old content with the patch and log the change.
+
+### Step 4: Preserve Structure
+Maintain artifact heading hierarchy, deterministic ordering, and valid Markdown syntax throughout.
+
+### Step 5: Produce Change Log
+Return a change log recording what changed, why, and where for audit purposes.
 
 ## Output Contract
 
-- Must return:
-  - updated artifact with all patches integrated
-  - change log showing what changed, why, and where
-- Must not return:
-  - duplicate markers
-  - speculative assumptions
+Returns:
+- Updated artifact with all patches integrated
+- Change log showing what changed, why, and where
+
+Does not return:
+- Duplicate markers
+- Speculative assumptions
 
 ## Validation Gates
 
@@ -50,9 +54,9 @@ Safely integrate patches (clarifications, updates, corrections) into any artifac
 - [ ] Markdown syntax valid
 - [ ] Changes logged for audit
 
-## Failure Modes
+## Troubleshooting
 
-- `MARKER_NOT_FOUND`: stop and report unresolved marker
-- `CONFLICTING_PATCHES`: stop and ask user to clarify conflict
-- `TEMPLATE_SYNTAX_ERROR`: stop and report structural issue
+**`MARKER_NOT_FOUND`**: Stop and report the unresolved marker.  
+**`CONFLICTING_PATCHES`**: Stop and ask the user to clarify the conflict.  
+**`TEMPLATE_SYNTAX_ERROR`**: Stop and report the structural issue.
 

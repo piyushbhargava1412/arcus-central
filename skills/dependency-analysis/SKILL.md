@@ -1,15 +1,10 @@
 ---
 name: dependency-analysis
-description: Analyze work item relationships and compute execution order while identifying parallelizable work.
+description: Analyzes work item relationships to determine safe execution order, identify parallelizable work, and surface the critical path. Use when planning task sequencing, checking for circular dependencies, grouping work into phases, or when asked to "analyze dependencies", "find the critical path", "identify parallel tasks", or "sequence work items".
 metadata:
-  inputs:
-    - work_items
-    - dependency_relationships
-  outputs:
-    - dependency_matrix
-    - phase_groupings
-    - parallel_execution_bundles
-    - critical_path_identification
+  version: "1.0.0"
+  type:
+    - agents
 ---
 
 # Dependency Analysis
@@ -23,25 +18,36 @@ Analyze work item relationships to determine safe parallel execution and identif
 - `work_items`: list of work items with dependency notes
 - `dependency_relationships`: explicit relationships between work items
 
-## Processing Rules
+## Instructions
 
-1. Parse dependency relationships from work item descriptions and metadata.
-2. Build a directed acyclic graph (DAG) of work item relationships.
-3. Identify work item phases based on dependencies (Setup → Foundational → Features → Polish).
-4. Identify which work items can execute in parallel (no shared resource dependencies).
-5. Flag critical paths and blocking work items.
-6. Suggest parallel execution batches per phase/story.
-7. Validate no circular dependencies exist.
+### Step 1: Parse Dependencies
+Parse dependency relationships from work item descriptions and metadata.
+
+### Step 2: Build DAG
+Build a directed acyclic graph (DAG) of work item relationships.
+
+### Step 3: Group into Phases
+Identify work item phases based on dependency depth (Setup → Foundational → Features → Polish).
+
+### Step 4: Identify Parallelizable Work
+Within each phase, identify items with no shared resource dependencies that can execute in parallel.
+
+### Step 5: Flag Critical Path
+Trace the longest dependency chain and mark each item on it as blocking.
+
+### Step 6: Validate
+Confirm no circular dependencies exist. If found, stop and report immediately.
 
 ## Output Contract
 
-- Must return:
-  - work item dependency matrix
-  - phase groupings with execution order
-  - list of `{ phase, parallelizable_items }` execution bundles
-  - critical path identification
-- Must not return:
-  - circular dependencies (error if found)
+Format output using the template in `assets/dependency-report-template.md`. Returns:
+- Work item dependency matrix
+- Phase groupings with execution order
+- Parallel execution bundles per phase
+- Critical path identification
+
+Does not return:
+- Circular dependencies (error if found)
 
 ## Validation Gates
 
@@ -51,8 +57,8 @@ Analyze work item relationships to determine safe parallel execution and identif
 - [ ] Critical path identified
 - [ ] Phases are properly sequenced
 
-## Failure Modes
+## Troubleshooting
 
-- `CIRCULAR_DEPENDENCY`: stop and report loop with path
-- `AMBIGUOUS_DEPENDENCY`: ask for clarification on item ordering
+**`CIRCULAR_DEPENDENCY`**: Stop and report the loop with full path.  
+**`AMBIGUOUS_DEPENDENCY`**: Ask for clarification on item ordering before proceeding.
 

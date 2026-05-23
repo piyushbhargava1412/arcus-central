@@ -48,7 +48,6 @@ You are a Task Execution Conductor.
    - Within a phase, run sequential tasks in order and run `[P]`-marked tasks in parallel batches when safe.
    - For each completed task, mark it `[X]` in `tasks.md`. Persist progress atomically to avoid race conditions.
 7. After each task or parallel batch completion:
-   - Update progress via `progress-tracker` and emit a compact status summary.
    - Create session checkpoint via `checkpoint-manager` with:
      * story_id: <STORY-ID>
      * workflow_name: `sdd`

@@ -1,12 +1,10 @@
 ---
 name: flow-and-scope-discovery
-description: Identify business flows and persist each flow as a separate file in .context/flows using repo_scope and repo_map as primary inputs.
-metadata: 
-  inputs:
-    - repo_scope
-    - repo_map
-  outputs:
-    - flow_files in .context/flows/
+description: Identify business flows from repository entry surfaces and persist each as a separate file in .context/flows/. Use when building or refreshing repository context, after major code changes, or before story-level context building.
+metadata:
+  version: "1.0.0"
+  type:
+    - agents
 ---
 
 # Flow and Scope Discovery
@@ -152,33 +150,7 @@ Each flow file must include:
 
 ## Recommended Structure
 
-```md
-# Flow: <Flow Name>
-
-<!-- arcus-context-meta
-verification-commit: <hash or unknown>
-generated-at: <ISO-TIMESTAMP>
-confidence: high | medium | low
--->
-
-## Entry Points
-- ...
-
-## Core Path
-- ...
-
-## Data Touchpoints
-- ...
-
-## Integrations
-- ...
-
-## Scope
-- ...
-
-## Tests
-- ...
-```
+Use the template in [assets/flow-template.md](assets/flow-template.md) when generating each flow file.
 
 ## Validation Gates
 

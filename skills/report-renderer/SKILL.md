@@ -1,14 +1,10 @@
 ---
 name: report-renderer
-description: Render concise, deterministic stage completion reports for chat output.
-metadata: 
-  inputs:
-    - stage_name
-    - output_paths
-    - status
-    - warnings
-  outputs:
-    - chat_report
+description: Render concise, deterministic stage completion reports for chat output with status, artifact paths, and next-step recommendations. Use when an agent completes a workflow stage and needs to surface a consistent, low-noise summary to the user.
+metadata:
+  version: "1.0.0"
+  type:
+    - agents
 ---
 
 # Report Renderer
@@ -51,7 +47,6 @@ Standardize completion summaries across workflows so users get consistent, low-n
 - Must not return:
   - extra files, long narratives, redundant blocks, or summary artifacts
   - implementation code, detailed logs, or full artifact listings
-  - multi-line progress bars or phase breakdowns (those belong in progress-tracker)
 
 ## Validation Gates
 

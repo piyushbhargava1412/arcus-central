@@ -1,18 +1,10 @@
 ---
 name: session-bootstrap
-description: Resolve feature identity and canonical artifact/template paths for the current stage.
-metadata: 
-  inputs:
-    - user_input
-    - repository_root
-  outputs:
-    - story_id
-    - feature_dir
-    - artifact_paths
-    - template_paths
-    - checkpoint_content
-    - checkpoint_stage
-    - checkpoint_timestamp
+description: Resolve a story ID from user input or git branch and return canonical artifact and template paths for the current SDD stage. Use at the start of any sdd.specify, sdd.plan, sdd.tasks, or sdd.implement session to initialize stage context without duplicating path-resolution logic.
+metadata:
+  version: "1.0.0"
+  type:
+    - agents
 ---
 
 # Session Bootstrap
@@ -94,7 +86,7 @@ Resolve template paths from `.arcus/templates/` (symlinked to central):
 | Checklist template | `.arcus/templates/checklist-template.md` |
 | Plan template | `.arcus/templates/plan-template.md` |
 | Tasks template | `.arcus/templates/tasks-template.md` |
-| Story template | `.arcus/templates/stories/story-template.md` |
+| Story template | `.arcus/templates/story-template.md` |
 
 If a required template is missing → return `MISSING_TEMPLATE` with the specific path.
 

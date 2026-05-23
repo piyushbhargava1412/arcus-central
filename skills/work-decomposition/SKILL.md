@@ -1,16 +1,10 @@
 ---
 name: work-decomposition
-description: Break down requirements/design into concrete work items (tasks, stories, components) organized by phase/priority.
-metadata: 
-  inputs:
-    - requirements
-    - design_context
-    - organization_model
-    - guardrails
-  outputs:
-    - work_items
-    - organization_structure
-    - parallelization_opportunities
+description: Break down requirements and design context into concrete, independently actionable work items organized by phase and priority. Use when an agent needs to generate a task breakdown from a spec, analyse coverage, or plan implementation work.
+metadata:
+  version: "1.0.0"
+  type:
+    - agents
 ---
 
 # Work Decomposition

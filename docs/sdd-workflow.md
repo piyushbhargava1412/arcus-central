@@ -21,7 +21,7 @@
 └─────────────────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────────────────┐
-│              SKILLS SYSTEM (23 reusable, capability-based)              │
+│              SKILLS SYSTEM (22 reusable, capability-based)              │
 │                                                                         │
 │  🟢 Core (3):           🟦 Artifact (4):      🟨 Reasoning (4):        │
 │  • session-bootstrap    • artifact-modeling   • design-synthesis       │
@@ -33,13 +33,13 @@
 │  • repo-context-build   • flow-and-scope     • feature-context-pack   │
 │  • test-pattern-disc                         • context-sync           │
 │                                                                         │
-│  🟦 Specialized (4):    🟦 Interaction (1):  🟨 Formatting (1):       │
+│  🟦 Specialized (3):    🟦 Interaction (1):  🟨 Formatting (1):       │
 │  • spec-authoring       • question-orch      • format-enforcer        │
 │  • ambiguity-detect                                                   │
 │  • task-exec-control    🟪 Session (1):                               │
-│  • progress-tracker     • checkpoint-manager                           │
+│                          • checkpoint-manager                           │
 │                                                                         │
-│  Loaded on-demand by agents, NOT shipped to target repos               │
+│                 │
 └─────────────────────────────────────────────────────────────────────────┘
 
 ═════════════════════════════════════════════════════════════════════════════
@@ -331,7 +331,7 @@
 | - Formatting (1): format-enforcer
 | - Foundation (2): repository-context-builder, test-pattern-discovery
 | - Session (1): checkpoint-manager
-| - Specialized (4): spec-authoring, ambiguity-detection, task-execution-controller, progress-tracker
+| - Specialized (4): spec-authoring, ambiguity-detection, task-execution-controller
 ```
 
 ---

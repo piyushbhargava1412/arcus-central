@@ -1,12 +1,10 @@
 ---
 name: repository-context-builder
-description: Build or refresh baseline repository context by analyzing repository structure and generating repo_scope and repo_map artifacts in .context using only code evidence.
-metadata: 
-  inputs:
-    - repository_root
-  outputs:
-    - repo_scope in .context/repo_scope.md
-    - repo_map in .context/repo_map.md
+description: Build or refresh baseline repository context by analyzing repository structure and generating repo_scope.md and repo_map.md in .context/ using only code evidence. Use when onboarding a repository to ARCUS, when context artifacts are missing or outdated, or before flow discovery and story-level work begins.
+metadata:
+  version: "1.0.0"
+  type:
+    - agents
 ---
 
 # Repository Context Builder
@@ -91,6 +89,8 @@ confidence: <high | medium | low>
 
 ### repo_scope (`.context/repo_scope.md`)
 
+Use [assets/repo-scope-template.md](assets/repo-scope-template.md) as the base template.
+
 Must include:
 
 - `arcus-context-meta` block with `verification-commit`, `generated-at`, `confidence`
@@ -103,6 +103,8 @@ Must include:
 - Source/Test/Config Roots
 
 ### repo_map (`.context/repo_map.md`)
+
+Use [assets/repo-map-template.md](assets/repo-map-template.md) as the base template.
 
 Must include:
 
