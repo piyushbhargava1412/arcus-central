@@ -34,7 +34,7 @@ This file maintains a registry of all available agents, their capabilities, and 
   4. `quality-gates` - Validate completeness
   5. `checkpoint-manager` - Save resumable workflow snapshot
   6. `report-renderer` - Report completion
-- **Guardrails**: Respects `.github/copilot-instructions.md` if present in target repo
+- **Guardrails**: Applies repository guardrails defined in `AGENTS.md`
 
 ### sdd.clarify
 
@@ -57,7 +57,7 @@ This file maintains a registry of all available agents, their capabilities, and 
   5. `markdown-validation` - Validate spec syntax
   6. `checkpoint-manager` - Save resumable workflow snapshot
   7. `report-renderer` - Report completion
-- **Guardrails**: Respects `.github/copilot-instructions.md` if present
+- **Guardrails**: Applies repository guardrails defined in `AGENTS.md`
 
 ### sdd.plan
 
@@ -80,7 +80,7 @@ This file maintains a registry of all available agents, their capabilities, and 
   5. `markdown-validation` - Validate syntax
   6. `checkpoint-manager` - Save resumable workflow snapshot
   7. `report-renderer` - Report completion
-- **Guardrails**: Respects `.github/copilot-instructions.md` if present
+- **Guardrails**: Applies repository guardrails defined in `AGENTS.md`
 
 ### sdd.tasks
 
@@ -102,7 +102,7 @@ This file maintains a registry of all available agents, their capabilities, and 
   5. `format-enforcer` - Normalize format (reusable)
   6. `quality-gates` - Validate completeness
   7. `report-renderer` - Report completion
-- **Guardrails**: Respects `.github/copilot-instructions.md` if present
+- **Guardrails**: Applies repository guardrails defined in `AGENTS.md`
 
 ### sdd.analyze
 
@@ -124,7 +124,7 @@ This file maintains a registry of all available agents, their capabilities, and 
    4. `format-enforcer` - Validate format (reusable)
   5. `checkpoint-manager` - Save resumable workflow snapshot for analysis
    6. `report-renderer` - Report findings
-- **Guardrails**: Respects `.github/copilot-instructions.md` if present
+- **Guardrails**: Applies repository guardrails defined in `AGENTS.md`
 
 ### sdd.implement
 
@@ -147,7 +147,7 @@ This file maintains a registry of all available agents, their capabilities, and 
   5. `task-execution-controller` - Execute tasks
   6. `checkpoint-manager` - Save resumable workflow snapshot
   7. `report-renderer` - Report completion
-- **Guardrails**: Respects `.github/copilot-instructions.md` if present
+- **Guardrails**: Applies repository guardrails defined in `AGENTS.md`
 
 ---
 
@@ -174,7 +174,7 @@ This file maintains a registry of all available agents, their capabilities, and 
   4. `test-pattern-discovery` - Analyze testing patterns and generate testing-patterns.md
   5. `quality-gates` - Validate context artifacts
   6. `report-renderer` - Report completion
-- **Guardrails**: Respects `.github/copilot-instructions.md` if present. Applies `.arcus-ignore` patterns during analysis.
+- **Guardrails**: Applies repository guardrails from `AGENTS.md` and `.arcus-ignore` patterns during analysis.
 
 ### sdd.groom
 
@@ -189,7 +189,7 @@ This file maintains a registry of all available agents, their capabilities, and 
   - Repository-context-aware story scoping
   - Story file naming, organizing, and artifact generation
   - Dependency identification between stories
-- **Guardrails**: Respects `.github/copilot-instructions.md` if present. Leverages `.context/repo_scope.md` and `.context/repo_map.md` for scoping.
+- **Guardrails**: Applies repository guardrails from `AGENTS.md`; leverages `.context/repo_scope.md` and `.context/repo_map.md` for scoping.
 
 ### sdd.instructions
 
@@ -205,7 +205,7 @@ This file maintains a registry of all available agents, their capabilities, and 
   - Amendment tracking with semantic versioning
   - Dependent file synchronization (ensures updates propagate)
   - Governance compliance checking
-- **Guardrails**: Respects `.github/copilot-instructions.md` as canonical. Validates against `.arcus/guidelines/` baseline.
+- **Guardrails**: Treats `AGENTS.md` as canonical. Validates against `.arcus/guidelines/` baseline.
 
 ### sdd.close
 
@@ -235,7 +235,7 @@ This file maintains a registry of all available agents, their capabilities, and 
 **Context Bootstrap** (one-time):
 ```
 1. /sdd.context-builder    →  Initialize repository context (.context/)
-2. /sdd.instructions       →  Create copilot instructions (.github/copilot-instructions.md)
+2. /sdd.instructions       →  Create project instructions (AGENTS.md)
 ```
 
 **Development**

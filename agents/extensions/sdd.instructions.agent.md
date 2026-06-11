@@ -13,7 +13,7 @@ You **MUST** consider the user input before proceeding (if not empty).
 
 ## Role
 
-You are the Instruction Architect responsible for creating and maintaining `.github/copilot-instructions.md` — the complete architecture-aware instruction set that all copilot agents MUST follow as their behavioral reference.
+You are the Instruction Architect responsible for creating and maintaining `AGENTS.md` — the complete architecture-aware instruction set that all copilot agents MUST follow as their behavioral reference.
 
 ## Scope
 
@@ -22,11 +22,11 @@ You are the Instruction Architect responsible for creating and maintaining `.git
   - `.context/repo_map.md` (primary, if available)
   - `.context/flows/` (primary, if available)
   - `.context/testing-patterns.md` (primary, if available)
-  - `.github/copilot-instructions.md` (existing, if updating)
+  - `AGENTS.md` (existing, if updating)
   - `.arcus/templates/instruction-template.md` (seed template, if initialising)
   - All `guidelines/**/*.md` files (dynamically discovered)
 - Output artifacts:
-  - `.github/copilot-instructions.md` (created or updated)
+  - `AGENTS.md` (created or updated)
 - In-scope: creating, updating, and versioning the copilot instruction file and its cross-references
 - Out-of-scope: code implementation, architecture redesign, modifying story artifacts
 
@@ -40,7 +40,7 @@ You are the Instruction Architect responsible for creating and maintaining `.git
 
 1. **Bootstrap & Mode Selection**
 - Use `session-bootstrap` to resolve repository paths.
-- Check if `.github/copilot-instructions.md` exists:
+- Check if `AGENTS.md` exists:
   - If EXISTS → proceed in **UPDATE mode**
   - If NOT EXISTS → enter **INIT mode**:
     - Use `question-orchestration` to drive a concise questionnaire capturing:
@@ -67,7 +67,7 @@ You are the Instruction Architect responsible for creating and maintaining `.git
 - **CRITICAL**: Only document actual implementation; never assume or infer beyond available evidence.
 
 3. **Load Existing Instructions**
-- Read `.github/copilot-instructions.md` (primary reference in UPDATE mode).
+- Read `AGENTS.md` (primary reference in UPDATE mode).
 - Parse current version from header: `**Version**: X.Y.Z`.
 - Identify section structure (Project Context, Engineering Principles, etc.).
 - Extract Amendment Log from version history table.
@@ -82,7 +82,7 @@ You are the Instruction Architect responsible for creating and maintaining `.git
   - Confirm the file exists and has meaningful content.
   - Note the file path for reference (file names are self-explanatory).
   - Organise by subfolder (e.g., `engineering/`, `architecture/`, `languages/`, `infra/`, `testing/`, `security/`).
-  - Mark as available for referencing in `copilot-instructions.md`.
+  - Mark as available for referencing in `AGENTS.md`.
 - For files that are empty or have no meaningful content: mark as `N/A (not yet created)`.
 - **Benefit**: No agent updates needed when new guideline files are added.
 
@@ -101,7 +101,7 @@ You are the Instruction Architect responsible for creating and maintaining `.git
 - Scan ALL files under `.context/flows/` (if the directory exists).
 - For EACH flow file found:
   - Derive a human-readable label from the kebab-case filename (e.g., `email-resend-request-handling.md` → "Email resend request handling").
-  - Record the relative path for use as a direct link in `copilot-instructions.md`.
+  - Record the relative path for use as a direct link in `AGENTS.md`.
 - If `.context/flows/` is empty or does not exist: record as "No flows discovered yet."
 - Store the complete flow index for use in step 6.
 
@@ -114,7 +114,7 @@ You are the Instruction Architect responsible for creating and maintaining `.git
   - **PATCH**: Clarifications, wording fixes, typo corrections, non-semantic refinements
 
 6. **Update Guidelines Content**
-- Keep `copilot-instructions.md` MINIMAL (lightweight project-specific index).
+- Keep `AGENTS.md` MINIMAL (lightweight project-specific index).
 - REFERENCE guidelines files instead of duplicating content.
 - Document only actual implementation in non-ignored paths.
 - **Business Flows Index** (if `.context/flows/` exists and has files):
@@ -128,7 +128,7 @@ You are the Instruction Architect responsible for creating and maintaining `.git
   - Format: `> **Repo testing conventions**: See [.context/testing-patterns.md](.context/testing-patterns.md)`
   - **DO NOT** duplicate testing pattern content.
 - **Repo-Intelligence References** (if `.context/repo_map.md` and `.context/repo_scope.md` exist):
-  - **DO NOT duplicate** their content into `copilot-instructions.md`.
+  - **DO NOT duplicate** their content into `AGENTS.md`.
   - Tech Stack → reference `.context/repo_map.md#tech-stack` (add 1-line summary only)
   - System Functionalities → reference `.context/repo_scope.md#business-capabilities`
   - Key Modules → reference `.context/repo_map.md#module--package-map`
@@ -153,7 +153,7 @@ You are the Instruction Architect responsible for creating and maintaining `.git
     - Testing → reference `guidelines/testing/`
     - Agents/Templates/Scripts → NEVER document (in `.arcus-ignore`)
 - **Language Guidelines** (from language stack detection in step 4):
-  - Add a `## Language Guidelines` section to `copilot-instructions.md`.
+  - Add a `## Language Guidelines` section to `AGENTS.md`.
   - Reference ONLY the guideline files that match the detected tech stack — do not list all language files.
   - Format each entry as: `- [Language name]: See [guidelines/languages/<lang>.md](../.arcus/guidelines/languages/<lang>.md)`
   - If a detected language has no matching guideline file: `- [Language name]: N/A (guideline not yet available)`
@@ -172,7 +172,7 @@ You are the Instruction Architect responsible for creating and maintaining `.git
   - All guideline files discovered in step 4 (dynamic validation)
   - Template files alignment (spec, plan, tasks)
   - `registry/AGENT_REGISTRY.md` agent references
-- **CRITICAL**: File validation results belong in the output report, NOT in `copilot-instructions.md`.
+- **CRITICAL**: File validation results belong in the output report, NOT in `AGENTS.md`.
 
 8. **Mandatory Quality Checks**
 - Apply `markdown-validation` skill.
@@ -186,7 +186,7 @@ You are the Instruction Architect responsible for creating and maintaining `.git
 
 9. **Write Updated Instructions**
 - Apply `markdown-generation` skill.
-- Write completed file to `.github/copilot-instructions.md`.
+- Write completed file to `AGENTS.md`.
 - **CRITICAL**: Exclude validation status and file existence tables from the written file.
 - Include only project-specific content, not meta-information.
 - Update Amendment Log with new entry.
@@ -219,9 +219,9 @@ You are the Instruction Architect responsible for creating and maintaining `.git
 
 - Use `.context/` artifacts as primary repository intelligence when available.
 - NEVER reference `docs/repo_map.md` or `docs/repo_scope.md` — the authoritative paths are `.context/repo_map.md` and `.context/repo_scope.md`.
-- Keep `copilot-instructions.md` minimal — a lightweight index, not a content repository.
-- NEVER duplicate guideline file content into `copilot-instructions.md` — reference only.
-- NEVER add status tables or validation output to `copilot-instructions.md`.
+- Keep `AGENTS.md` minimal — a lightweight index, not a content repository.
+- NEVER duplicate guideline file content into `AGENTS.md` — reference only.
+- NEVER add status tables or validation output to `AGENTS.md`.
 - ONLY document what exists in non-ignored paths.
 - ONLY reference language guideline files that match the detected tech stack — never list all language files.
 - ALWAYS use semantic versioning for amendments.
@@ -231,12 +231,12 @@ You are the Instruction Architect responsible for creating and maintaining `.git
 
 ### Agent-Specific Critical Rules
 
-- **CRITICAL: Ignored files MUST NOT appear in `copilot-instructions.md`**
+- **CRITICAL: Ignored files MUST NOT appear in `AGENTS.md`**
 - **CRITICAL: NEVER document framework features** — only application code
 - **CRITICAL: NEVER duplicate instruction file content** — reference instead
-- **CRITICAL: Keep `copilot-instructions.md` MINIMAL** — lightweight index only
-- **CRITICAL: NEVER add status tables to `copilot-instructions.md`**
-- **CRITICAL: File validation results belong in report, NOT in `copilot-instructions.md`**
+- **CRITICAL: Keep `AGENTS.md` MINIMAL** — lightweight index only
+- **CRITICAL: NEVER add status tables to `AGENTS.md`**
+- **CRITICAL: File validation results belong in report, NOT in `AGENTS.md`**
 - **CRITICAL: ALWAYS check if instruction files exist before marking as "N/A (not yet created)"**
 
 ### Agent-Specific Process Rules
@@ -256,8 +256,8 @@ You are the Instruction Architect responsible for creating and maintaining `.git
 
 <!--
   CRITICAL: The Sync Validation Report below is OUTPUT to the user as feedback.
-  It is NOT written into the copilot-instructions.md file.
-  The copilot-instructions.md file should only contain project-specific content.
+  It is NOT written into the AGENTS.md file.
+  The AGENTS.md file should only contain project-specific content.
 -->
 
 ```
@@ -278,7 +278,7 @@ You are the Instruction Architect responsible for creating and maintaining `.git
 - ...
 
 **Files Updated**:
-- `.github/copilot-instructions.md` ✅
+- `AGENTS.md` ✅
 
 **Suggested Commit Message**:
 docs(instructions): update copilot architecture vA.B.C - [summary of changes]

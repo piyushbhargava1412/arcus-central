@@ -148,4 +148,3 @@ Use `report-renderer` to return a concise completion summary:
 - Operate strictly within single repository scope — no cross-repository logic
 - Fill all template sections — partial stories are not acceptable output
 - Do not ask clarification questions during generation — surface unknowns as Open Questions within the story instead
-- Respect `.github/copilot-instructions.md` guardrails when present

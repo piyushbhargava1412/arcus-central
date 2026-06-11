@@ -57,7 +57,7 @@ When a story is being worked on, an intelligent extract is built once and reused
 - Affected components (only the components this story modifies)
 - Affected files and directories
 - Relevant testing patterns
-- Relevant guardrails from `.github/copilot-instructions.md`
+- Relevant guardrails from `AGENTS.md`
 
 **Size:** Context-packs are typically **300-800 tokens** depending on feature complexity.
 
@@ -135,9 +135,9 @@ This lineage enables:
 - **Regeneration**: If template version changes, the artifact can be flagged for regeneration
 - **Audit**: Historical record of what context was available when the decision was made
 
-## Integration with Copilot Instructions
+## Integration with AGENTS.md
 
-Each repository has `.github/copilot-instructions.md` generated from `.context/repo_scope.md` and `.context/repo_map.md`. This ensures:
+Each repository has `AGENTS.md` generated from `.context/repo_scope.md` and `.context/repo_map.md`. This ensures:
 
 - All agents follow the same guardrails
 - Guardrails are derived from actual repository structure (not abstract guidelines)

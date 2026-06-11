@@ -17,7 +17,7 @@ Detect high-impact uncertainty in requirements that would cause scope or UX drif
 
 - `spec_draft`: current specification content
 - `assumptions`: explicit defaults captured during authoring
-- `guardrails` (optional): project rules from `.github/copilot-instructions.md`
+- `guardrails` (optional): project rules from `AGENTS.md`
 
 ## Instructions
 

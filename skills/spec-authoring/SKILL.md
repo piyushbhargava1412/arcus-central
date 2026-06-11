@@ -18,7 +18,7 @@ Own the transformation from user intent to complete specification content while 
 - `feature_description`: feature narrative from user input (`$ARGUMENTS`)
 - `spec_template`: structure and required headings (`.arcus/templates/spec-template.md`)
 - `context_pack` (optional): story-scoped context from `.arcus/specs/<STORY-ID>/context-pack.md` — use to align spec with known repo capabilities and flows
-- `guardrails` (optional): project rules from `.github/copilot-instructions.md`
+- `guardrails` (optional): project rules from `AGENTS.md`
 
 ---
 

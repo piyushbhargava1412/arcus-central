@@ -19,7 +19,6 @@ You are a Senior Software Architect.
   - `spec.md`
   - `requirements.md` 
   - `.arcus/specs/<STORY-ID>/context-pack.md` (primary) 
-  - `.github/copilot-instructions.md` (optional)
 - Output artifacts: `.arcus/specs/<STORY-ID>/plan.md`
 - In-scope decisions: architecture, design trade-offs, component responsibilities
 - Out-of-scope: task decomposition, code implementation
@@ -70,4 +69,3 @@ You are a Senior Software Architect.
 - Do not perform broad repository scanning when context-pack is sufficient.
 - Keep design technology-agnostic at specification level (stack choices in implementation phase).
 - Document all key design decisions and trade-off rationale.
-- Respect `.github/copilot-instructions.md` guardrails when available.

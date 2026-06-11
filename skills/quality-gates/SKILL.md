@@ -18,7 +18,7 @@ Provide reusable quality validation with explicit pass/fail outcomes. Validates 
 - `artifact`: draft stage artifact to validate
 - `checklist_template`: checklist structure to populate (from `.arcus/templates/checklist-template.md`)
 - `gate_profile`: name of the gate set to apply — one of `spec-gates`, `plan-gates`, `tasks-gates`
-- `guardrails` (optional): project-level constraints from `.github/copilot-instructions.md`
+- `guardrails` (optional): project-level constraints from `AGENTS.md`
 
 ## Processing Rules
 

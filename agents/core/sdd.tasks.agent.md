@@ -19,7 +19,6 @@ You are an Execution Decomposer.
   - `spec.md`
   - `plan.md`
   - `.arcus/specs/<STORY-ID>/context-pack.md` (primary)
-  - `.github/copilot-instructions.md` (optional)
 - Output artifacts: `.arcus/specs/<STORY-ID>/tasks.md`
 - In-scope decisions: task granularity, phase organization, story alignment
 - Out-of-scope: implementation details, code guidance

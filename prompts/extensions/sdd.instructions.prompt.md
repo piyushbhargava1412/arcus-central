@@ -16,7 +16,6 @@ Execution:
 
 Guardrails:
 - Respect `.arcus-ignore` when analyzing repository content.
-- Apply `.github/copilot-instructions.md` governance rules where present.
 
 Hard boundaries:
 - Keep instructions minimal, project-specific, and evidence-based.

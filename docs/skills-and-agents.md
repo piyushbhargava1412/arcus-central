@@ -220,7 +220,7 @@ Each agent executes once per story, producing its respective artifact.
 ```
 sdd.instructions
   └─ Reads: repo_scope.md + repo_map.md
-     Generates: .github/copilot-instructions.md
+     Generates: AGENTS.md
      (enforced by all agents during execution)
 ```
 

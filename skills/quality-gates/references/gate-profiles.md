@@ -20,7 +20,7 @@ Validates that `spec.md` and `requirements.md` are complete, testable, and techn
 | S8 | No stack/API/code details in spec | No class names, method signatures, framework names, or file paths |
 | S9 | Success criteria are measurable | Each SC-XXX includes a numeric threshold or verifiable outcome |
 | S10 | `requirements.md` exists and is non-empty | Testable requirements list generated alongside `spec.md` |
-| S11 | Guardrail compatibility (if guardrails provided) | No requirement conflicts with a MUST rule in `copilot-instructions.md` |
+| S11 | Guardrail compatibility (if guardrails provided) | No requirement conflicts with a MUST rule in `AGENTS.md` |
 
 ---
 
@@ -40,7 +40,7 @@ Validates that `plan.md` is architecturally complete and traceable to the spec.
 | P8 | Observability / testing approach documented | Testing framework and strategy referenced |
 | P9 | Project structure matches repo type | Structure section uses correct layout for detected project type (single / web / mobile) |
 | P10 | No implementation code in plan | No function bodies, SQL statements, or config file content |
-| P11 | Guardrail compatibility (if guardrails provided) | No design decision conflicts with a MUST rule in `copilot-instructions.md` |
+| P11 | Guardrail compatibility (if guardrails provided) | No design decision conflicts with a MUST rule in `AGENTS.md` |
 
 ---
 
@@ -60,4 +60,4 @@ Validates that `tasks.md` is complete, dependency-ordered, and fully traceable.
 | T8 | Parallel markers are valid | `[P]` tasks reference different files — no two `[P]` tasks write the same file |
 | T9 | Dependency declarations are acyclic | No circular task dependencies (`depends: T005 → T003 → T005`) |
 | T10 | Phase ordering is consistent | Tasks in Phase N do not depend on tasks in Phase N+1 |
-| T11 | Guardrail compatibility (if guardrails provided) | No task contradicts a MUST rule in `copilot-instructions.md` |
+| T11 | Guardrail compatibility (if guardrails provided) | No task contradicts a MUST rule in `AGENTS.md` |

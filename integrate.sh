@@ -275,7 +275,7 @@ main() {
         local removal_count=0
 
         # Remove symlinked directories inside .arcus/ (but preserve .arcus/ folder itself)
-        # DO NOT remove .arcus/guidelines/ — developers may reference it in their copilot-instructions.md
+        # DO NOT remove .arcus/guidelines/ — developers may reference it in their AGENTS.md
         # Developers may have created local artifacts in .arcus/ that they want to keep
         local symlink_dirs=("templates" "scripts")
         for symdir in "${symlink_dirs[@]}"; do

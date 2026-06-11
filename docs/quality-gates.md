@@ -263,7 +263,7 @@ Teams can define custom gates for special scenarios:
 **Example: Payment Service Team**
 
 ```yaml
-# In .github/copilot-instructions.md
+# In AGENTS.md
 custom-gates:
   payment-spec-gates:
     - All requirements reference payment flows (payment, refund, reconciliation)

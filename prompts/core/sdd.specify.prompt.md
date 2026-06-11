@@ -12,9 +12,6 @@ Execution:
 - For each step, look up the skill name in `.github/skills/SKILLS_REGISTRY.md` to find the SKILL.md file path.
 - Read and implement the Processing Rules section of the located SKILL.md file directly (do not invoke as an agent or tool).
 
-Guardrails:
-- If `.github/copilot-instructions.md` exists in the active repository, apply it as mandatory guidance.
-
 Hard boundaries:
 - Create only `spec.md` and `requirements.md`.
 - Do not include implementation details (languages, frameworks, APIs, code structure).

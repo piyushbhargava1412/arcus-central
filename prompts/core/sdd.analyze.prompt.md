@@ -16,9 +16,6 @@ Execution:
     - before implementation → read-only analysis
     - after implementation → analysis + selective `.context` refresh
 
-Guardrails:
-- If `.github/copilot-instructions.md` exists in the active repository, apply it as mandatory guidance.
-
 Hard boundaries:
 - Do not perform broad repository scanning when context-pack is sufficient.
 - In pre-implementation mode: do not edit files.

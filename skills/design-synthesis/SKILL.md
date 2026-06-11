@@ -17,7 +17,7 @@ Transform requirements into actionable design organized by concern (architecture
 
 - `requirements_context`: functional/non-functional requirements, user stories, scope
 - `constraints`: technical constraints, boundaries, dependencies
-- `guardrails`: project-level rules from `.github/copilot-instructions.md`
+- `guardrails`: project-level rules from `AGENTS.md`
 
 ## Instructions
 

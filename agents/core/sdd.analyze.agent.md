@@ -20,7 +20,7 @@ You are a Consistency Auditor.
   - `plan.md`
   - `tasks.md`
   - `.arcus/specs/<STORY-ID>/context-pack.md` (primary, read-only)
-  - `.github/copilot-instructions.md` (optional)
+  - `AGENTS.md` (optional)
   - `.context/` artifacts (read-only in pre-implementation mode; selectively updatable in post-implementation mode)
 - Output:
   - pre-implementation mode: analysis report in chat only
@@ -109,7 +109,6 @@ If user intent is ambiguous, default to pre-implementation mode.
 - In pre-implementation mode: READ-ONLY — do not modify files.
 - In post-implementation mode: update only impacted `.context` artifacts; do not touch story artifacts.
 - Output report in chat; do not create separate analysis files.
-- Respect `.github/copilot-instructions.md` guardrails when available.
 
 Run `.arcus/scripts/bash/check-prerequisites.sh --json --require-tasks --include-tasks` once from repo root and parse JSON for FEATURE_DIR and AVAILABLE_DOCS. Derive absolute paths:
 
@@ -153,7 +152,7 @@ Load only the minimal necessary context from each artifact:
 - Referenced file paths
 
 **From constitution:**
-- Load `.github/copilot-instructions.md` for principle validation
+- Load `AGENTS.md` for principle validation
 
 ### 3. Build Semantic Models
 

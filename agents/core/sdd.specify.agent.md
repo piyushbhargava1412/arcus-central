@@ -23,8 +23,6 @@ You are a Specification Architect.
   - `.context/repo_map.md`
   - `.context/testing-patterns.md`
   - `.context/flows/*.md`
-- Optional:
-  - `.github/copilot-instructions.md` (guardrails)
 - Output artifacts:
   - `.arcus/specs/<STORY-ID>/context-pack.md`
   - `.arcus/specs/<STORY-ID>/spec.md`
@@ -99,7 +97,6 @@ Run `spec-authoring` with:
 - `feature_description`: the user's `$ARGUMENTS`
 - `spec_template`: loaded in step 6
 - `context_pack`: produced in step 5
-- `guardrails`: `.github/copilot-instructions.md` if present
 
 The skill generates sections in this order: User Scenarios → Requirements → Success Criteria → Edge Cases.
 
@@ -199,6 +196,5 @@ Return a concise completion report via `report-renderer` including:
 - Use `.context/` + `context-pack.md` as the only sources of repository intelligence
 - No repo-wide scanning when `.context/` is available
 - Record all reasonable defaults as explicit assumptions — never silently invent requirements
-- Respect `.github/copilot-instructions.md` guardrails when present
 - Do not resolve `[NEEDS CLARIFICATION]` markers — leave them for `/sdd.clarify`
 - Do not write partial outputs — all three artifacts written together or not at all

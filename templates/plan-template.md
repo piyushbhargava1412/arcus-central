@@ -102,7 +102,7 @@ directories captured above]
 
 ## Constitution Check
 
-[Verify alignment with `.github/copilot-instructions.md`. List any trade-offs or exceptions.]
+[Verify alignment with `AGENTS.md`. List any trade-offs or exceptions.]
 
 ---
 

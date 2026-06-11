@@ -58,7 +58,7 @@ Per-type formatting rules applied by the `markdown-generation` skill based on th
 
 ---
 
-## `index` — `copilot-instructions.md` Sections
+## `index` — `AGENTS.md` Sections
 
 - Reference links only — no duplicated content
 - Format: `- [Label](path/to/file.md)`

@@ -69,14 +69,14 @@
    ┌──────────────────────────────────────────────────┐
    │  Stage 2: /sdd.instructions                      │
    │  ─────────────────────────────────────────────── │
-   │  Create project copilot instructions             │
+   │  Create project AGENTS.md instructions           │
    │                                                  │
    │  What it does:                                   │
    │  • Reads .context/repo_scope.md + repo_map.md    │
    │  • Synthesizes repo-specific guardrails          │
-   │  • Generates .github/copilot-instructions.md     │
+   │  • Generates AGENTS.md     │
    │                                                  │
-   │  Output: Copilot instructions (enforces          │
+   │  Output: AGENTS.md instructions (enforces        │
    │          consistency across all agents)          │
    └────────────────┬─────────────────────────────────┘
                     │
@@ -252,7 +252,7 @@
    │  + repo_map once)      │  Generates (enforces via agents):
    └──────────┬─────────────┘
               │
-              └─→ .github/copilot-instructions.md ──→ [GOVERNANCE]
+              └─→ AGENTS.md ──→ [GOVERNANCE]
 
 
    FEATURE DEVELOPMENT:
